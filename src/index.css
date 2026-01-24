@@ -1,0 +1,27 @@
+@import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Inter:wght@400;500&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  @apply bg-brand-light text-slate-800 font-sans;
+}
+
+/* THE "OBSIDIAN" FONT CLASS */
+.font-display {
+  font-family: 'Rajdhani', sans-serif;
+}
+
+/* DEPTH EFFECTS */
+.text-glow {
+  text-shadow: 0 0 20px rgba(249, 115, 22, 0.3);
+}
+
+.text-depth {
+  text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+}
