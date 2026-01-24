@@ -205,23 +205,25 @@ const Navbar = memo(() => {
   }, [scrolled]);
 
   return (
-    <nav className="hidden md:block fixed w-full z-50 top-0 transition-all duration-300">
+    <nav className="fixed w-full z-50 top-0 transition-all duration-300">
       <div 
         className={`mx-auto flex items-center justify-between transition-all duration-500 ease-[cubic-bezier(0.4,0,0.2,1)]
           ${scrolled 
-            ? 'bg-brand-black/70 backdrop-blur-xl border-b border-x border-slate-800/80 shadow-[0_15px_40px_-10px_rgba(0,0,0,0.6)] rounded-b-[2.5rem] py-6 px-10 max-w-[90rem]' 
-            : 'bg-transparent border-transparent py-10 px-10 max-w-[95rem]'
+            ? 'bg-brand-black/70 backdrop-blur-xl border-b border-x border-slate-800/80 shadow-[0_15px_40px_-10px_rgba(0,0,0,0.6)] rounded-b-2xl md:rounded-b-[2.5rem] py-4 px-5 md:py-6 md:px-10 max-w-[95%] md:max-w-[90rem]' 
+            : 'bg-transparent border-transparent py-6 px-5 md:py-10 md:px-10 max-w-full md:max-w-[95rem]'
           }
         `}
       >
-        <div className="flex items-end gap-5"> 
-          <img src="/logo-agp.png" alt="AGP Logo" className="h-14 w-auto object-contain bg-white/5 rounded-lg px-2 border border-white/10" />
-          <span className="text-white font-bold text-5xl tracking-tighter font-display flex items-center gap-2 drop-shadow-md leading-none translate-y-1.5">
+        {/* BRANDING: Visible on Mobile & Desktop */}
+        <div className="flex items-end gap-3 md:gap-5"> 
+          <img src="/logo-agp.png" alt="AGP Logo" className="h-10 md:h-14 w-auto object-contain bg-white/5 rounded-lg px-2 border border-white/10" />
+          <span className="text-white font-bold text-3xl md:text-5xl tracking-tighter font-display flex items-center gap-2 drop-shadow-md leading-none -mb-1 md:translate-y-1.5">
              ENTERPRISES
           </span>
         </div>
 
-        <div className="flex items-center gap-12">
+        {/* LINKS: Hidden on Mobile (hidden), Visible on Desktop (md:flex) */}
+        <div className="hidden md:flex items-center gap-12">
           {NAV_LINKS.map((item) => (
             <a key={item} href={`#${item.toLowerCase()}`} className="text-slate-300 hover:text-cyan-300 transition-colors text-sm uppercase tracking-[0.2em] font-bold font-display hover:drop-shadow-[0_0_8px_rgba(34,211,238,0.8)]">
               {item}
@@ -231,6 +233,8 @@ const Navbar = memo(() => {
             Get Quote
           </a>
         </div>
+        
+        {/* No Hamburger Menu Button here anymore */}
       </div>
     </nav>
   );
