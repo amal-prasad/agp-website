@@ -83,27 +83,43 @@ const RotatingRig = ({ position, color, iconColor, shadowColor }) => (
   </div>
 );
 
-// --- UPDATED: CLEAN INDUSTRIAL BACKGROUND (No Rotating Rigs) ---
 const IndustrialBackground = () => (
-  <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden bg-brand-black">
-    {/* 1. The Engineering Grid (Kept for structure) */}
+  <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
+    <div className="absolute inset-0 bg-[#050505]" />
     <div 
-      className="absolute inset-0 opacity-[0.15]"
-      style={{ 
-        backgroundImage: 'linear-gradient(#334155 1px, transparent 1px), linear-gradient(to right, #334155 1px, transparent 1px)', 
-        backgroundSize: '60px 60px' 
-      }}
+      className="absolute inset-0 opacity-[0.05] mix-blend-overlay translate-z-0"
+      style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")` }}
     />
+    <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/[0.03] to-transparent pointer-events-none" />
+    <div className="absolute -top-20 -right-20 w-[800px] h-[800px] bg-orange-600/10 blur-[100px] rounded-full mix-blend-screen" />
+    <div className="absolute -bottom-40 -left-20 w-[800px] h-[800px] bg-red-600/5 blur-[100px] rounded-full mix-blend-screen" />
 
-    {/* 2. Soft Ambient Lighting (Kept for depth) */}
-    {/* Top Left Warmth */}
-    <div className="absolute top-[-20%] left-[-10%] w-[60%] h-[60%] rounded-full bg-brand-orange/[0.03] blur-[120px]" />
-    {/* Bottom Right Coolness */}
-    <div className="absolute bottom-[-20%] right-[-10%] w-[60%] h-[60%] rounded-full bg-cyan-500/[0.03] blur-[120px]" />
+    <RotatingRig 
+      position="top-20 left-20" 
+      color="cyan-500" 
+      iconColor="text-cyan-500/30" 
+      shadowColor="rgba(34,211,238,0.6)" 
+    />
+    
+    {/* Using explicit style for the second one since rotation logic is slightly different in original, 
+        but for optimization, using the same component with rotated parent is cleaner or just keep specific props.
+        Here we adapt the component to handle bottom-right logic. */}
+    <div className="absolute bottom-20 right-20 w-48 h-48 hidden md:block rotate-180">
+        {/* Reusing rig logic but inverted via parent rotation */}
+        <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-orange-500 to-transparent" />
+        <div className="absolute top-0 left-0 h-full w-[1px] bg-gradient-to-b from-orange-500 to-transparent" />
+        <div className="absolute top-0 left-0 -translate-x-1/2 -translate-y-1/2">
+             <motion.div 
+               animate={{ rotate: 360 }}
+               transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+               style={{ willChange: "transform" }}
+             >
+                <Printer size={80} strokeWidth={0.5} className="text-orange-500/30 drop-shadow-[0_0_15px_rgba(249,115,22,0.6)]" />
+             </motion.div>
+        </div>
+    </div>
 
-    {/* 3. Heavy Industrial Vignette (Kept to focus eyes on center) */}
-    <div className="absolute inset-0 bg-gradient-to-t from-brand-black via-transparent to-brand-black opacity-90" />
-    <div className="absolute inset-0 bg-gradient-to-r from-brand-black via-transparent to-brand-black opacity-90" />
+    <div className="absolute inset-0 bg-[size:100px_100px] bg-grid-pattern opacity-[0.03]" />
   </div>
 );
 
