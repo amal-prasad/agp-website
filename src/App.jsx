@@ -196,24 +196,33 @@ const Navbar = memo(() => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, [scrolled]);
 
-  // ULTRATHINK FIX: 
-  // We intercept the interaction to ensure scrolling initiates 
-  // BEFORE the component is unmounted by AnimatePresence.
+  // ULTRATHINK FIX: Manual Offset Calculation
   const handleMobileNav = (e, targetId) => {
-    e.preventDefault(); // Stop native anchor behavior to prevent fighting
+    e.preventDefault();
     
     const targetElement = document.querySelector(targetId);
     if (targetElement) {
-      // 1. Force the scroll immediately
-      targetElement.scrollIntoView({ behavior: 'smooth' });
+      // 1. Get the element's distance from the top of the viewport
+      const elementPosition = targetElement.getBoundingClientRect().top;
       
-      // 2. Delay the menu close slightly to allow the scroll event 
-      // to lock into the browser's main thread.
+      // 2. Get the current scroll position of the page
+      const offsetPosition = elementPosition + window.scrollY;
+      
+      // 3. Define the header offset (approx 85px for your mobile nav height)
+      // This ensures the title isn't hidden behind the fixed header
+      const headerOffset = 85; 
+
+      // 4. Scroll to the calculated position
+      window.scrollTo({
+        top: offsetPosition - headerOffset,
+        behavior: "smooth"
+      });
+      
+      // 5. Delay closing the menu to prevent visual jitter
       setTimeout(() => {
         setIsOpen(false);
       }, 150);
     } else {
-      // Fallback if target not found (rare)
       setIsOpen(false);
     }
   };
@@ -235,7 +244,7 @@ const Navbar = memo(() => {
           </span>
         </div>
 
-        {/* Desktop Menu - Unchanged */}
+        {/* Desktop Menu - Standard Href is fine here as global CSS handles it or space is sufficient */}
         <div className="hidden md:flex items-center gap-12">
           {NAV_LINKS.map((item) => (
             <a key={item} href={`#${item.toLowerCase()}`} className="text-slate-300 hover:text-cyan-300 transition-colors text-sm uppercase tracking-[0.2em] font-bold font-display hover:drop-shadow-[0_0_8px_rgba(34,211,238,0.8)]">
@@ -265,7 +274,6 @@ const Navbar = memo(() => {
                 <a 
                   key={item} 
                   href={`#${item.toLowerCase()}`} 
-                  // UPDATED: Using the new handler
                   onClick={(e) => handleMobileNav(e, `#${item.toLowerCase()}`)} 
                   className="text-slate-300 text-xl font-bold font-display hover:text-brand-orange uppercase tracking-widest"
                 >
@@ -274,7 +282,6 @@ const Navbar = memo(() => {
               ))}
               <a 
                 href="#contact" 
-                // UPDATED: Using the new handler
                 onClick={(e) => handleMobileNav(e, "#contact")} 
                 className="w-full bg-brand-orange text-white py-3 rounded-lg font-bold uppercase tracking-widest"
               >
