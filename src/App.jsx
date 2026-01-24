@@ -1,13 +1,13 @@
-import React, { useState, useRef, useEffect, memo } from 'react';
+import React, { useState, useRef, useEffect, memo, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import emailjs from '@emailjs/browser';
 import { 
   Printer, Layers, Send, Phone, MapPin, CheckCircle, 
-  Menu, X, Palette, FileText, CreditCard, User, 
+  Palette, FileText, CreditCard, User, 
   Image as ImageIcon, Loader2, ArrowRight, Building2, GraduationCap, Factory, Star 
 } from 'lucide-react';
 
-// --- CONSTANTS & CONFIG ---
+// --- STATIC CONSTANTS (Extracted to prevent recreation) ---
 const EMAILJS_CONFIG = {
   SERVICE_ID: 'service_foh4x56',
   TEMPLATE_ID: 'template_o1ibewd',
@@ -43,30 +43,28 @@ const PORTFOLIO = [
   { category: "Outdoor", title: "Large Flex Banners", color: "bg-emerald-500" },
 ];
 
-// --- UNIFIED ANIMATION ENGINE ---
-const Reveal = ({ children, dir = "up", delay = 0, className = "" }) => {
-  const variants = {
-    up:    { opacity: 0, y: 50 },
-    left:  { opacity: 0, x: -50 },
-    right: { opacity: 0, x: 50 }
-  };
-
-  return (
-    <motion.div
-      initial={variants[dir]}
-      whileInView={{ opacity: 1, x: 0, y: 0 }}
-      viewport={{ once: true, margin: "-50px" }}
-      transition={{ duration: 0.8, delay, ease: "easeOut" }}
-      className={className}
-    >
-      {children}
-    </motion.div>
-  );
+const REVEAL_VARIANTS = {
+  up:    { opacity: 0, y: 50 },
+  left:  { opacity: 0, x: -50 },
+  right: { opacity: 0, x: 50 }
 };
 
-// --- OPTIMIZED BACKGROUND COMPONENTS (Memoized) ---
+// --- ANIMATION ENGINE ---
+const Reveal = memo(({ children, dir = "up", delay = 0, className = "" }) => (
+  <motion.div
+    initial={REVEAL_VARIANTS[dir]}
+    whileInView={{ opacity: 1, x: 0, y: 0 }}
+    viewport={{ once: true, margin: "-50px" }}
+    transition={{ duration: 0.8, delay, ease: "easeOut" }}
+    className={className}
+  >
+    {children}
+  </motion.div>
+));
+
+// --- BACKGROUND COMPONENTS ---
 const RotatingRig = memo(({ position, color, iconColor, shadowColor, className = "" }) => (
-  <div className={`absolute ${position} w-48 h-48 hidden md:block ${className}`}>
+  <div className={`absolute ${position} w-48 h-48 hidden md:block ${className}`} style={{ contentVisibility: 'auto' }}>
     <div className={`absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-${color} to-transparent`} />
     <div className={`absolute top-0 left-0 h-full w-[1px] bg-gradient-to-b from-${color} to-transparent`} />
     <div className="absolute top-0 left-0 -translate-x-1/2 -translate-y-1/2">
@@ -78,7 +76,8 @@ const RotatingRig = memo(({ position, color, iconColor, shadowColor, className =
         <Printer 
           size={80} 
           strokeWidth={0.5} 
-          className={`${iconColor} drop-shadow-[0_0_15px_${shadowColor}]`} 
+          className={`${iconColor}`}
+          style={{ filter: `drop-shadow(0 0 15px ${shadowColor})` }}
         />
       </motion.div>
     </div>
@@ -86,32 +85,18 @@ const RotatingRig = memo(({ position, color, iconColor, shadowColor, className =
 ));
 
 const IndustrialBackground = memo(() => (
-  <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
-    <div className="absolute inset-0 bg-[#050505]" />
+  <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden bg-[#050505]">
+    {/* Noise Filter - Inline SVG for performance */}
     <div 
-      className="absolute inset-0 opacity-[0.05] mix-blend-overlay translate-z-0"
+      className="absolute inset-0 opacity-[0.05] mix-blend-overlay"
       style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")` }}
     />
-    <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/[0.03] to-transparent pointer-events-none" />
+    <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/[0.03] to-transparent" />
     <div className="absolute -top-20 -right-20 w-[800px] h-[800px] bg-orange-600/10 blur-[100px] rounded-full mix-blend-screen" />
     <div className="absolute -bottom-40 -left-20 w-[800px] h-[800px] bg-red-600/5 blur-[100px] rounded-full mix-blend-screen" />
 
-    {/* Top Left Rig */}
-    <RotatingRig 
-      position="top-20 left-20" 
-      color="cyan-500" 
-      iconColor="text-cyan-500/30" 
-      shadowColor="rgba(34,211,238,0.6)" 
-    />
-    
-    {/* Bottom Right Rig (Inverted via Rotate) */}
-    <RotatingRig 
-      position="bottom-20 right-20" 
-      color="orange-500" 
-      iconColor="text-orange-500/30" 
-      shadowColor="rgba(249,115,22,0.6)"
-      className="rotate-180"
-    />
+    <RotatingRig position="top-20 left-20" color="cyan-500" iconColor="text-cyan-500/30" shadowColor="rgba(34,211,238,0.6)" />
+    <RotatingRig position="bottom-20 right-20" color="orange-500" iconColor="text-orange-500/30" shadowColor="rgba(249,115,22,0.6)" className="rotate-180" />
 
     <div className="absolute inset-0 bg-[size:100px_100px] bg-grid-pattern opacity-[0.03]" />
   </div>
@@ -119,55 +104,48 @@ const IndustrialBackground = memo(() => (
 
 const PolishedGlassLayer = memo(() => (
   <div className="fixed inset-0 pointer-events-none z-[1] overflow-hidden">
-    <div className="absolute -top-[10%] left-1/2 -translate-x-1/2 w-[70%] h-[50%] bg-white/[0.03] blur-[100px] rounded-[100%] pointer-events-none mix-blend-overlay" />
+    <div className="absolute -top-[10%] left-1/2 -translate-x-1/2 w-[70%] h-[50%] bg-white/[0.03] blur-[100px] rounded-[100%] mix-blend-overlay" />
     <div className="absolute -bottom-[20%] left-1/2 -translate-x-1/2 w-[80%] h-[60%] bg-cyan-500/[0.05] blur-[120px] rounded-full mix-blend-screen" />
     <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/[0.02] to-transparent opacity-50" />
   </div>
 ));
 
-// --- UI COMPONENT PRIMITIVES ---
-const StaticGlowCard = ({ children, className = "" }) => (
-  <div
-    className={`group relative border border-slate-800 bg-slate-900/20 backdrop-blur-md overflow-hidden transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_0_30px_rgba(249,115,22,0.3)] hover:border-orange-500/30 ${className}`}
-    style={{ contain: 'paint' }} 
-  >
+// --- UI COMPONENTS ---
+const StaticGlowCard = memo(({ children, className = "" }) => (
+  <div className={`group relative border border-slate-800 bg-slate-900/20 backdrop-blur-md overflow-hidden transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_0_30px_rgba(249,115,22,0.3)] hover:border-orange-500/30 ${className}`}>
     <div className="pointer-events-none absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 ease-in-out"
-      style={{
-        background: `radial-gradient(circle at 50% 0%, rgba(34, 211, 238, 0.25) 20%, rgba(34, 211, 238, 0.05) 50%, transparent 80%)`
-      }}
+      style={{ background: `radial-gradient(circle at 50% 0%, rgba(34, 211, 238, 0.25) 20%, rgba(34, 211, 238, 0.05) 50%, transparent 80%)` }}
     />
     <div className="absolute inset-0 border border-cyan-500/0 group-hover:border-cyan-500/20 rounded-xl transition-colors duration-500 pointer-events-none" />
     <div className="relative h-full">{children}</div>
   </div>
-);
+));
 
-const SectionHeading = ({ children, subtitle, dark = false }) => (
+const SectionHeading = memo(({ children, subtitle, dark = false }) => (
   <Reveal>
     <div className="mb-12 md:mb-16 relative z-10">
-      <h2 className={`text-4xl md:text-6xl font-bold mb-4 font-display uppercase tracking-wide 
-        ${dark ? 'text-white drop-shadow-[0_0_10px_rgba(34,211,238,0.8)]' : 'text-brand-black'}
-      `}>
+      <h2 className={`text-4xl md:text-6xl font-bold mb-4 font-display uppercase tracking-wide ${dark ? 'text-white drop-shadow-[0_0_10px_rgba(34,211,238,0.8)]' : 'text-slate-900'}`}>
         {children}
       </h2>
-      <div className="h-1 w-32 mb-6 bg-gradient-to-r from-brand-orange via-orange-400 to-transparent rounded-full shadow-[0_0_20px_orange]" />
+      <div className="h-1 w-32 mb-6 bg-gradient-to-r from-orange-500 via-orange-400 to-transparent rounded-full shadow-[0_0_20px_orange]" />
       <p className={`text-xl max-w-2xl font-medium ${dark ? 'text-slate-300' : 'text-slate-600'}`}>
         {subtitle}
       </p>
     </div>
   </Reveal>
-);
+));
 
-const FormInput = (props) => (
+const FormInput = memo((props) => (
   <input 
     {...props}
-    className="w-full px-6 py-4 rounded-xl border border-slate-700 bg-slate-800/50 focus:bg-slate-800 focus:border-brand-orange outline-none transition-all font-medium text-white placeholder-slate-500 backdrop-blur-sm"
+    className="w-full px-6 py-4 rounded-xl border border-slate-700 bg-slate-800/50 focus:bg-slate-800 focus:border-orange-500 outline-none transition-all font-medium text-white placeholder-slate-500 backdrop-blur-sm"
   />
-);
+));
 
-const TeamCard = ({ name, role, tag, img, colorClass, glowColor, delay = 0 }) => (
+const TeamCard = memo(({ name, role, tag, img, colorClass, glowColor, delay = 0 }) => (
   <Reveal dir="left" delay={delay}>
     <div className="relative bg-slate-800 rounded-2xl border border-slate-700 shadow-2xl group hover:border-orange-500/30 transition-all duration-300 mt-0 hover:-translate-y-2 hover:shadow-[0_0_30px_rgba(249,115,22,0.3)]">
-        <div className="aspect-[3/4] relative">
+        <div className="aspect-[3/4] relative overflow-hidden rounded-t-2xl">
           <div className={`absolute bottom-0 left-0 w-full h-[80%] bg-gradient-to-t ${glowColor} blur-[50px] opacity-60 group-hover:opacity-100 transition-all duration-500 z-0`} />
           <img src={img} loading="lazy" decoding="async" alt={role} className="absolute bottom-0 left-0 w-full h-[105%] object-contain object-bottom drop-shadow-2xl z-0 scale-100 group-hover:scale-105 transition-transform duration-500 origin-bottom" />
         </div>
@@ -178,16 +156,9 @@ const TeamCard = ({ name, role, tag, img, colorClass, glowColor, delay = 0 }) =>
         </div>
     </div>
   </Reveal>
-);
+));
 
-// A dedicated invisible landing pad for navigation
-const ScrollAnchor = ({ id }) => (
-  <div 
-    id={id} 
-    className="absolute -top-32 left-0 w-full h-1 pointer-events-none opacity-0" 
-    aria-hidden="true"
-  />
-);
+const ScrollAnchor = ({ id }) => <div id={id} className="absolute -top-32 left-0 w-full h-1 pointer-events-none opacity-0" aria-hidden="true" />;
 
 // --- SECTIONS ---
 
@@ -199,7 +170,6 @@ const Navbar = memo(() => {
       const isScrolled = window.scrollY > 20;
       if (scrolled !== isScrolled) setScrolled(isScrolled);
     };
-    
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, [scrolled]);
@@ -209,12 +179,11 @@ const Navbar = memo(() => {
       <div 
         className={`mx-auto flex items-center justify-between transition-all duration-500 ease-[cubic-bezier(0.4,0,0.2,1)]
           ${scrolled 
-            ? 'bg-brand-black/70 backdrop-blur-xl border-b border-x border-slate-800/80 shadow-[0_15px_40px_-10px_rgba(0,0,0,0.6)] rounded-b-2xl md:rounded-b-[2.5rem] py-4 px-5 md:py-6 md:px-10 max-w-[95%] md:max-w-[90rem]' 
+            ? 'bg-black/80 backdrop-blur-xl border-b border-x border-slate-800/80 shadow-[0_15px_40px_-10px_rgba(0,0,0,0.6)] rounded-b-2xl md:rounded-b-[2.5rem] py-4 px-5 md:py-6 md:px-10 max-w-[95%] md:max-w-[90rem]' 
             : 'bg-transparent border-transparent py-6 px-5 md:py-10 md:px-10 max-w-full md:max-w-[95rem]'
           }
         `}
       >
-        {/* BRANDING: Visible on Mobile & Desktop */}
         <div className="flex items-end gap-3 md:gap-5"> 
           <img src="/logo-agp.png" alt="AGP Logo" className="h-10 md:h-14 w-auto object-contain bg-white/5 rounded-lg px-2 border border-white/10" />
           <span className="text-white font-bold text-3xl md:text-5xl tracking-tighter font-display flex items-center gap-2 drop-shadow-md leading-none -mb-1 md:translate-y-1.5">
@@ -222,19 +191,16 @@ const Navbar = memo(() => {
           </span>
         </div>
 
-        {/* LINKS: Hidden on Mobile (hidden), Visible on Desktop (md:flex) */}
         <div className="hidden md:flex items-center gap-12">
           {NAV_LINKS.map((item) => (
             <a key={item} href={`#${item.toLowerCase()}`} className="text-slate-300 hover:text-cyan-300 transition-colors text-sm uppercase tracking-[0.2em] font-bold font-display hover:drop-shadow-[0_0_8px_rgba(34,211,238,0.8)]">
               {item}
             </a>
           ))}
-          <a href="#contact" className="bg-gradient-to-r from-brand-orange to-red-500 text-white px-9 py-3.5 rounded-xl font-bold hover:shadow-[0_0_25px_rgba(249,115,22,0.6)] transition-all font-display tracking-widest border border-orange-400/50 text-base uppercase">
+          <a href="#contact" className="bg-gradient-to-r from-orange-600 to-red-600 text-white px-9 py-3.5 rounded-xl font-bold hover:shadow-[0_0_25px_rgba(249,115,22,0.6)] transition-all font-display tracking-widest border border-orange-400/50 text-base uppercase">
             Get Quote
           </a>
         </div>
-        
-        {/* No Hamburger Menu Button here anymore */}
       </div>
     </nav>
   );
@@ -247,9 +213,9 @@ const Hero = () => (
         <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-slate-800/80 border border-slate-700 text-cyan-300 text-sm font-bold tracking-widest uppercase mb-8 shadow-[0_0_15px_rgba(34,211,238,0.15)] backdrop-blur-md">
           <span className="w-2 h-2 rounded-full bg-cyan-300 animate-pulse shadow-[0_0_10px_cyan]"/> Est. 2019
         </div>
-        <h1 className="text-6xl md:text-8xl font-bold text-white leading-[0.9] mb-8 font-display text-depth">
+        <h1 className="text-6xl md:text-8xl font-bold text-white leading-[0.9] mb-8 font-display">
           PRECISION <br />
-          <span className="text-brand-orange drop-shadow-[0_0_35px_rgba(249,115,22,0.8)] relative z-10">
+          <span className="text-orange-500 drop-shadow-[0_0_35px_rgba(249,115,22,0.8)] relative z-10">
             IN PRINT.
           </span>
         </h1>
@@ -257,7 +223,7 @@ const Hero = () => (
           Engineering your brand's physical identity with <span className="text-cyan-300 font-semibold drop-shadow-lg">industrial-grade perfection</span>.
         </p>
         <div className="flex flex-col sm:flex-row gap-4">
-          <a href="#contact" className="bg-brand-orange text-white px-8 py-4 rounded-lg font-bold text-lg hover:bg-orange-600 transition-all shadow-[0_0_25px_rgba(249,115,22,0.5)] flex items-center justify-center gap-2 font-display uppercase tracking-wide border border-orange-400">
+          <a href="#contact" className="bg-orange-600 text-white px-8 py-4 rounded-lg font-bold text-lg hover:bg-orange-700 transition-all shadow-[0_0_25px_rgba(249,115,22,0.5)] flex items-center justify-center gap-2 font-display uppercase tracking-wide border border-orange-500">
             Start Project <ArrowRight size={20} />
           </a>
           <a href="#portfolio" className="border border-slate-600 text-white px-8 py-4 rounded-lg font-bold text-lg hover:bg-slate-800 hover:border-cyan-300 hover:text-cyan-300 transition-all flex items-center justify-center font-display uppercase tracking-wide backdrop-blur-md">
@@ -274,7 +240,7 @@ const Hero = () => (
           <div className="absolute inset-0 bg-gradient-to-br from-slate-900 to-black rounded-3xl border border-slate-700/50 p-1 shadow-[0_0_100px_-20px_rgba(249,115,22,0.4)] backdrop-blur-sm">
              <div className="w-full h-full bg-slate-900/90 rounded-2xl flex flex-col items-center justify-center text-slate-600 overflow-hidden relative">
                 <Printer size={140} strokeWidth={0.5} className="mb-4 text-white drop-shadow-[0_0_20px_rgba(255,255,255,0.4)] relative z-10" />
-                <p className="uppercase tracking-[0.5em] text-sm text-brand-orange font-bold relative z-10 drop-shadow-[0_0_10px_orange]">High Fidelity Output</p>
+                <p className="uppercase tracking-[0.5em] text-sm text-orange-500 font-bold relative z-10 drop-shadow-[0_0_10px_orange]">High Fidelity Output</p>
              </div>
           </div>
           <motion.div 
@@ -297,24 +263,19 @@ const Hero = () => (
   </section>
 );
 
-// ... existing imports and code ...
-
 const Services = () => (
   <section className="py-24 relative border-t border-slate-800">
-    {/* INVISIBLE MARKER */}
     <ScrollAnchor id="services" />
-    
     <div className="max-w-7xl mx-auto px-6 relative z-10">
       <SectionHeading dark subtitle="Comprehensive printing solutions tailored for businesses of all scales.">
         Our Services
       </SectionHeading>
-      {/* ... rest of services content ... */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {SERVICES.map((service, idx) => (
           <Reveal dir="left" key={service.title} delay={idx * 0.05}>
             <StaticGlowCard className="rounded-2xl p-8 h-full">
                <div className="relative z-10">
-                  <div className="h-14 w-14 bg-slate-800 text-slate-400 rounded-xl flex items-center justify-center mb-6 border border-slate-700 group-hover:bg-cyan-400 group-hover:text-brand-black group-hover:border-cyan-300 transition-all shadow-lg">
+                  <div className="h-14 w-14 bg-slate-800 text-slate-400 rounded-xl flex items-center justify-center mb-6 border border-slate-700 group-hover:bg-cyan-400 group-hover:text-black group-hover:border-cyan-300 transition-all shadow-lg">
                     {service.icon}
                   </div>
                   <h3 className="text-xl font-bold text-white mb-3 font-display uppercase tracking-wide group-hover:text-cyan-300 transition-colors">{service.title}</h3>
@@ -330,14 +291,11 @@ const Services = () => (
 
 const Portfolio = () => (
   <section className="py-24 relative border-t border-slate-900">
-    {/* INVISIBLE MARKER */}
     <ScrollAnchor id="portfolio" />
-
     <div className="max-w-7xl mx-auto px-6 relative z-10">
       <SectionHeading dark subtitle="A showcase of our recent industrial printing projects.">
         Featured Work
       </SectionHeading>
-      {/* ... rest of portfolio content ... */}
       <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
         {PORTFOLIO.map((item, i) => (
           <Reveal key={i} delay={i * 0.1}>
@@ -348,7 +306,7 @@ const Portfolio = () => (
               </div>
               <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-90" />
               <div className="absolute bottom-0 left-0 p-6 w-full">
-                <p className="text-xs font-bold text-brand-orange uppercase tracking-widest mb-1">{item.category}</p>
+                <p className="text-xs font-bold text-orange-500 uppercase tracking-widest mb-1">{item.category}</p>
                 <h3 className="text-xl font-bold text-white font-display group-hover:text-cyan-300 transition-colors">{item.title}</h3>
               </div>
             </div>
@@ -364,11 +322,8 @@ const Portfolio = () => (
 
 const About = () => (
   <section className="py-32 text-white relative overflow-hidden border-t border-slate-800">
-    {/* INVISIBLE MARKER */}
     <ScrollAnchor id="about" />
-
     <div className="max-w-7xl mx-auto px-6 grid md:grid-cols-2 gap-16 items-center relative z-10">
-      {/* ... rest of about content ... */}
        <div className="grid grid-cols-2 gap-6 relative z-10">
         <TeamCard 
            name="M. Sivaprasad" role="Director" tag="LEADERSHIP" 
@@ -380,8 +335,8 @@ const About = () => (
             <TeamCard 
                name="Ajay Pandey" role="Ops Head" tag="EXECUTION" 
                img="/person-grey.png" 
-               colorClass="text-brand-orange"
-               glowColor="from-brand-orange/50 via-red-500/20 to-transparent"
+               colorClass="text-orange-500"
+               glowColor="from-orange-600/50 via-red-500/20 to-transparent"
                delay={0.2}
             />
         </div>
@@ -399,7 +354,7 @@ const About = () => (
               { title: "End-to-End", desc: "From design conceptualization to final finishing." }
             ].map((item, i) => (
               <div key={i} className="flex gap-5 group hover:translate-x-2 transition-transform duration-300 p-4 rounded-xl hover:bg-slate-800/30 border border-transparent hover:border-white/5 backdrop-blur-sm">
-                <div className="mt-1 min-w-[32px] h-[32px] rounded-lg bg-slate-800 flex items-center justify-center border border-slate-700 text-brand-orange shadow-[0_0_15px_rgba(249,115,22,0.3)] group-hover:shadow-[0_0_25px_rgba(249,115,22,0.6)] transition-all">
+                <div className="mt-1 min-w-[32px] h-[32px] rounded-lg bg-slate-800 flex items-center justify-center border border-slate-700 text-orange-500 shadow-[0_0_15px_rgba(249,115,22,0.3)] group-hover:shadow-[0_0_25px_rgba(249,115,22,0.6)] transition-all">
                     <Star size={18} fill="currentColor" />
                 </div>
                 <div>
@@ -417,17 +372,13 @@ const About = () => (
 
 const Clients = () => (
   <section className="py-20 relative border-y border-slate-800">
-    {/* INVISIBLE MARKER */}
     <ScrollAnchor id="clients" />
-
     <div className="max-w-7xl mx-auto px-6 relative z-10">
-      {/* ... rest of clients content ... */}
        <Reveal>
         <div className="text-center mb-12">
-            <h3 className="text-brand-orange font-display font-bold text-xl tracking-[0.3em] uppercase mb-4 drop-shadow-[0_0_10px_rgba(249,115,22,0.5)]">Trusted By The Best</h3>
+            <h3 className="text-orange-500 font-display font-bold text-xl tracking-[0.3em] uppercase mb-4 drop-shadow-[0_0_10px_rgba(249,115,22,0.5)]">Trusted By The Best</h3>
         </div>
       </Reveal>
-      
       <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12">
         {CLIENTS.map((client, i) => (
            <Reveal key={i} delay={i * 0.1}>
@@ -449,29 +400,46 @@ const Clients = () => (
 
 const Contact = () => {
   const formRef = useRef();
-  const [status, setStatus] = useState('idle');
-  // ... existing submit handler ...
-  const handleSubmit = (e) => { /* ... */ };
+  const [status, setStatus] = useState('idle'); // idle, sending, success, error
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!formRef.current) return;
+    
+    setStatus('sending');
+
+    try {
+      await emailjs.sendForm(
+        EMAILJS_CONFIG.SERVICE_ID,
+        EMAILJS_CONFIG.TEMPLATE_ID,
+        formRef.current,
+        EMAILJS_CONFIG.PUBLIC_KEY
+      );
+      setStatus('success');
+      e.target.reset();
+      // Reset status after 5 seconds to allow new submissions if needed
+      setTimeout(() => setStatus('idle'), 5000);
+    } catch (error) {
+      console.error('EmailJS Error:', error);
+      setStatus('error');
+      setTimeout(() => setStatus('idle'), 5000);
+    }
+  };
 
   return (
     <section className="py-24 relative scroll-mt-32">
-       {/* INVISIBLE MARKER - Removed the ref from section, formRef is on form anyway */}
        <ScrollAnchor id="contact" />
        
        <div className="max-w-7xl mx-auto px-6 relative z-10">
-         {/* ... rest of contact content ... */}
          <Reveal>
-          {/* GLASS CONTAINER */}
           <div className="rounded-[2rem] overflow-hidden shadow-2xl grid lg:grid-cols-5 border border-white/10 bg-slate-900/40 backdrop-blur-xl">
-             {/* ... content ... */}
              <div className="lg:col-span-2 bg-slate-900/60 p-12 text-white flex flex-col justify-between relative overflow-hidden border-r border-white/5">
-                {/* ... left column ... */}
-                  <div className="absolute top-0 right-0 p-40 bg-brand-orange/10 rounded-full blur-[80px] -mr-20 -mt-20 pointer-events-none"></div>
+                  <div className="absolute top-0 right-0 p-40 bg-orange-500/10 rounded-full blur-[80px] -mr-20 -mt-20 pointer-events-none"></div>
                   <div className="relative z-10">
-                    <h3 className="text-4xl font-bold mb-6 font-display text-white text-depth">LET'S PRINT.</h3>
+                    <h3 className="text-4xl font-bold mb-6 font-display text-white">LET'S PRINT.</h3>
                     <div className="space-y-8 mb-12">
                       <div className="flex items-center gap-5">
-                        <Phone className="text-brand-orange drop-shadow-[0_0_8px_orange]" size={24} />
+                        <Phone className="text-orange-500 drop-shadow-[0_0_8px_orange]" size={24} />
                         <div>
                           <p className="font-mono text-lg font-bold text-white tracking-wide">+91-7999406413</p>
                           <p className="font-mono text-lg font-bold text-slate-400 tracking-wide">+91-8269897212</p>
@@ -479,14 +447,14 @@ const Contact = () => {
                       </div>
                       
                       <div className="flex items-center gap-5">
-                        <Send className="text-brand-orange drop-shadow-[0_0_8px_orange]" size={24} />
+                        <Send className="text-orange-500 drop-shadow-[0_0_8px_orange]" size={24} />
                         <p className="font-mono text-sm md:text-lg font-bold text-white tracking-wide text-ellipsis overflow-hidden">
                           agpent2019@gmail.com
                         </p>
                       </div>
 
                       <div className="flex items-start gap-5">
-                        <MapPin className="text-brand-orange drop-shadow-[0_0_8px_orange] mt-1 shrink-0" size={24} />
+                        <MapPin className="text-orange-500 drop-shadow-[0_0_8px_orange] mt-1 shrink-0" size={24} />
                         <p className="font-mono text-lg font-bold text-white tracking-wide leading-relaxed">
                           Flat A36/104, Treasure Fantasy<br/>
                           CAT Road, Rau<br/>
@@ -495,7 +463,6 @@ const Contact = () => {
                       </div>
                     </div>
 
-                    {/* Fixed Map Implementation */}
                     <div className="w-full h-48 rounded-xl overflow-hidden border border-slate-700/50 shadow-inner relative group">
                         <iframe 
                           src={MAP_EMBED_URL}
@@ -512,11 +479,9 @@ const Contact = () => {
                   </div>
              </div>
 
-             {/* RIGHT COLUMN: FORM */}
             <div className="lg:col-span-3 p-8 md:p-12">
               <form ref={formRef} onSubmit={handleSubmit} className="space-y-6">
-                 {/* ... form inputs ... */}
-                  <div className="grid md:grid-cols-2 gap-6">
+                <div className="grid md:grid-cols-2 gap-6">
                   <FormInput name="user_name" required type="text" placeholder="Your Name" />
                   <FormInput name="user_phone" required type="tel" placeholder="+91-XXXXXXXXXX" />
                 </div>
@@ -524,17 +489,17 @@ const Contact = () => {
                   <FormInput name="user_email" required type="email" placeholder="Email Address" />
                   
                   <div className="relative">
-                    <select name="service_interest" className="w-full px-6 py-4 rounded-xl border border-slate-700 bg-slate-800/50 focus:bg-slate-800 focus:border-brand-orange outline-none transition-all font-medium text-white appearance-none cursor-pointer">
+                    <select name="service_interest" className="w-full px-6 py-4 rounded-xl border border-slate-700 bg-slate-800/50 focus:bg-slate-800 focus:border-orange-500 outline-none transition-all font-medium text-white appearance-none cursor-pointer">
                       <option value="General" className="bg-slate-900 text-white">General Inquiry</option>
                       {SERVICES.map(s => <option key={s.title} value={s.title} className="bg-slate-900 text-white">{s.title}</option>)}
                     </select>
-                    <div className="absolute right-6 top-1/2 -translate-y-1/2 pointer-events-none text-brand-orange">
+                    <div className="absolute right-6 top-1/2 -translate-y-1/2 pointer-events-none text-orange-500">
                       <svg width="12" height="8" viewBox="0 0 12 8" fill="none"><path d="M1 1.5L6 6.5L11 1.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
                     </div>
                   </div>
                 </div>
 
-                <textarea name="message" required rows={4} className="w-full px-6 py-4 rounded-xl border border-slate-700 bg-slate-800/50 focus:bg-slate-800 focus:border-brand-orange outline-none transition-all font-medium text-white placeholder-slate-500 backdrop-blur-sm" placeholder="Message..." />
+                <textarea name="message" required rows={4} className="w-full px-6 py-4 rounded-xl border border-slate-700 bg-slate-800/50 focus:bg-slate-800 focus:border-orange-500 outline-none transition-all font-medium text-white placeholder-slate-500 backdrop-blur-sm" placeholder="Message..." />
                 
                 <button 
                   type="submit"
@@ -542,10 +507,10 @@ const Contact = () => {
                   className={`w-full font-bold py-5 rounded-xl transition-all flex items-center justify-center gap-3 text-lg font-display uppercase tracking-wider shadow-[0_0_20px_rgba(0,0,0,0.3)] border
                     ${status === 'success' ? 'bg-green-600 text-white border-green-500 shadow-green-900/20' : 
                       status === 'error' ? 'bg-red-600 text-white border-red-500' : 
-                      'bg-brand-orange text-white hover:bg-orange-600 border-orange-500 shadow-[0_0_30px_rgba(249,115,22,0.4)]'}`}
+                      'bg-orange-600 text-white hover:bg-orange-700 border-orange-500 shadow-[0_0_30px_rgba(249,115,22,0.4)]'}`}
                 >
                   {status === 'sending' ? <Loader2 className="animate-spin" /> : <Send size={20} />}
-                  {status === 'sending' ? 'Sending...' : status === 'success' ? 'Enquiry Sent!' : 'Send Enquiry'}
+                  {status === 'sending' ? 'Sending...' : status === 'success' ? 'Enquiry Sent!' : status === 'error' ? 'Failed - Retry' : 'Send Enquiry'}
                 </button>
               </form>
             </div>
@@ -556,8 +521,8 @@ const Contact = () => {
   );
 };
 
-const Footer = () => (
-  <footer className="bg-brand-black text-slate-500 py-12 border-t border-slate-900 text-sm relative z-10">
+const Footer = memo(() => (
+  <footer className="bg-black text-slate-500 py-12 border-t border-slate-900 text-sm relative z-10">
     <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-6">
       <div className="flex items-center gap-3">
          <img src="/logo-agp.png" alt="Footer Logo" className="h-6 grayscale opacity-50 hover:grayscale-0 transition-all" />
@@ -565,11 +530,11 @@ const Footer = () => (
       </div>
     </div>
   </footer>
-);
+));
 
 export default function App() {
   return (
-    <div className="antialiased bg-brand-black selection:bg-brand-orange selection:text-white overflow-x-hidden relative min-h-screen">
+    <div className="antialiased bg-[#050505] selection:bg-orange-500 selection:text-white overflow-x-hidden relative min-h-screen">
       <IndustrialBackground />
       <PolishedGlassLayer />
       <Navbar />
