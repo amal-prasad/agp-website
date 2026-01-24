@@ -221,12 +221,8 @@ const Navbar = () => {
         `}
       >
         <div className="flex items-end gap-3 md:gap-5"> 
-          {/* Logo Image: Box removed, size increased (h-10/h-16), nudged up (-mt-1) */}
-            <img 
-              src="/logo-agp.png" 
-              alt="Logo" 
-              className="h-10 md:h-16 w-auto object-contain -mt-1" 
-            />
+          {/* Logo Image */}
+          <img src="/logo-agp.png" alt="AGP Logo" className="h-8 md:h-14 w-auto object-contain bg-white/5 rounded-lg px-2 border border-white/10" />
           
           {/* Logo Text: Added 'translate-y-1' to nudge it down slightly */}
           <span className="text-white font-bold text-3xl md:text-5xl tracking-tighter font-display flex items-center gap-2 drop-shadow-md leading-none -mb-1 md:translate-y-1.5">
@@ -511,12 +507,13 @@ const Contact = () => {
                   </div>
                   <div className="flex items-center gap-5">
                     <Send className="text-brand-orange drop-shadow-[0_0_8px_orange]" size={24} />
-                    <p className="font-mono text-lg font-bold text-white tracking-wide">agpent2019@gmail.com</p>
+                    {/* Updated: 'text-sm' for mobile, 'md:text-lg' for desktop */}
+                    <p className="font-mono text-sm md:text-lg font-bold text-white tracking-wide text-ellipsis overflow-hidden">agpent2019@gmail.com</p>
                   </div>
                   <div className="flex items-start gap-5">
                     <MapPin className="text-brand-orange drop-shadow-[0_0_8px_orange] mt-1 shrink-0" size={24} />
                     <p className="font-mono text-lg font-bold text-white tracking-wide leading-relaxed">
-                      Flat A36/104, Treasure Fantsy<br/>
+                      Flat A36/104, Treasure Fantasy<br/>
                       CAT Road, Rau<br/>
                       Indore - 453331
                     </p>
