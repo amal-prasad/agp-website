@@ -500,7 +500,7 @@ const Contact = () => {
                   <div className="flex items-start gap-5">
                     <MapPin className="text-brand-orange drop-shadow-[0_0_8px_orange] mt-1 shrink-0" size={24} />
                     <p className="font-mono text-lg font-bold text-white tracking-wide leading-relaxed">
-                      Flat A36/104, Treasure Fantsy<br/>
+                      Flat A36/104, Treasure Fantasy<br/>
                       CAT Road, Rau<br/>
                       Indore - 453331
                     </p>
