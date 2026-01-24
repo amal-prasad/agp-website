@@ -221,8 +221,12 @@ const Navbar = () => {
         `}
       >
         <div className="flex items-end gap-3 md:gap-5"> 
-          {/* Logo Image */}
-          <img src="/logo-agp.png" alt="AGP Logo" className="h-8 md:h-14 w-auto object-contain bg-white/5 rounded-lg px-2 border border-white/10" />
+          {/* Logo Image: Box removed, size increased (h-10/h-16), nudged up (-mt-1) */}
+            <img 
+              src="/logo-agp.png" 
+              alt="Logo" 
+              className="h-10 md:h-16 w-auto object-contain -mt-1" 
+            />
           
           {/* Logo Text: Added 'translate-y-1' to nudge it down slightly */}
           <span className="text-white font-bold text-3xl md:text-5xl tracking-tighter font-display flex items-center gap-2 drop-shadow-md leading-none -mb-1 md:translate-y-1.5">
