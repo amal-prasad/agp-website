@@ -486,7 +486,8 @@ const Contact = () => {
   };
 
   return (
-    <section id="contact" className="py-24 relative">
+    // UPDATED: Added 'scroll-mt-32' to prevent navbar overlap
+    <section id="contact" className="py-24 relative scroll-mt-32">
       <div className="max-w-7xl mx-auto px-6 relative z-10">
         <Reveal>
           {/* GLASS CONTAINER */}
@@ -505,14 +506,19 @@ const Contact = () => {
                       <p className="font-mono text-lg font-bold text-slate-400 tracking-wide">+91-8269897212</p>
                     </div>
                   </div>
+                  
+                  {/* UPDATED: Email Font Size (text-sm for mobile, md:text-lg for desktop) */}
                   <div className="flex items-center gap-5">
                     <Send className="text-brand-orange drop-shadow-[0_0_8px_orange]" size={24} />
-                    <p className="font-mono text-lg font-bold text-white tracking-wide">agpent2019@gmail.com</p>
+                    <p className="font-mono text-sm md:text-lg font-bold text-white tracking-wide text-ellipsis overflow-hidden">
+                      agpent2019@gmail.com
+                    </p>
                   </div>
+
                   <div className="flex items-start gap-5">
                     <MapPin className="text-brand-orange drop-shadow-[0_0_8px_orange] mt-1 shrink-0" size={24} />
                     <p className="font-mono text-lg font-bold text-white tracking-wide leading-relaxed">
-                      Flat A36/104, Treasure Fantasy<br/>
+                      Flat A36/104, Treasure Fantsy<br/>
                       CAT Road, Rau<br/>
                       Indore - 453331
                     </p>
@@ -578,7 +584,6 @@ const Contact = () => {
     </section>
   );
 };
-
 const Footer = () => (
   <footer className="bg-brand-black text-slate-500 py-12 border-t border-slate-900 text-sm relative z-10">
     <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-6">
