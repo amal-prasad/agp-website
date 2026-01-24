@@ -196,6 +196,28 @@ const Navbar = memo(() => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, [scrolled]);
 
+  // ULTRATHINK FIX: 
+  // We intercept the interaction to ensure scrolling initiates 
+  // BEFORE the component is unmounted by AnimatePresence.
+  const handleMobileNav = (e, targetId) => {
+    e.preventDefault(); // Stop native anchor behavior to prevent fighting
+    
+    const targetElement = document.querySelector(targetId);
+    if (targetElement) {
+      // 1. Force the scroll immediately
+      targetElement.scrollIntoView({ behavior: 'smooth' });
+      
+      // 2. Delay the menu close slightly to allow the scroll event 
+      // to lock into the browser's main thread.
+      setTimeout(() => {
+        setIsOpen(false);
+      }, 150);
+    } else {
+      // Fallback if target not found (rare)
+      setIsOpen(false);
+    }
+  };
+
   return (
     <nav className="fixed w-full z-50 top-0 transition-all duration-300">
       <div 
@@ -213,6 +235,7 @@ const Navbar = memo(() => {
           </span>
         </div>
 
+        {/* Desktop Menu - Unchanged */}
         <div className="hidden md:flex items-center gap-12">
           {NAV_LINKS.map((item) => (
             <a key={item} href={`#${item.toLowerCase()}`} className="text-slate-300 hover:text-cyan-300 transition-colors text-sm uppercase tracking-[0.2em] font-bold font-display hover:drop-shadow-[0_0_8px_rgba(34,211,238,0.8)]">
@@ -239,11 +262,22 @@ const Navbar = memo(() => {
           >
             <div className="flex flex-col p-6 gap-6 items-center text-center">
               {NAV_LINKS.map((item) => (
-                <a key={item} onClick={() => setIsOpen(false)} href={`#${item.toLowerCase()}`} className="text-slate-300 text-xl font-bold font-display hover:text-brand-orange uppercase tracking-widest">
+                <a 
+                  key={item} 
+                  href={`#${item.toLowerCase()}`} 
+                  // UPDATED: Using the new handler
+                  onClick={(e) => handleMobileNav(e, `#${item.toLowerCase()}`)} 
+                  className="text-slate-300 text-xl font-bold font-display hover:text-brand-orange uppercase tracking-widest"
+                >
                   {item}
                 </a>
               ))}
-              <a onClick={() => setIsOpen(false)} href="#contact" className="w-full bg-brand-orange text-white py-3 rounded-lg font-bold uppercase tracking-widest">
+              <a 
+                href="#contact" 
+                // UPDATED: Using the new handler
+                onClick={(e) => handleMobileNav(e, "#contact")} 
+                className="w-full bg-brand-orange text-white py-3 rounded-lg font-bold uppercase tracking-widest"
+              >
                 Get Quote
               </a>
             </div>
