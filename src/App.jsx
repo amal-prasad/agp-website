@@ -180,6 +180,15 @@ const TeamCard = ({ name, role, tag, img, colorClass, glowColor, delay = 0 }) =>
   </Reveal>
 );
 
+// A dedicated invisible landing pad for navigation
+const ScrollAnchor = ({ id }) => (
+  <div 
+    id={id} 
+    className="absolute -top-32 left-0 w-full h-1 pointer-events-none opacity-0" 
+    aria-hidden="true"
+  />
+);
+
 // --- SECTIONS ---
 
 const Navbar = memo(() => {
@@ -196,34 +205,20 @@ const Navbar = memo(() => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, [scrolled]);
 
-  // ULTRATHINK FIX: Manual Offset Calculation
   const handleMobileNav = (e, targetId) => {
     e.preventDefault();
+    const id = targetId.replace('#', '');
+    const element = document.getElementById(id);
     
-    const targetElement = document.querySelector(targetId);
-    if (targetElement) {
-      // 1. Get the element's distance from the top of the viewport
-      const elementPosition = targetElement.getBoundingClientRect().top;
+    if (element) {
+      // 1. Scroll to the invisible marker
+      // Since the marker is physically above the section, 
+      // 'start' alignment places the marker at the top of viewport,
+      // revealing the section below the header perfectly.
+      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
       
-      // 2. Get the current scroll position of the page
-      const offsetPosition = elementPosition + window.scrollY;
-      
-      // 3. Define the header offset (approx 85px for your mobile nav height)
-      // This ensures the title isn't hidden behind the fixed header
-      const headerOffset = 85; 
-
-      // 4. Scroll to the calculated position
-      window.scrollTo({
-        top: offsetPosition - headerOffset,
-        behavior: "smooth"
-      });
-      
-      // 5. Delay closing the menu to prevent visual jitter
-      setTimeout(() => {
-        setIsOpen(false);
-      }, 150);
-    } else {
-      setIsOpen(false);
+      // 2. Wait for scroll to engage, then close menu
+      setTimeout(() => setIsOpen(false), 200);
     }
   };
 
@@ -244,7 +239,6 @@ const Navbar = memo(() => {
           </span>
         </div>
 
-        {/* Desktop Menu - Standard Href is fine here as global CSS handles it or space is sufficient */}
         <div className="hidden md:flex items-center gap-12">
           {NAV_LINKS.map((item) => (
             <a key={item} href={`#${item.toLowerCase()}`} className="text-slate-300 hover:text-cyan-300 transition-colors text-sm uppercase tracking-[0.2em] font-bold font-display hover:drop-shadow-[0_0_8px_rgba(34,211,238,0.8)]">
@@ -352,13 +346,18 @@ const Hero = () => (
   </section>
 );
 
+// ... existing imports and code ...
+
 const Services = () => (
-  <section id="services" className="py-24 relative border-t border-slate-800">
-    <div className="absolute top-0 right-0 w-1/2 h-full bg-slate-900/30 skew-x-12 -z-0 pointer-events-none" />
+  <section className="py-24 relative border-t border-slate-800">
+    {/* INVISIBLE MARKER */}
+    <ScrollAnchor id="services" />
+    
     <div className="max-w-7xl mx-auto px-6 relative z-10">
       <SectionHeading dark subtitle="Comprehensive printing solutions tailored for businesses of all scales.">
         Our Services
       </SectionHeading>
+      {/* ... rest of services content ... */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {SERVICES.map((service, idx) => (
           <Reveal dir="left" key={service.title} delay={idx * 0.05}>
@@ -379,11 +378,15 @@ const Services = () => (
 );
 
 const Portfolio = () => (
-  <section id="portfolio" className="py-24 relative border-t border-slate-900">
+  <section className="py-24 relative border-t border-slate-900">
+    {/* INVISIBLE MARKER */}
+    <ScrollAnchor id="portfolio" />
+
     <div className="max-w-7xl mx-auto px-6 relative z-10">
       <SectionHeading dark subtitle="A showcase of our recent industrial printing projects.">
         Featured Work
       </SectionHeading>
+      {/* ... rest of portfolio content ... */}
       <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
         {PORTFOLIO.map((item, i) => (
           <Reveal key={i} delay={i * 0.1}>
@@ -409,9 +412,13 @@ const Portfolio = () => (
 );
 
 const About = () => (
-  <section id="about" className="py-32 text-white relative overflow-hidden border-t border-slate-800">
+  <section className="py-32 text-white relative overflow-hidden border-t border-slate-800">
+    {/* INVISIBLE MARKER */}
+    <ScrollAnchor id="about" />
+
     <div className="max-w-7xl mx-auto px-6 grid md:grid-cols-2 gap-16 items-center relative z-10">
-      <div className="grid grid-cols-2 gap-6 relative z-10">
+      {/* ... rest of about content ... */}
+       <div className="grid grid-cols-2 gap-6 relative z-10">
         <TeamCard 
            name="M. Sivaprasad" role="Director" tag="LEADERSHIP" 
            img="/person-blue.png" 
@@ -458,9 +465,13 @@ const About = () => (
 );
 
 const Clients = () => (
-  <section id="clients" className="py-20 relative border-y border-slate-800">
+  <section className="py-20 relative border-y border-slate-800">
+    {/* INVISIBLE MARKER */}
+    <ScrollAnchor id="clients" />
+
     <div className="max-w-7xl mx-auto px-6 relative z-10">
-      <Reveal>
+      {/* ... rest of clients content ... */}
+       <Reveal>
         <div className="text-center mb-12">
             <h3 className="text-brand-orange font-display font-bold text-xl tracking-[0.3em] uppercase mb-4 drop-shadow-[0_0_10px_rgba(249,115,22,0.5)]">Trusted By The Best</h3>
         </div>
@@ -488,87 +499,73 @@ const Clients = () => (
 const Contact = () => {
   const formRef = useRef();
   const [status, setStatus] = useState('idle');
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    setStatus('sending');
-
-    emailjs.sendForm(
-      EMAILJS_CONFIG.SERVICE_ID,
-      EMAILJS_CONFIG.TEMPLATE_ID,
-      formRef.current,
-      EMAILJS_CONFIG.PUBLIC_KEY
-    )
-    .then(() => {
-      setStatus('success');
-      formRef.current.reset();
-      setTimeout(() => setStatus('idle'), 5000);
-    }, (error) => {
-      setStatus('error');
-      console.error(error);
-      alert(`Email Failed: ${error.text}.`);
-    });
-  };
+  // ... existing submit handler ...
+  const handleSubmit = (e) => { /* ... */ };
 
   return (
-    <section id="contact" className="py-24 relative scroll-mt-32">
-      <div className="max-w-7xl mx-auto px-6 relative z-10">
-        <Reveal>
+    <section className="py-24 relative scroll-mt-32">
+       {/* INVISIBLE MARKER - Removed the ref from section, formRef is on form anyway */}
+       <ScrollAnchor id="contact" />
+       
+       <div className="max-w-7xl mx-auto px-6 relative z-10">
+         {/* ... rest of contact content ... */}
+         <Reveal>
           {/* GLASS CONTAINER */}
           <div className="rounded-[2rem] overflow-hidden shadow-2xl grid lg:grid-cols-5 border border-white/10 bg-slate-900/40 backdrop-blur-xl">
-            
-            {/* LEFT COLUMN: INFO */}
-            <div className="lg:col-span-2 bg-slate-900/60 p-12 text-white flex flex-col justify-between relative overflow-hidden border-r border-white/5">
-              <div className="absolute top-0 right-0 p-40 bg-brand-orange/10 rounded-full blur-[80px] -mr-20 -mt-20 pointer-events-none"></div>
-              <div className="relative z-10">
-                <h3 className="text-4xl font-bold mb-6 font-display text-white text-depth">LET'S PRINT.</h3>
-                <div className="space-y-8 mb-12">
-                  <div className="flex items-center gap-5">
-                    <Phone className="text-brand-orange drop-shadow-[0_0_8px_orange]" size={24} />
-                    <div>
-                      <p className="font-mono text-lg font-bold text-white tracking-wide">+91-7999406413</p>
-                      <p className="font-mono text-lg font-bold text-slate-400 tracking-wide">+91-8269897212</p>
+             {/* ... content ... */}
+             <div className="lg:col-span-2 bg-slate-900/60 p-12 text-white flex flex-col justify-between relative overflow-hidden border-r border-white/5">
+                {/* ... left column ... */}
+                  <div className="absolute top-0 right-0 p-40 bg-brand-orange/10 rounded-full blur-[80px] -mr-20 -mt-20 pointer-events-none"></div>
+                  <div className="relative z-10">
+                    <h3 className="text-4xl font-bold mb-6 font-display text-white text-depth">LET'S PRINT.</h3>
+                    <div className="space-y-8 mb-12">
+                      <div className="flex items-center gap-5">
+                        <Phone className="text-brand-orange drop-shadow-[0_0_8px_orange]" size={24} />
+                        <div>
+                          <p className="font-mono text-lg font-bold text-white tracking-wide">+91-7999406413</p>
+                          <p className="font-mono text-lg font-bold text-slate-400 tracking-wide">+91-8269897212</p>
+                        </div>
+                      </div>
+                      
+                      <div className="flex items-center gap-5">
+                        <Send className="text-brand-orange drop-shadow-[0_0_8px_orange]" size={24} />
+                        <p className="font-mono text-sm md:text-lg font-bold text-white tracking-wide text-ellipsis overflow-hidden">
+                          agpent2019@gmail.com
+                        </p>
+                      </div>
+
+                      <div className="flex items-start gap-5">
+                        <MapPin className="text-brand-orange drop-shadow-[0_0_8px_orange] mt-1 shrink-0" size={24} />
+                        <p className="font-mono text-lg font-bold text-white tracking-wide leading-relaxed">
+                          Flat A36/104, Treasure Fantasy<br/>
+                          CAT Road, Rau<br/>
+                          Indore - 453331
+                        </p>
+                      </div>
+                    </div>
+
+                    {/* Fixed Map Implementation */}
+                    <div className="w-full h-48 rounded-xl overflow-hidden border border-slate-700/50 shadow-inner relative group">
+                        <iframe 
+                          src={MAP_EMBED_URL}
+                          width="100%" 
+                          height="100%" 
+                          style={{ border: 0, filter: 'invert(90%) hue-rotate(180deg) contrast(1.2)' }} 
+                          allowFullScreen="" 
+                          loading="lazy" 
+                          className="opacity-80 group-hover:opacity-100 transition-opacity duration-500"
+                          referrerPolicy="no-referrer-when-downgrade"
+                          title="Google Maps Location"
+                        />
                     </div>
                   </div>
-                  
-                  <div className="flex items-center gap-5">
-                    <Send className="text-brand-orange drop-shadow-[0_0_8px_orange]" size={24} />
-                    <p className="font-mono text-sm md:text-lg font-bold text-white tracking-wide text-ellipsis overflow-hidden">
-                      agpent2019@gmail.com
-                    </p>
-                  </div>
+             </div>
 
-                  <div className="flex items-start gap-5">
-                    <MapPin className="text-brand-orange drop-shadow-[0_0_8px_orange] mt-1 shrink-0" size={24} />
-                    <p className="font-mono text-lg font-bold text-white tracking-wide leading-relaxed">
-                      Flat A36/104, Treasure Fantasy<br/>
-                      CAT Road, Rau<br/>
-                      Indore - 453331
-                    </p>
-                  </div>
-                </div>
-
-                {/* Fixed Map Implementation */}
-                <div className="w-full h-48 rounded-xl overflow-hidden border border-slate-700/50 shadow-inner relative group">
-                    <iframe 
-                      src={MAP_EMBED_URL}
-                      width="100%" 
-                      height="100%" 
-                      style={{ border: 0, filter: 'invert(90%) hue-rotate(180deg) contrast(1.2)' }} 
-                      allowFullScreen="" 
-                      loading="lazy" 
-                      className="opacity-80 group-hover:opacity-100 transition-opacity duration-500"
-                      referrerPolicy="no-referrer-when-downgrade"
-                      title="Google Maps Location"
-                    />
-                </div>
-              </div>
-            </div>
-
-            {/* RIGHT COLUMN: FORM */}
+             {/* RIGHT COLUMN: FORM */}
             <div className="lg:col-span-3 p-8 md:p-12">
               <form ref={formRef} onSubmit={handleSubmit} className="space-y-6">
-                <div className="grid md:grid-cols-2 gap-6">
+                 {/* ... form inputs ... */}
+                  <div className="grid md:grid-cols-2 gap-6">
                   <FormInput name="user_name" required type="text" placeholder="Your Name" />
                   <FormInput name="user_phone" required type="tel" placeholder="+91-XXXXXXXXXX" />
                 </div>
@@ -602,8 +599,8 @@ const Contact = () => {
               </form>
             </div>
           </div>
-        </Reveal>
-      </div>
+         </Reveal>
+       </div>
     </section>
   );
 };
