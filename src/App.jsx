@@ -507,8 +507,7 @@ const Contact = () => {
                   </div>
                   <div className="flex items-center gap-5">
                     <Send className="text-brand-orange drop-shadow-[0_0_8px_orange]" size={24} />
-                    {/* Updated: 'text-sm' for mobile, 'md:text-lg' for desktop */}
-                    <p className="font-mono text-sm md:text-lg font-bold text-white tracking-wide text-ellipsis overflow-hidden">agpent2019@gmail.com</p>
+                    <p className="font-mono text-lg font-bold text-white tracking-wide">agpent2019@gmail.com</p>
                   </div>
                   <div className="flex items-start gap-5">
                     <MapPin className="text-brand-orange drop-shadow-[0_0_8px_orange] mt-1 shrink-0" size={24} />
