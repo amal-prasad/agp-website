@@ -178,7 +178,7 @@ const SectionHeading = ({ children, subtitle, dark = false }) => (
 const FormInput = (props) => (
   <input 
     {...props}
-    className="w-full px-6 py-4 rounded-xl border-2 border-slate-100 bg-slate-50 focus:bg-white focus:border-brand-orange outline-none transition-all font-medium text-slate-800"
+    className="w-full px-6 py-4 rounded-xl border border-slate-700 bg-slate-800/50 focus:bg-slate-800 focus:border-brand-orange outline-none transition-all font-medium text-white placeholder-slate-500 backdrop-blur-sm"
   />
 );
 
@@ -486,12 +486,15 @@ const Contact = () => {
   };
 
   return (
-    <section id="contact" className="py-24 bg-brand-light relative">
+    <section id="contact" className="py-24 relative">
       <div className="max-w-7xl mx-auto px-6 relative z-10">
         <Reveal>
-          <div className="bg-white rounded-[2rem] overflow-hidden shadow-2xl grid lg:grid-cols-5 border border-slate-100">
-            <div className="lg:col-span-2 bg-brand-black p-12 text-white flex flex-col justify-between relative overflow-hidden">
-              <div className="absolute top-0 right-0 p-40 bg-brand-orange/20 rounded-full blur-[80px] -mr-20 -mt-20 pointer-events-none"></div>
+          {/* GLASS CONTAINER */}
+          <div className="rounded-[2rem] overflow-hidden shadow-2xl grid lg:grid-cols-5 border border-white/10 bg-slate-900/40 backdrop-blur-xl">
+            
+            {/* LEFT COLUMN: INFO (Slightly Darker Glass) */}
+            <div className="lg:col-span-2 bg-slate-900/60 p-12 text-white flex flex-col justify-between relative overflow-hidden border-r border-white/5">
+              <div className="absolute top-0 right-0 p-40 bg-brand-orange/10 rounded-full blur-[80px] -mr-20 -mt-20 pointer-events-none"></div>
               <div className="relative z-10">
                 <h3 className="text-4xl font-bold mb-6 font-display text-white text-depth">LET'S PRINT.</h3>
                 <div className="space-y-8 mb-12">
@@ -516,21 +519,23 @@ const Contact = () => {
                   </div>
                 </div>
 
-                <div className="w-full h-48 rounded-xl overflow-hidden border border-slate-700 shadow-2xl">
+                <div className="w-full h-48 rounded-xl overflow-hidden border border-slate-700/50 shadow-inner relative group">
                     <iframe 
                       src="https://maps.google.com/maps?q=Treasure+Fantasy,+CAT+Road,+Rau,+Indore&t=&z=15&ie=UTF8&iwloc=&output=embed"
                       width="100%" 
                       height="100%" 
-                      style={{ border: 0, filter: 'invert(90%) hue-rotate(180deg)' }} 
+                      style={{ border: 0, filter: 'invert(90%) hue-rotate(180deg) contrast(1.2)' }} 
                       allowFullScreen="" 
                       loading="lazy" 
+                      className="opacity-80 group-hover:opacity-100 transition-opacity duration-500"
                       referrerPolicy="no-referrer-when-downgrade">
                     </iframe>
                 </div>
               </div>
             </div>
 
-            <div className="lg:col-span-3 p-8 md:p-12 bg-white">
+            {/* RIGHT COLUMN: FORM (Transparent Background) */}
+            <div className="lg:col-span-3 p-8 md:p-12">
               <form ref={formRef} onSubmit={handleSubmit} className="space-y-6">
                 <div className="grid md:grid-cols-2 gap-6">
                   <FormInput name="user_name" required type="text" placeholder="Your Name" />
@@ -538,22 +543,32 @@ const Contact = () => {
                 </div>
                 <div className="grid md:grid-cols-2 gap-6">
                   <FormInput name="user_email" required type="email" placeholder="Email Address" />
-                  <select name="service_interest" className="w-full px-6 py-4 rounded-xl border-2 border-slate-100 bg-slate-50 focus:bg-white focus:border-brand-orange outline-none transition-all font-medium text-slate-800">
-                    <option value="General">General Inquiry</option>
-                    {SERVICES.map(s => <option key={s.title} value={s.title}>{s.title}</option>)}
-                  </select>
+                  
+                  {/* Custom Dark Select */}
+                  <div className="relative">
+                    <select name="service_interest" className="w-full px-6 py-4 rounded-xl border border-slate-700 bg-slate-800/50 focus:bg-slate-800 focus:border-brand-orange outline-none transition-all font-medium text-white appearance-none cursor-pointer">
+                      <option value="General" className="bg-slate-900 text-white">General Inquiry</option>
+                      {SERVICES.map(s => <option key={s.title} value={s.title} className="bg-slate-900 text-white">{s.title}</option>)}
+                    </select>
+                    {/* Arrow Icon overlay */}
+                    <div className="absolute right-6 top-1/2 -translate-y-1/2 pointer-events-none text-brand-orange">
+                      <svg width="12" height="8" viewBox="0 0 12 8" fill="none"><path d="M1 1.5L6 6.5L11 1.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                    </div>
+                  </div>
                 </div>
-                <textarea name="message" required rows={4} className="w-full px-6 py-4 rounded-xl border-2 border-slate-100 bg-slate-50 focus:bg-white focus:border-brand-orange outline-none transition-all font-medium text-slate-800" placeholder="Message..." />
+
+                <textarea name="message" required rows={4} className="w-full px-6 py-4 rounded-xl border border-slate-700 bg-slate-800/50 focus:bg-slate-800 focus:border-brand-orange outline-none transition-all font-medium text-white placeholder-slate-500 backdrop-blur-sm" placeholder="Message..." />
+                
                 <button 
                   type="submit"
                   disabled={status === 'sending' || status === 'success'}
-                  className={`w-full font-bold py-5 rounded-xl transition-all flex items-center justify-center gap-3 text-lg font-display uppercase tracking-wider shadow-xl border
-                    ${status === 'success' ? 'bg-green-600 text-white shadow-green-900/20 border-green-500' : 
+                  className={`w-full font-bold py-5 rounded-xl transition-all flex items-center justify-center gap-3 text-lg font-display uppercase tracking-wider shadow-[0_0_20px_rgba(0,0,0,0.3)] border
+                    ${status === 'success' ? 'bg-green-600 text-white border-green-500 shadow-green-900/20' : 
                       status === 'error' ? 'bg-red-600 text-white border-red-500' : 
-                      'bg-brand-black text-white hover:bg-slate-800 shadow-slate-900/20 border-slate-800'}`}
+                      'bg-brand-orange text-white hover:bg-orange-600 border-orange-500 shadow-[0_0_30px_rgba(249,115,22,0.4)]'}`}
                 >
                   {status === 'sending' ? <Loader2 className="animate-spin" /> : <Send size={20} />}
-                  {status === 'sending' ? 'Sending...' : status === 'success' ? 'Enquiry Sent Successfully!' : 'Send Enquiry'}
+                  {status === 'sending' ? 'Sending...' : status === 'success' ? 'Enquiry Sent!' : 'Send Enquiry'}
                 </button>
               </form>
             </div>
