@@ -192,7 +192,6 @@ const ScrollAnchor = ({ id }) => (
 // --- SECTIONS ---
 
 const Navbar = memo(() => {
-  const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
@@ -205,41 +204,24 @@ const Navbar = memo(() => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, [scrolled]);
 
-  const handleMobileNav = (e, targetId) => {
-    e.preventDefault();
-    const id = targetId.replace('#', '');
-    const element = document.getElementById(id);
-    
-    if (element) {
-      // 1. Scroll to the invisible marker
-      // Since the marker is physically above the section, 
-      // 'start' alignment places the marker at the top of viewport,
-      // revealing the section below the header perfectly.
-      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      
-      // 2. Wait for scroll to engage, then close menu
-      setTimeout(() => setIsOpen(false), 200);
-    }
-  };
-
   return (
-    <nav className="fixed w-full z-50 top-0 transition-all duration-300">
+    <nav className="hidden md:block fixed w-full z-50 top-0 transition-all duration-300">
       <div 
         className={`mx-auto flex items-center justify-between transition-all duration-500 ease-[cubic-bezier(0.4,0,0.2,1)]
           ${scrolled 
-            ? 'bg-brand-black/70 backdrop-blur-xl border-b border-x border-slate-800/80 shadow-[0_15px_40px_-10px_rgba(0,0,0,0.6)] rounded-b-2xl md:rounded-b-[2.5rem] py-4 px-5 md:py-6 md:px-10 max-w-[95%] md:max-w-[90rem]' 
-            : 'bg-transparent border-transparent py-6 px-5 md:py-10 md:px-10 max-w-full md:max-w-[95rem]'
+            ? 'bg-brand-black/70 backdrop-blur-xl border-b border-x border-slate-800/80 shadow-[0_15px_40px_-10px_rgba(0,0,0,0.6)] rounded-b-[2.5rem] py-6 px-10 max-w-[90rem]' 
+            : 'bg-transparent border-transparent py-10 px-10 max-w-[95rem]'
           }
         `}
       >
-        <div className="flex items-end gap-3 md:gap-5"> 
-          <img src="/logo-agp.png" alt="AGP Logo" className="h-8 md:h-14 w-auto object-contain bg-white/5 rounded-lg px-2 border border-white/10" />
-          <span className="text-white font-bold text-3xl md:text-5xl tracking-tighter font-display flex items-center gap-2 drop-shadow-md leading-none -mb-1 md:translate-y-1.5">
+        <div className="flex items-end gap-5"> 
+          <img src="/logo-agp.png" alt="AGP Logo" className="h-14 w-auto object-contain bg-white/5 rounded-lg px-2 border border-white/10" />
+          <span className="text-white font-bold text-5xl tracking-tighter font-display flex items-center gap-2 drop-shadow-md leading-none translate-y-1.5">
              ENTERPRISES
           </span>
         </div>
 
-        <div className="hidden md:flex items-center gap-12">
+        <div className="flex items-center gap-12">
           {NAV_LINKS.map((item) => (
             <a key={item} href={`#${item.toLowerCase()}`} className="text-slate-300 hover:text-cyan-300 transition-colors text-sm uppercase tracking-[0.2em] font-bold font-display hover:drop-shadow-[0_0_8px_rgba(34,211,238,0.8)]">
               {item}
@@ -249,42 +231,7 @@ const Navbar = memo(() => {
             Get Quote
           </a>
         </div>
-
-        <button onClick={() => setIsOpen(!isOpen)} className="md:hidden text-white p-1">
-          {isOpen ? <X size={28} /> : <Menu size={28} />}
-        </button>
       </div>
-
-      <AnimatePresence>
-        {isOpen && (
-          <motion.div 
-            initial={{ height: 0, opacity: 0 }} 
-            animate={{ height: 'auto', opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            className="md:hidden overflow-hidden bg-brand-black/95 border-b border-slate-800 backdrop-blur-xl mx-4 mt-2 rounded-2xl border border-slate-800"
-          >
-            <div className="flex flex-col p-6 gap-6 items-center text-center">
-              {NAV_LINKS.map((item) => (
-                <a 
-                  key={item} 
-                  href={`#${item.toLowerCase()}`} 
-                  onClick={(e) => handleMobileNav(e, `#${item.toLowerCase()}`)} 
-                  className="text-slate-300 text-xl font-bold font-display hover:text-brand-orange uppercase tracking-widest"
-                >
-                  {item}
-                </a>
-              ))}
-              <a 
-                href="#contact" 
-                onClick={(e) => handleMobileNav(e, "#contact")} 
-                className="w-full bg-brand-orange text-white py-3 rounded-lg font-bold uppercase tracking-widest"
-              >
-                Get Quote
-              </a>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
     </nav>
   );
 });
