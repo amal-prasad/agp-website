@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, memo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import emailjs from '@emailjs/browser';
 import { 
@@ -13,6 +13,8 @@ const EMAILJS_CONFIG = {
   TEMPLATE_ID: 'template_o1ibewd',
   PUBLIC_KEY: '0tI03IJkKlik1sdYe'
 };
+
+const MAP_EMBED_URL = "https://maps.google.com/maps?q=Treasure+Fantasy+Cat+Road+Rau+Indore&t=&z=15&ie=UTF8&iwloc=&output=embed";
 
 const NAV_LINKS = ['Services', 'Portfolio', 'About', 'Contact'];
 
@@ -62,9 +64,9 @@ const Reveal = ({ children, dir = "up", delay = 0, className = "" }) => {
   );
 };
 
-// --- OPTIMIZED BACKGROUND COMPONENTS ---
-const RotatingRig = ({ position, color, iconColor, shadowColor }) => (
-  <div className={`absolute ${position} w-48 h-48 hidden md:block`}>
+// --- OPTIMIZED BACKGROUND COMPONENTS (Memoized) ---
+const RotatingRig = memo(({ position, color, iconColor, shadowColor, className = "" }) => (
+  <div className={`absolute ${position} w-48 h-48 hidden md:block ${className}`}>
     <div className={`absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-${color} to-transparent`} />
     <div className={`absolute top-0 left-0 h-full w-[1px] bg-gradient-to-b from-${color} to-transparent`} />
     <div className="absolute top-0 left-0 -translate-x-1/2 -translate-y-1/2">
@@ -81,9 +83,9 @@ const RotatingRig = ({ position, color, iconColor, shadowColor }) => (
       </motion.div>
     </div>
   </div>
-);
+));
 
-const IndustrialBackground = () => (
+const IndustrialBackground = memo(() => (
   <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
     <div className="absolute inset-0 bg-[#050505]" />
     <div 
@@ -94,6 +96,7 @@ const IndustrialBackground = () => (
     <div className="absolute -top-20 -right-20 w-[800px] h-[800px] bg-orange-600/10 blur-[100px] rounded-full mix-blend-screen" />
     <div className="absolute -bottom-40 -left-20 w-[800px] h-[800px] bg-red-600/5 blur-[100px] rounded-full mix-blend-screen" />
 
+    {/* Top Left Rig */}
     <RotatingRig 
       position="top-20 left-20" 
       color="cyan-500" 
@@ -101,49 +104,28 @@ const IndustrialBackground = () => (
       shadowColor="rgba(34,211,238,0.6)" 
     />
     
-    {/* Using explicit style for the second one since rotation logic is slightly different in original, 
-        but for optimization, using the same component with rotated parent is cleaner or just keep specific props.
-        Here we adapt the component to handle bottom-right logic. */}
-    <div className="absolute bottom-20 right-20 w-48 h-48 hidden md:block rotate-180">
-        {/* Reusing rig logic but inverted via parent rotation */}
-        <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-orange-500 to-transparent" />
-        <div className="absolute top-0 left-0 h-full w-[1px] bg-gradient-to-b from-orange-500 to-transparent" />
-        <div className="absolute top-0 left-0 -translate-x-1/2 -translate-y-1/2">
-             <motion.div 
-               animate={{ rotate: 360 }}
-               transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-               style={{ willChange: "transform" }}
-             >
-                <Printer size={80} strokeWidth={0.5} className="text-orange-500/30 drop-shadow-[0_0_15px_rgba(249,115,22,0.6)]" />
-             </motion.div>
-        </div>
-    </div>
+    {/* Bottom Right Rig (Inverted via Rotate) */}
+    <RotatingRig 
+      position="bottom-20 right-20" 
+      color="orange-500" 
+      iconColor="text-orange-500/30" 
+      shadowColor="rgba(249,115,22,0.6)"
+      className="rotate-180"
+    />
 
     <div className="absolute inset-0 bg-[size:100px_100px] bg-grid-pattern opacity-[0.03]" />
   </div>
-);
+));
 
-// --- NEW: POLISHED GLASS LAYER (Replaces FrostAmbientLayer) ---
-const PolishedGlassLayer = () => (
+const PolishedGlassLayer = memo(() => (
   <div className="fixed inset-0 pointer-events-none z-[1] overflow-hidden">
-    {/* 1. The "Studio Light" Reflection (Top Center) */}
-    {/* This mimics a softbox light hitting smooth glass from above */}
     <div className="absolute -top-[10%] left-1/2 -translate-x-1/2 w-[70%] h-[50%] bg-white/[0.03] blur-[100px] rounded-[100%] pointer-events-none mix-blend-overlay" />
-
-    {/* 2. The "Deep Depth" Glow (Bottom) */}
-    {/* Adds a rich, premium tint behind the glass */}
     <div className="absolute -bottom-[20%] left-1/2 -translate-x-1/2 w-[80%] h-[60%] bg-cyan-500/[0.05] blur-[120px] rounded-full mix-blend-screen" />
-
-    {/* 3. The "Sheen" (Diagonal Cut) */}
-    {/* A sharp, subtle diagonal line that suggests a flat, polished surface */}
     <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/[0.02] to-transparent opacity-50" />
   </div>
-);
+));
 
-// --- HELPER CONSTANT FOR CARDS (Optional: Use this on your cards) ---
-const FROST_GLASS_STYLE = "bg-slate-900/40 backdrop-blur-xl border border-white/10 shadow-[0_0_30px_rgba(0,0,0,0.2)]";
-
-// --- REUSABLE UI COMPONENTS ---
+// --- UI COMPONENT PRIMITIVES ---
 const StaticGlowCard = ({ children, className = "" }) => (
   <div
     className={`group relative border border-slate-800 bg-slate-900/20 backdrop-blur-md overflow-hidden transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_0_30px_rgba(249,115,22,0.3)] hover:border-orange-500/30 ${className}`}
@@ -200,15 +182,19 @@ const TeamCard = ({ name, role, tag, img, colorClass, glowColor, delay = 0 }) =>
 
 // --- SECTIONS ---
 
-const Navbar = () => {
+const Navbar = memo(() => {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 20);
+    const handleScroll = () => {
+      const isScrolled = window.scrollY > 20;
+      if (scrolled !== isScrolled) setScrolled(isScrolled);
+    };
+    
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+  }, [scrolled]);
 
   return (
     <nav className="fixed w-full z-50 top-0 transition-all duration-300">
@@ -221,10 +207,7 @@ const Navbar = () => {
         `}
       >
         <div className="flex items-end gap-3 md:gap-5"> 
-          {/* Logo Image */}
           <img src="/logo-agp.png" alt="AGP Logo" className="h-8 md:h-14 w-auto object-contain bg-white/5 rounded-lg px-2 border border-white/10" />
-          
-          {/* Logo Text: Added 'translate-y-1' to nudge it down slightly */}
           <span className="text-white font-bold text-3xl md:text-5xl tracking-tighter font-display flex items-center gap-2 drop-shadow-md leading-none -mb-1 md:translate-y-1.5">
              ENTERPRISES
           </span>
@@ -269,7 +252,7 @@ const Navbar = () => {
       </AnimatePresence>
     </nav>
   );
-};
+});
 
 const Hero = () => (
   <section className="relative min-h-screen flex items-center overflow-visible pt-20">
@@ -337,7 +320,7 @@ const Services = () => (
       </SectionHeading>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {SERVICES.map((service, idx) => (
-          <Reveal dir="left" key={idx} delay={idx * 0.05}>
+          <Reveal dir="left" key={service.title} delay={idx * 0.05}>
             <StaticGlowCard className="rounded-2xl p-8 h-full">
                <div className="relative z-10">
                   <div className="h-14 w-14 bg-slate-800 text-slate-400 rounded-xl flex items-center justify-center mb-6 border border-slate-700 group-hover:bg-cyan-400 group-hover:text-brand-black group-hover:border-cyan-300 transition-all shadow-lg">
@@ -481,19 +464,19 @@ const Contact = () => {
       setTimeout(() => setStatus('idle'), 5000);
     }, (error) => {
       setStatus('error');
+      console.error(error);
       alert(`Email Failed: ${error.text}.`);
     });
   };
 
   return (
-    // UPDATED: Added 'scroll-mt-32' to prevent navbar overlap
     <section id="contact" className="py-24 relative scroll-mt-32">
       <div className="max-w-7xl mx-auto px-6 relative z-10">
         <Reveal>
           {/* GLASS CONTAINER */}
           <div className="rounded-[2rem] overflow-hidden shadow-2xl grid lg:grid-cols-5 border border-white/10 bg-slate-900/40 backdrop-blur-xl">
             
-            {/* LEFT COLUMN: INFO (Slightly Darker Glass) */}
+            {/* LEFT COLUMN: INFO */}
             <div className="lg:col-span-2 bg-slate-900/60 p-12 text-white flex flex-col justify-between relative overflow-hidden border-r border-white/5">
               <div className="absolute top-0 right-0 p-40 bg-brand-orange/10 rounded-full blur-[80px] -mr-20 -mt-20 pointer-events-none"></div>
               <div className="relative z-10">
@@ -507,7 +490,6 @@ const Contact = () => {
                     </div>
                   </div>
                   
-                  {/* UPDATED: Email Font Size (text-sm for mobile, md:text-lg for desktop) */}
                   <div className="flex items-center gap-5">
                     <Send className="text-brand-orange drop-shadow-[0_0_8px_orange]" size={24} />
                     <p className="font-mono text-sm md:text-lg font-bold text-white tracking-wide text-ellipsis overflow-hidden">
@@ -525,22 +507,24 @@ const Contact = () => {
                   </div>
                 </div>
 
+                {/* Fixed Map Implementation */}
                 <div className="w-full h-48 rounded-xl overflow-hidden border border-slate-700/50 shadow-inner relative group">
                     <iframe 
-                      src="https://maps.google.com/maps?q=Treasure+Fantasy,+CAT+Road,+Rau,+Indore&t=&z=15&ie=UTF8&iwloc=&output=embed"
+                      src={MAP_EMBED_URL}
                       width="100%" 
                       height="100%" 
                       style={{ border: 0, filter: 'invert(90%) hue-rotate(180deg) contrast(1.2)' }} 
                       allowFullScreen="" 
                       loading="lazy" 
                       className="opacity-80 group-hover:opacity-100 transition-opacity duration-500"
-                      referrerPolicy="no-referrer-when-downgrade">
-                    </iframe>
+                      referrerPolicy="no-referrer-when-downgrade"
+                      title="Google Maps Location"
+                    />
                 </div>
               </div>
             </div>
 
-            {/* RIGHT COLUMN: FORM (Transparent Background) */}
+            {/* RIGHT COLUMN: FORM */}
             <div className="lg:col-span-3 p-8 md:p-12">
               <form ref={formRef} onSubmit={handleSubmit} className="space-y-6">
                 <div className="grid md:grid-cols-2 gap-6">
@@ -550,13 +534,11 @@ const Contact = () => {
                 <div className="grid md:grid-cols-2 gap-6">
                   <FormInput name="user_email" required type="email" placeholder="Email Address" />
                   
-                  {/* Custom Dark Select */}
                   <div className="relative">
                     <select name="service_interest" className="w-full px-6 py-4 rounded-xl border border-slate-700 bg-slate-800/50 focus:bg-slate-800 focus:border-brand-orange outline-none transition-all font-medium text-white appearance-none cursor-pointer">
                       <option value="General" className="bg-slate-900 text-white">General Inquiry</option>
                       {SERVICES.map(s => <option key={s.title} value={s.title} className="bg-slate-900 text-white">{s.title}</option>)}
                     </select>
-                    {/* Arrow Icon overlay */}
                     <div className="absolute right-6 top-1/2 -translate-y-1/2 pointer-events-none text-brand-orange">
                       <svg width="12" height="8" viewBox="0 0 12 8" fill="none"><path d="M1 1.5L6 6.5L11 1.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
                     </div>
@@ -584,11 +566,12 @@ const Contact = () => {
     </section>
   );
 };
+
 const Footer = () => (
   <footer className="bg-brand-black text-slate-500 py-12 border-t border-slate-900 text-sm relative z-10">
     <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-6">
       <div className="flex items-center gap-3">
-         <img src="/logo-agp.png" className="h-6 grayscale opacity-50 hover:grayscale-0 transition-all" />
+         <img src="/logo-agp.png" alt="Footer Logo" className="h-6 grayscale opacity-50 hover:grayscale-0 transition-all" />
          <p>© {new Date().getFullYear()} AGP Enterprises. Precision Printing Solutions.</p>
       </div>
     </div>
