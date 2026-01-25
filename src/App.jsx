@@ -113,9 +113,9 @@ const IndustrialBackground = memo(() => (
       
       {/* 1. The Texture Layer: Blurred & Low Opacity */}
       <div 
-        className="absolute inset-0 opacity-75 blur-[3px]"
+        className="absolute inset-0 opacity-90 blur-[3px]"
         style={{ 
-          backgroundImage: `url('/pexels-arina-krasnikova-7002683.jpg')`,
+          backgroundImage: `url('/pexels-834934396-20818871.jpg')`,
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           backgroundRepeat: 'no-repeat',
