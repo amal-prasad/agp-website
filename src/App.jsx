@@ -126,11 +126,11 @@ const IndustrialBackground = memo(() => (
 
       {/* 2. THE DARKENING LAYER (CONTROLS VISIBILITY) 
           -------------------------------------------------------
-          CONTROL KNOB: Change 'bg-black/35' to adjust darkness.
-          - bg-black/10 = 10% Darkness (Subtle)
-          - bg-black/50 = 50% Darkness (Very Dark)
+          CONTROL KNOB: Change opacity to adjust darkness.
+          - bg-black/35 = 35% Darkness (Previous)
+          - bg-black/50 = 50% Darkness (Current - Darker for mobile)
       */}
-      <div className="absolute inset-0 bg-black/35" />
+      <div className="absolute inset-0 bg-black/50" />
 
     </div>
 
