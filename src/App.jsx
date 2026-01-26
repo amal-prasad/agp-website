@@ -64,10 +64,8 @@ const useTheme = () => {
       const isDark = theme === 'dark' || (theme === 'system' && darkQuery.matches);
       if (isDark) {
         element.classList.add('dark');
-        element.style.colorScheme = 'dark';
       } else {
         element.classList.remove('dark');
-        element.style.colorScheme = 'light';
       }
     };
 
@@ -113,7 +111,7 @@ const IndustrialBackground = memo(() => (
 
       {/* 1. The Texture Layer */}
       <div
-        className="absolute inset-0 opacity-90 blur-[3px]"
+        className="absolute inset-0 opacity-90"
         style={{
           backgroundImage: `url('/pastel_1.png')`,
           backgroundSize: 'cover',
@@ -126,16 +124,15 @@ const IndustrialBackground = memo(() => (
 
       {/* 2. THE DARKENING LAYER (CONTROLS VISIBILITY) 
           -------------------------------------------------------
-          CONTROL KNOB: Change opacity to adjust darkness.
-          - bg-black/35 = 35% Darkness (Previous)
-          - bg-black/50 = 50% Darkness (Current - Darker for mobile)
+          Responsive opacity:
+          - Mobile: bg-black/50 (50% darkness)
+          - Desktop (md+): bg-black/25 (25% darkness)
       */}
-      <div className="absolute inset-0 bg-black/50" />
+      <div className="absolute inset-0 bg-black/40" />
 
     </div>
 
-    {/* Warm Tint (Retained) */}
-    <div className="absolute inset-0 bg-orange-500/[0.01] dark:hidden pointer-events-none mix-blend-multiply" />
+
 
     {/* --- DARK MODE LAYERS (UNCHANGED) --- */}
     <div className="hidden dark:block">
