@@ -238,21 +238,21 @@ const SectionHeading = memo(({ children, subtitle }) => (
 const FormInput = memo((props) => (
   <input
     {...props}
-    className="w-full px-6 py-4 rounded-xl border border-slate-300 dark:border-slate-700 bg-white/80 dark:bg-slate-800/50 focus:bg-white dark:focus:bg-slate-800 focus:border-orange-500 outline-none transition-all font-medium text-black dark:text-white placeholder-slate-600 dark:placeholder-slate-500 backdrop-blur-sm shadow-sm focus:shadow-md"
+    className="w-full px-6 py-4 rounded-xl border border-white/20 dark:border-slate-700 bg-black/40 dark:bg-slate-800/50 focus:bg-black/50 dark:focus:bg-slate-800 focus:border-orange-500 outline-none transition-all font-medium text-white dark:text-white placeholder-slate-400 dark:placeholder-slate-500 backdrop-blur-md shadow-sm focus:shadow-md"
   />
 ));
 
 const TeamCard = memo(({ name, role, tag, img, colorClass, glowColor, delay = 0 }) => (
   <Reveal dir="left" delay={delay}>
-    <div className="relative bg-[#fafafa] dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-xl dark:shadow-2xl group hover:border-orange-500/30 transition-all duration-300 mt-0 hover:-translate-y-2 hover:shadow-2xl dark:hover:shadow-[0_0_30px_rgba(249,115,22,0.3)]">
-      <div className="aspect-[3/4] relative overflow-hidden rounded-t-2xl bg-white dark:bg-slate-900/50">
+    <div className="relative bg-black/40 dark:bg-slate-800 backdrop-blur-xl rounded-2xl border border-white/20 dark:border-slate-700 shadow-xl dark:shadow-2xl group hover:border-orange-500/30 transition-all duration-300 mt-0 hover:-translate-y-2 hover:shadow-2xl dark:hover:shadow-[0_0_30px_rgba(249,115,22,0.3)]">
+      <div className="aspect-[3/4] relative overflow-hidden rounded-t-2xl bg-black/20 dark:bg-slate-900/50">
         <div className={`absolute bottom-0 left-0 w-full h-[80%] bg-gradient-to-t ${glowColor} blur-[50px] opacity-40 dark:opacity-60 group-hover:opacity-100 transition-all duration-500 z-0`} />
         <img src={img} loading="lazy" decoding="async" alt={role} className="absolute bottom-0 left-0 w-full h-[105%] object-contain object-bottom drop-shadow-2xl z-0 scale-100 group-hover:scale-105 transition-transform duration-500 origin-bottom" />
       </div>
-      <div className="p-4 bg-white dark:bg-slate-900 border-t border-slate-100 dark:border-slate-800 relative z-10 rounded-b-2xl transition-colors">
+      <div className="p-4 bg-black/30 dark:bg-slate-900 backdrop-blur-md border-t border-white/10 dark:border-slate-800 relative z-10 rounded-b-2xl transition-colors">
         {/* LEVITATION: Dark mode subtle lift */}
-        <h4 className="text-black dark:text-white font-display text-xl font-bold uppercase mb-1 drop-shadow-[0_3px_2px_rgba(0,0,0,0.3)] dark:drop-shadow-[0_4px_10px_rgba(255,255,255,0.2)]">{name}</h4>
-        <p className="font-bold text-slate-700 dark:text-slate-300 font-display text-sm uppercase">{role}</p>
+        <h4 className="text-white dark:text-white font-display text-xl font-bold uppercase mb-1 drop-shadow-[0_3px_2px_rgba(0,0,0,0.3)] dark:drop-shadow-[0_4px_10px_rgba(255,255,255,0.2)]">{name}</h4>
+        <p className="font-bold text-slate-300 dark:text-slate-300 font-display text-sm uppercase">{role}</p>
         <p className={`text-xs ${colorClass} tracking-widest font-bold mt-1`}>{tag}</p>
       </div>
     </div>
@@ -490,7 +490,7 @@ const Portfolio = () => (
       <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
         {PORTFOLIO.map((item, i) => (
           <Reveal key={i} delay={i * 0.1}>
-            <div className="group relative aspect-[4/5] overflow-hidden rounded-2xl bg-[#fafafa] dark:bg-slate-800 border border-slate-200 dark:border-slate-700 transition-all duration-300 hover:-translate-y-2 shadow-sm hover:shadow-xl dark:hover:shadow-[0_0_30px_rgba(249,115,22,0.3)] hover:border-orange-500/30 hover:scale-[1.02]">
+            <div className="group relative aspect-[4/5] overflow-hidden rounded-2xl bg-black/40 dark:bg-slate-800 backdrop-blur-xl border border-white/20 dark:border-slate-700 transition-all duration-300 hover:-translate-y-2 shadow-sm hover:shadow-xl dark:hover:shadow-[0_0_30px_rgba(249,115,22,0.3)] hover:border-orange-500/30 hover:scale-[1.02]">
               <div className={`absolute inset-0 ${item.color} opacity-10 dark:opacity-20 group-hover:opacity-20 dark:group-hover:opacity-30 transition-opacity`} />
               <div className="absolute inset-0 flex items-center justify-center">
                 <ImageIcon size={48} className="text-slate-400 dark:text-slate-600 opacity-50" />
@@ -498,7 +498,7 @@ const Portfolio = () => (
               <div className="absolute inset-0 bg-gradient-to-t from-black/5 via-transparent to-transparent dark:from-black dark:opacity-90" />
               <div className="absolute bottom-0 left-0 p-6 w-full">
                 <p className="text-xs font-bold text-[#E8D99A] dark:text-orange-500 uppercase tracking-widest mb-1">{item.category}</p>
-                <h3 className="text-xl font-bold text-slate-800 dark:text-white font-display group-hover:text-[#FFEBA7] dark:group-hover:text-cyan-300 transition-colors">{item.title}</h3>
+                <h3 className="text-xl font-bold text-white dark:text-white font-display group-hover:text-[#FFEBA7] dark:group-hover:text-cyan-300 transition-colors">{item.title}</h3>
               </div>
             </div>
           </Reveal>
@@ -652,32 +652,32 @@ const Contact = () => {
 
       <div className="max-w-7xl mx-auto px-6 relative z-10">
         <Reveal>
-          <div className="rounded-[2rem] overflow-hidden shadow-2xl grid lg:grid-cols-5 border border-slate-200 dark:border-white/10 bg-white/95 dark:bg-slate-900/40 backdrop-blur-xl transition-colors">
-            <div className="lg:col-span-2 bg-slate-50 dark:bg-slate-900/60 p-12 text-slate-900 dark:text-white flex flex-col justify-between relative overflow-hidden border-r border-slate-200 dark:border-white/5 transition-colors">
+          <div className="rounded-[2rem] overflow-hidden shadow-2xl grid lg:grid-cols-5 border border-white/20 dark:border-white/10 bg-black/60 dark:bg-slate-900/40 backdrop-blur-xl transition-colors">
+            <div className="lg:col-span-2 bg-black/40 dark:bg-slate-900/60 p-12 text-white dark:text-white flex flex-col justify-between relative overflow-hidden border-r border-white/10 dark:border-white/5 transition-colors">
               <div className="absolute top-0 right-0 p-40 bg-orange-500/10 rounded-full blur-[80px] -mr-20 -mt-20 pointer-events-none"></div>
               <div className="relative z-10">
                 {/* MODIFICATION: Levitation shadow added here */}
-                <h3 className="text-4xl font-bold mb-6 font-display text-black dark:text-white transition-colors drop-shadow-[0_5px_5px_rgba(0,0,0,0.25)]">LET'S PRINT.</h3>
+                <h3 className="text-4xl font-bold mb-6 font-display text-white dark:text-white transition-colors drop-shadow-[0_5px_5px_rgba(0,0,0,0.25)]">LET'S PRINT.</h3>
                 <div className="space-y-8 mb-12">
                   {/* ... (Contact Details remain largely the same, they benefit from high contrast) ... */}
                   <div className="flex items-center gap-5">
                     <Phone className="text-orange-600 dark:text-orange-500 drop-shadow-sm dark:drop-shadow-[0_0_8px_orange]" size={24} />
                     <div>
-                      <p className="font-mono text-lg font-bold text-slate-900 dark:text-white tracking-wide">+91-7999406413</p>
-                      <p className="font-mono text-lg font-bold text-slate-600 dark:text-slate-400 tracking-wide">+91-8269897212</p>
+                      <p className="font-mono text-lg font-bold text-white dark:text-white tracking-wide">+91-7999406413</p>
+                      <p className="font-mono text-lg font-bold text-slate-300 dark:text-slate-400 tracking-wide">+91-8269897212</p>
                     </div>
                   </div>
 
                   <div className="flex items-center gap-5">
                     <Send className="text-orange-600 dark:text-orange-500 drop-shadow-sm dark:drop-shadow-[0_0_8px_orange]" size={24} />
-                    <p className="font-mono text-sm md:text-lg font-bold text-slate-900 dark:text-white tracking-wide text-ellipsis overflow-hidden">
+                    <p className="font-mono text-sm md:text-lg font-bold text-white dark:text-white tracking-wide text-ellipsis overflow-hidden">
                       agpent2019@gmail.com
                     </p>
                   </div>
 
                   <div className="flex items-start gap-5">
                     <MapPin className="text-orange-600 dark:text-orange-500 drop-shadow-sm dark:drop-shadow-[0_0_8px_orange] mt-1 shrink-0" size={24} />
-                    <p className="font-mono text-lg font-bold text-slate-900 dark:text-white tracking-wide leading-relaxed">
+                    <p className="font-mono text-lg font-bold text-white dark:text-white tracking-wide leading-relaxed">
                       Flat A36/104, Treasure Fantasy<br />
                       CAT Road, Rau<br />
                       Indore - 453331
@@ -685,7 +685,7 @@ const Contact = () => {
                   </div>
                 </div>
 
-                <div className="w-full h-48 rounded-xl overflow-hidden border border-slate-300 dark:border-slate-700/50 shadow-inner relative group">
+                <div className="w-full h-48 rounded-xl overflow-hidden border border-white/20 dark:border-slate-700/50 shadow-inner relative group">
                   <iframe
                     src={MAP_EMBED_URL}
                     width="100%"
@@ -712,9 +712,9 @@ const Contact = () => {
                   <FormInput name="user_email" required type="email" placeholder="Email Address" />
 
                   <div className="relative">
-                    <select name="service_interest" className="w-full px-6 py-4 rounded-xl border border-slate-300 dark:border-slate-700 bg-white/80 dark:bg-slate-800/50 focus:bg-white dark:focus:bg-slate-800 focus:border-orange-500 outline-none transition-all font-medium text-black dark:text-white appearance-none cursor-pointer shadow-sm">
-                      <option value="General" className="bg-white dark:bg-slate-900 text-black dark:text-white">General Inquiry</option>
-                      {SERVICES.map(s => <option key={s.title} value={s.title} className="bg-white dark:bg-slate-900 text-black dark:text-white">{s.title}</option>)}
+                    <select name="service_interest" className="w-full px-6 py-4 rounded-xl border border-white/20 dark:border-slate-700 bg-black/40 dark:bg-slate-800/50 focus:bg-black/50 dark:focus:bg-slate-800 focus:border-orange-500 outline-none transition-all font-medium text-white dark:text-white appearance-none cursor-pointer shadow-sm backdrop-blur-md">
+                      <option value="General" className="bg-slate-900 dark:bg-slate-900 text-white dark:text-white">General Inquiry</option>
+                      {SERVICES.map(s => <option key={s.title} value={s.title} className="bg-slate-900 dark:bg-slate-900 text-white dark:text-white">{s.title}</option>)}
                     </select>
                     <div className="absolute right-6 top-1/2 -translate-y-1/2 pointer-events-none text-orange-500">
                       <svg width="12" height="8" viewBox="0 0 12 8" fill="none"><path d="M1 1.5L6 6.5L11 1.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg>
@@ -722,7 +722,7 @@ const Contact = () => {
                   </div>
                 </div>
 
-                <textarea name="message" required rows={4} className="w-full px-6 py-4 rounded-xl border border-slate-300 dark:border-slate-700 bg-white/80 dark:bg-slate-800/50 focus:bg-white dark:focus:bg-slate-800 focus:border-orange-500 outline-none transition-all font-medium text-black dark:text-white placeholder-slate-600 dark:placeholder-slate-500 backdrop-blur-sm shadow-sm" placeholder="Message..." />
+                <textarea name="message" required rows={4} className="w-full px-6 py-4 rounded-xl border border-white/20 dark:border-slate-700 bg-black/40 dark:bg-slate-800/50 focus:bg-black/50 dark:focus:bg-slate-800 focus:border-orange-500 outline-none transition-all font-medium text-white dark:text-white placeholder-slate-400 dark:placeholder-slate-500 backdrop-blur-md shadow-sm" placeholder="Message..." />
 
                 <button
                   type="submit"
@@ -744,7 +744,7 @@ const Contact = () => {
   );
 };
 const Footer = memo(() => (
-  <footer className="bg-[#F4EDE4]/90 dark:bg-black text-slate-900 dark:text-slate-500 py-12 border-t border-slate-200 dark:border-slate-900 text-sm relative z-10 transition-colors backdrop-blur-sm">
+  <footer className="bg-black/60 dark:bg-black text-slate-300 dark:text-slate-500 py-12 border-t border-white/10 dark:border-slate-900 text-sm relative z-10 transition-colors backdrop-blur-xl">
     <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-6">
       <div className="flex items-center gap-3">
         <img src="/logo.png" alt="Footer Logo" className="h-6 grayscale opacity-80 hover:grayscale-0 transition-all" />
