@@ -375,7 +375,9 @@ const Hero = () => (
   </section>
 );
 const Services = () => (
-  <section className="py-24 relative border-t border-[#F4EDE4]/20 dark:border-slate-800 transition-colors">
+  // REMOVED: border-t border-[#F4EDE4]/20 dark:border-slate-800
+  // RATIONALE: Eliminates the hard visual stop, allowing the Hero to flow organically into Services.
+  <section className="py-24 relative transition-colors">
     <ScrollAnchor id="services" />
     <div className="max-w-7xl mx-auto px-6 relative z-10">
       <SectionHeading subtitle="Comprehensive printing solutions tailored for businesses of all scales.">
@@ -391,7 +393,6 @@ const Services = () => (
                   </div>
                   <h3 className="text-xl font-bold text-[#3A2F26] dark:text-white mb-3 font-display uppercase tracking-wide group-hover:text-orange-600 dark:group-hover:text-cyan-300 transition-colors drop-shadow-[0_3px_2px_rgba(0,0,0,0.3)] dark:drop-shadow-[0_0_10px_rgba(255,255,255,0.2)]">{service.title}</h3>
                   
-                  {/* MODIFICATION: Shadow increased to [0_5px_5px_rgba(0,0,0,0.5)] */}
                   <p className="text-[#E2E8F0] dark:text-slate-400 text-sm leading-relaxed 
                     font-medium dark:font-normal 
                     group-hover:text-black dark:group-hover:text-slate-300 [text-shadow:0_5px_5px_rgba(0,0,0,0.5)] dark:[text-shadow:none]">
@@ -470,17 +471,24 @@ const About = () => (
               { title: "Strict Deadlines", desc: "We respect your time. Deliveries on schedule, always." },
               { title: "End-to-End", desc: "From design conceptualization to final finishing." }
             ].map((item, i) => (
-              <div key={i} className="flex gap-5 group hover:translate-x-2 transition-transform duration-300 p-4 rounded-xl bg-white/50 hover:bg-white dark:hover:bg-slate-800/30 border border-transparent hover:border-slate-200 dark:hover:border-white/5 backdrop-blur-sm shadow-sm dark:shadow-none">
+              <div key={i} className="flex gap-5 group hover:translate-x-2 transition-transform duration-300 p-6 rounded-xl 
+                bg-white/80 dark:bg-slate-800/40 
+                hover:bg-white dark:hover:bg-slate-800/60 
+                border border-transparent hover:border-slate-200 dark:hover:border-white/5 
+                backdrop-blur-sm shadow-sm dark:shadow-none"
+              >
                 <div className="mt-1 min-w-[32px] h-[32px] rounded-lg bg-slate-100 dark:bg-slate-800 flex items-center justify-center border border-slate-200 dark:border-slate-700 text-orange-500 shadow-sm dark:shadow-[0_0_15px_rgba(249,115,22,0.3)] group-hover:shadow-[0_0_25px_rgba(249,115,22,0.6)] transition-all">
                     <Star size={18} fill="currentColor" />
                 </div>
                 <div>
-                  <h4 className="text-2xl font-bold mb-2 text-[#3A2F26] dark:text-white font-display uppercase group-hover:text-orange-600 dark:group-hover:text-cyan-300 transition-colors drop-shadow-[0_2px_2px_rgba(0,0,0,0.3)] dark:drop-shadow-[0_0_10px_rgba(255,255,255,0.2)]">{item.title}</h4>
+                  <h4 className="text-xl md:text-2xl font-bold mb-2 text-[#3A2F26] dark:text-white font-display uppercase group-hover:text-orange-600 dark:group-hover:text-cyan-300 transition-colors drop-shadow-[0_2px_2px_rgba(0,0,0,0.3)] dark:drop-shadow-[0_0_10px_rgba(255,255,255,0.2)]">
+                    {item.title}
+                  </h4>
                   
-                  {/* MODIFICATION: Color changed to #E2E8F0 */}
-                  <p className="text-[#E2E8F0] dark:text-slate-400 leading-relaxed text-lg 
+                  {/* FIX: Changed text color logic for better contrast */}
+                  <p className="text-slate-600 dark:text-slate-400 leading-relaxed text-base md:text-lg 
                     font-medium dark:font-normal 
-                    group-hover:text-black dark:group-hover:text-slate-200 [text-shadow:0_0_15px_rgba(0,0,0,0.3)] dark:[text-shadow:none]">
+                    group-hover:text-black dark:group-hover:text-slate-200">
                     {item.desc}
                   </p>
                 </div>
