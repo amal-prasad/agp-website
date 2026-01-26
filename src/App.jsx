@@ -126,11 +126,11 @@ const IndustrialBackground = memo(() => (
 
       {/* 2. THE DARKENING LAYER (CONTROLS VISIBILITY) 
           -------------------------------------------------------
-          CONTROL KNOB: Change 'bg-black/20' to adjust darkness.
+          CONTROL KNOB: Change 'bg-black/35' to adjust darkness.
           - bg-black/10 = 10% Darkness (Subtle)
           - bg-black/50 = 50% Darkness (Very Dark)
       */}
-      <div className="absolute inset-0 bg-black/20" />
+      <div className="absolute inset-0 bg-black/35" />
 
     </div>
 
@@ -198,22 +198,22 @@ const ThemeToggle = ({ theme, setTheme, isVertical = false }) => {
 
 const StaticGlowCard = memo(({ children, className = "" }) => (
   <div className={`group relative border 
-    border-slate-300/80 dark:border-slate-800 
-    bg-white/40 dark:bg-slate-900/20 
+    border-white/30 dark:border-slate-800 
+    bg-black/10 dark:bg-slate-900/20 
     backdrop-blur-xl 
     overflow-hidden transition-all duration-300 
     hover:-translate-y-2 
-    shadow-[0_8px_32px_rgba(0,0,0,0.12)] hover:shadow-[0_16px_48px_rgba(0,0,0,0.18)] 
+    shadow-[0_8px_32px_rgba(0,0,0,0.15)] hover:shadow-[0_16px_48px_rgba(0,0,0,0.25)] 
     dark:shadow-[0_0_30px_rgba(249,115,22,0.15)] dark:hover:shadow-[0_0_30px_rgba(249,115,22,0.3)] 
-    hover:border-cyan-500/40 dark:hover:border-orange-500/30 ${className}`}
+    hover:border-white/50 dark:hover:border-orange-500/30 ${className}`}
   >
     {/* Glass gradient overlay for light mode */}
-    <div className="absolute inset-0 bg-gradient-to-br from-white/60 via-white/30 to-transparent dark:opacity-0 pointer-events-none" />
+    <div className="absolute inset-0 bg-gradient-to-br from-white/30 via-white/10 to-transparent dark:opacity-0 pointer-events-none" />
     {/* Hover glow effect */}
     <div className="pointer-events-none absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 ease-in-out"
-      style={{ background: `radial-gradient(circle at 50% 0%, rgba(34, 211, 238, 0.2) 20%, rgba(34, 211, 238, 0.08) 50%, transparent 80%)` }}
+      style={{ background: `radial-gradient(circle at 50% 0%, rgba(255, 255, 255, 0.15) 20%, rgba(255, 255, 255, 0.05) 50%, transparent 80%)` }}
     />
-    <div className="absolute inset-0 border border-cyan-500/0 group-hover:border-cyan-500/30 rounded-xl transition-colors duration-500 pointer-events-none" />
+    <div className="absolute inset-0 border border-white/0 group-hover:border-white/20 rounded-xl transition-colors duration-500 pointer-events-none" />
     <div className="relative h-full z-10">{children}</div>
   </div>
 ));
@@ -423,10 +423,10 @@ const Hero = () => (
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%] rounded-full -z-10 pointer-events-none"
             style={{ background: 'radial-gradient(circle, rgba(249,115,22,0.1) 0%, rgba(0,0,0,0) 70%)' }}>
           </div>
-          <div className="absolute inset-0 bg-gradient-to-br from-white to-slate-50 dark:from-slate-900 dark:to-black rounded-3xl border border-slate-200 dark:border-slate-700/50 p-1 shadow-2xl dark:shadow-[0_0_100px_-20px_rgba(249,115,22,0.4)] backdrop-blur-sm transition-colors">
-            <div className="w-full h-full bg-slate-50 dark:bg-slate-900/90 rounded-2xl flex flex-col items-center justify-center text-slate-600 overflow-hidden relative transition-colors">
-              <Printer size={140} strokeWidth={0.5} className="mb-4 text-slate-800 dark:text-white drop-shadow-xl dark:drop-shadow-[0_0_20px_rgba(255,255,255,0.4)] relative z-10 transition-colors" />
-              <p className="uppercase tracking-[0.5em] text-sm text-orange-600 dark:text-orange-500 font-bold relative z-10 drop-shadow-sm dark:drop-shadow-[0_0_10px_orange]">High Fidelity Output</p>
+          <div className="absolute inset-0 bg-black/40 rounded-3xl border border-white/30 p-1 shadow-[0_0_40px_rgba(249,115,22,0.2)] dark:shadow-[0_0_100px_-20px_rgba(249,115,22,0.4)] backdrop-blur-xl transition-colors">
+            <div className="w-full h-full bg-black/30 rounded-2xl flex flex-col items-center justify-center text-slate-600 overflow-hidden relative transition-colors backdrop-blur-md border border-white/10">
+              <Printer size={140} strokeWidth={0.5} className="mb-4 text-white/80 drop-shadow-xl dark:drop-shadow-[0_0_20px_rgba(255,255,255,0.4)] relative z-10 transition-colors" />
+              <p className="uppercase tracking-[0.5em] text-sm text-orange-500 font-bold relative z-10 drop-shadow-[0_0_10px_rgba(249,115,22,0.5)]">High Fidelity Output</p>
             </div>
           </div>
           <motion.div
@@ -587,18 +587,19 @@ const Clients = () => (
         {CLIENTS.map((client, i) => (
           <Reveal key={i} delay={i * 0.1}>
             <div className="flex flex-col items-center justify-center gap-4 group cursor-default p-6 
-                bg-black/70 hover:bg-black/90 dark:bg-black/[0.85] dark:hover:bg-black 
+                bg-black/70 hover:bg-black/80 
                 rounded-2xl transition-all duration-300 
-                border border-white/10 hover:border-orange-500/50 
-                backdrop-blur-xl shadow-lg hover:shadow-2xl 
+                border border-white/30 hover:border-orange-500/60 
+                backdrop-blur-xl 
+                shadow-[0_0_20px_rgba(249,115,22,0.15)] hover:shadow-[0_0_35px_rgba(249,115,22,0.4)] 
                 hover:-translate-y-2 hover:scale-105"
             >
               <div className="w-20 h-20 rounded-2xl 
-                    bg-white/5 border border-white/10 
+                    bg-white/5 border border-white/20 
                     flex items-center justify-center 
                     text-slate-300 group-hover:text-white 
                     group-hover:bg-orange-600 group-hover:border-orange-500 
-                    group-hover:shadow-[0_0_25px_rgba(249,115,22,0.4)] 
+                    group-hover:shadow-[0_0_25px_rgba(249,115,22,0.5)] 
                     transition-all duration-300"
               >
                 {client.icon}
