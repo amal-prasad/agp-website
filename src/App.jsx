@@ -156,28 +156,30 @@ const PolishedGlassLayer = memo(() => (
 ));
 
 // --- UI COMPONENTS ---
-const ThemeToggle = ({ theme, setTheme, isMobile = false }) => {
+const ThemeToggle = ({ theme, setTheme, isVertical = false }) => {
   const icons = [
-    { mode: 'light', icon: <Sun size={isMobile ? 18 : 14} />, activeColor: 'text-amber-500' },
-    { mode: 'system', icon: <Monitor size={isMobile ? 18 : 14} />, activeColor: 'text-cyan-400' },
-    { mode: 'dark', icon: <Moon size={isMobile ? 18 : 14} />, activeColor: 'text-blue-400' }
+    { mode: 'light', icon: <Sun size={16} />, activeColor: 'text-amber-500' },
+    { mode: 'system', icon: <Monitor size={16} />, activeColor: 'text-cyan-400' },
+    { mode: 'dark', icon: <Moon size={16} />, activeColor: 'text-blue-400' }
   ];
   const currentIndex = icons.findIndex(i => i.mode === theme);
 
   return (
-    <div className={`relative flex items-center gap-0.5 p-1 rounded-full 
-      bg-black/20 dark:bg-white/10 backdrop-blur-md 
+    <div className={`relative flex ${isVertical ? 'flex-col' : ''} items-center gap-0.5 p-1 
+      ${isVertical ? 'rounded-2xl' : 'rounded-full'}
+      bg-black/30 dark:bg-white/10 backdrop-blur-md 
       border border-white/20 dark:border-white/10 
-      shadow-lg ${isMobile ? 'scale-110' : ''}`}
+      shadow-lg`}
     >
       {/* Animated pill indicator */}
       <motion.div
         layout
         transition={{ type: "spring", stiffness: 400, damping: 25 }}
-        className="absolute h-[calc(100%-6px)] rounded-full bg-white/90 dark:bg-slate-700 shadow-md z-0"
-        style={{
-          width: isMobile ? 32 : 26,
-          left: `calc(${currentIndex * (isMobile ? 34 : 28)}px + 3px)`
+        className={`absolute ${isVertical ? 'w-[calc(100%-6px)] h-7' : 'h-[calc(100%-6px)] w-6'} rounded-full bg-white/90 dark:bg-slate-700 shadow-md z-0`}
+        style={isVertical ? {
+          top: `calc(${currentIndex * 30}px + 3px)`
+        } : {
+          left: `calc(${currentIndex * 28}px + 3px)`
         }}
       />
       {icons.map(({ mode, icon, activeColor }) => (
@@ -219,11 +221,11 @@ const StaticGlowCard = memo(({ children, className = "" }) => (
 const SectionHeading = memo(({ children, subtitle }) => (
   <Reveal>
     <div className="mb-12 md:mb-16 relative z-10">
-      <h2 className="text-4xl md:text-6xl font-bold mb-4 font-display uppercase tracking-wide text-cyan-700 dark:text-white drop-shadow-[0_5px_5px_rgba(0,0,0,0.3)] dark:drop-shadow-[0_4px_15px_rgba(34,211,238,0.5)] transition-all">
+      <h2 className="text-4xl md:text-6xl font-bold mb-4 font-display uppercase tracking-wide text-[#FFEBA7] dark:text-white drop-shadow-[0_5px_5px_rgba(0,0,0,0.3)] dark:drop-shadow-[0_4px_15px_rgba(34,211,238,0.5)] transition-all">
         {children}
       </h2>
 
-      <div className="h-1 w-32 mb-6 bg-gradient-to-r from-cyan-500 via-cyan-400 to-transparent dark:from-orange-500 dark:via-orange-400 rounded-full shadow-[0_0_20px_rgba(6,182,212,0.6)] dark:shadow-[0_0_20px_orange]" />
+      <div className="h-1 w-32 mb-6 bg-gradient-to-r from-[#FFEBA7] via-[#FFEBA7]/60 to-transparent dark:from-orange-500 dark:via-orange-400 rounded-full shadow-[0_0_20px_rgba(255,235,167,0.6)] dark:shadow-[0_0_20px_orange]" />
 
       <p className="text-xl max-w-2xl text-slate-700 dark:text-slate-300 transition-colors 
         font-medium dark:font-normal
@@ -289,9 +291,9 @@ const Navbar = memo(({ theme, setTheme }) => {
             <img
               src="/logo.png"
               alt="AGP Logo"
-              className="h-8 md:h-12 w-auto object-contain contrast-125 saturate-150 drop-shadow-[0_3px_3px_rgba(0,0,0,0.5)]"
+              className="h-10 md:h-12 w-auto object-contain contrast-125 saturate-150 drop-shadow-[0_3px_3px_rgba(0,0,0,0.5)]"
             />
-            <span className="font-bold text-xl md:text-5xl tracking-tighter font-display leading-none translate-y-0.5 md:translate-y-3 transition-colors text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.5)]">ENTERPRISES</span>
+            <span className="font-bold text-3xl md:text-5xl tracking-tighter font-display leading-none translate-y-1 md:translate-y-3 transition-colors text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.5)]">ENTERPRISES</span>
           </div>
 
           {/* DESKTOP NAVIGATION */}
@@ -313,9 +315,8 @@ const Navbar = memo(({ theme, setTheme }) => {
             </a>
           </div>
 
-          {/* MOBILE: Theme Toggle + Hamburger */}
+          {/* MOBILE: Hamburger Only */}
           <div className="flex md:hidden items-center gap-3">
-            <ThemeToggle theme={theme} setTheme={setTheme} isMobile={true} />
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               className="p-2 rounded-lg bg-black/30 backdrop-blur-md border border-white/20 text-white"
@@ -331,6 +332,20 @@ const Navbar = memo(({ theme, setTheme }) => {
           </div>
         </div>
       </nav>
+
+      {/* FLOATING VERTICAL TOGGLE - Hidden when scrolled */}
+      <motion.div
+        initial={{ opacity: 1, x: 0 }}
+        animate={{
+          opacity: scrolled ? 0 : 1,
+          x: scrolled ? 20 : 0,
+          pointerEvents: scrolled ? 'none' : 'auto'
+        }}
+        transition={{ duration: 0.3 }}
+        className="fixed top-24 md:top-28 right-4 z-50 md:hidden"
+      >
+        <ThemeToggle theme={theme} setTheme={setTheme} isVertical={true} />
+      </motion.div>
 
       {/* MOBILE MENU OVERLAY */}
       {mobileMenuOpen && (
@@ -386,9 +401,10 @@ const Hero = () => (
         <p className="text-[#FFEBA7] dark:text-slate-300 text-xl md:text-2xl mb-10 leading-relaxed max-w-lg 
             font-medium dark:font-normal 
             transition-colors [text-shadow:0_2px_12px_rgba(0,0,0,0.3)] dark:[text-shadow:none]">
-          Engineering your brand's physical identity with <span className="text-orange-600 dark:text-cyan-300 
-            font-semibold dark:font-semibold
-            dark:drop-shadow-[0_0_15px_rgba(34,211,238,0.5)]">industrial-grade perfection</span>.
+          Engineering your brand's physical identity with <span className="text-cyan-400 dark:text-cyan-300 
+            font-semibold 
+            drop-shadow-[0_0_10px_rgba(34,211,238,0.5)] dark:drop-shadow-[0_0_15px_rgba(34,211,238,0.5)]
+            [text-shadow:0_4px_8px_rgba(0,0,0,0.3),0_0_15px_rgba(34,211,238,0.4)]">industrial-grade perfection</span>.
         </p>
 
         <div className="flex flex-col sm:flex-row gap-4">
@@ -446,10 +462,10 @@ const Services = () => (
           <Reveal dir="left" key={service.title} delay={idx * 0.05}>
             <StaticGlowCard className="rounded-2xl p-8 h-full">
               <div className="relative z-10">
-                <div className="h-14 w-14 bg-slate-200/80 dark:bg-slate-800 text-slate-600 dark:text-slate-400 rounded-xl flex items-center justify-center mb-6 border border-slate-300/50 dark:border-slate-700 group-hover:bg-cyan-500 dark:group-hover:bg-cyan-400 group-hover:text-white dark:group-hover:text-black group-hover:border-cyan-400 dark:group-hover:border-cyan-300 transition-all shadow-sm">
+                <div className="h-14 w-14 bg-slate-200/80 dark:bg-slate-800 text-slate-600 dark:text-slate-400 rounded-xl flex items-center justify-center mb-6 border border-slate-300/50 dark:border-slate-700 group-hover:bg-[#FFEBA7] dark:group-hover:bg-cyan-400 group-hover:text-slate-900 dark:group-hover:text-black group-hover:border-[#FFEBA7] dark:group-hover:border-cyan-300 transition-all shadow-sm">
                   {service.icon}
                 </div>
-                <h3 className="text-xl font-bold text-slate-800 dark:text-white mb-3 font-display uppercase tracking-wide group-hover:text-cyan-600 dark:group-hover:text-cyan-300 transition-colors">{service.title}</h3>
+                <h3 className="text-xl font-bold text-slate-800 dark:text-white mb-3 font-display uppercase tracking-wide group-hover:text-[#E8D99A] dark:group-hover:text-cyan-300 transition-colors">{service.title}</h3>
 
                 <p className="text-slate-600 dark:text-slate-400 text-sm leading-relaxed 
                     font-medium dark:font-normal 
@@ -481,8 +497,8 @@ const Portfolio = () => (
               </div>
               <div className="absolute inset-0 bg-gradient-to-t from-black/5 via-transparent to-transparent dark:from-black dark:opacity-90" />
               <div className="absolute bottom-0 left-0 p-6 w-full">
-                <p className="text-xs font-bold text-cyan-600 dark:text-orange-500 uppercase tracking-widest mb-1">{item.category}</p>
-                <h3 className="text-xl font-bold text-slate-800 dark:text-white font-display group-hover:text-cyan-600 dark:group-hover:text-cyan-300 transition-colors">{item.title}</h3>
+                <p className="text-xs font-bold text-[#E8D99A] dark:text-orange-500 uppercase tracking-widest mb-1">{item.category}</p>
+                <h3 className="text-xl font-bold text-slate-800 dark:text-white font-display group-hover:text-[#FFEBA7] dark:group-hover:text-cyan-300 transition-colors">{item.title}</h3>
               </div>
             </div>
           </Reveal>
@@ -539,7 +555,7 @@ const About = () => (
                   <Star size={18} fill="currentColor" />
                 </div>
                 <div>
-                  <h4 className="text-xl md:text-2xl font-bold mb-2 text-slate-800 dark:text-white font-display uppercase group-hover:text-cyan-600 dark:group-hover:text-cyan-300 transition-colors">
+                  <h4 className="text-xl md:text-2xl font-bold mb-2 text-slate-800 dark:text-white font-display uppercase group-hover:text-[#E8D99A] dark:group-hover:text-cyan-300 transition-colors">
                     {item.title}
                   </h4>
 
@@ -564,7 +580,7 @@ const Clients = () => (
     <div className="max-w-7xl mx-auto px-6 relative z-10">
       <Reveal>
         <div className="text-center mb-12">
-          <h3 className="text-cyan-700 dark:text-orange-500 font-display font-bold text-xl tracking-[0.3em] uppercase mb-4 drop-shadow-sm dark:drop-shadow-[0_0_15px_rgba(249,115,22,0.6)]">Trusted By The Best</h3>
+          <h3 className="text-[#FFEBA7] dark:text-orange-500 font-display font-bold text-xl tracking-[0.3em] uppercase mb-4 drop-shadow-[0_2px_4px_rgba(0,0,0,0.3)] dark:drop-shadow-[0_0_15px_rgba(249,115,22,0.6)]">Trusted By The Best</h3>
         </div>
       </Reveal>
       <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12">
@@ -730,7 +746,7 @@ const Footer = memo(() => (
   <footer className="bg-[#F4EDE4]/90 dark:bg-black text-slate-900 dark:text-slate-500 py-12 border-t border-slate-200 dark:border-slate-900 text-sm relative z-10 transition-colors backdrop-blur-sm">
     <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-6">
       <div className="flex items-center gap-3">
-        <img src="/logo-agp.png" alt="Footer Logo" className="h-6 grayscale opacity-80 hover:grayscale-0 transition-all" />
+        <img src="/logo.png" alt="Footer Logo" className="h-6 grayscale opacity-80 hover:grayscale-0 transition-all" />
         <p className="font-medium">© {new Date().getFullYear()} AGP Enterprises. Precision Printing Solutions.</p>
       </div>
     </div>
