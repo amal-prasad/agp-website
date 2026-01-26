@@ -260,7 +260,7 @@ const Navbar = memo(({ theme, setTheme }) => {
 
   useEffect(() => {
     const handleScroll = () => {
-      const isScrolled = window.scrollY > 20; // Increased threshold slightly for smoother initial feel
+      const isScrolled = window.scrollY > 20;
       if (scrolled !== isScrolled) setScrolled(isScrolled);
     };
     window.addEventListener('scroll', handleScroll, { passive: true });
@@ -284,7 +284,15 @@ const Navbar = memo(({ theme, setTheme }) => {
           </span>
         </div>
 
-        {/* NAVIGATION LINKS */}
+        {/* --- FIX START: MOBILE CONTROLS --- */}
+        {/* We render this ONLY on mobile (md:hidden) so it sits to the right of the logo */}
+        <div className="flex md:hidden items-center gap-4">
+          <ThemeToggle theme={theme} setTheme={setTheme} scrolled={scrolled} />
+          {/* Note: I did not add the 'Get Quote' button here to save space, keeping it clean as requested. */}
+        </div>
+        {/* --- FIX END --- */}
+
+        {/* DESKTOP NAVIGATION (Unchanged, hidden on mobile) */}
         <div className="hidden md:flex items-center gap-8 lg:gap-12">
           {NAV_LINKS.map((item) => (
             <a key={item} href={`#${item.toLowerCase()}`} 
