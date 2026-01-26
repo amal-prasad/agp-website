@@ -108,36 +108,33 @@ const Reveal = memo(({ children, dir = "up", delay = 0, className = "" }) => (
 const IndustrialBackground = memo(() => (
   <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden bg-[#F0F4F8] dark:bg-[#050505] transition-colors duration-700">
     
-    {/* --- LIGHT MODE LAYERS (MODIFIED) --- */}
+    {/* --- LIGHT MODE LAYERS --- */}
     <div className="absolute inset-0 dark:hidden">
       
-      {/* 1. The Texture Layer: Blurred & Low Opacity */}
+      {/* 1. The Texture Layer */}
       <div 
         className="absolute inset-0 opacity-90 blur-[3px]"
         style={{ 
-          backgroundImage: `url('/pexels-834934396-20818871.jpg')`,
+          backgroundImage: `url('/pastel_1.png')`,
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           backgroundRepeat: 'no-repeat',
-          // Performance optimization for full-screen filters
           willChange: 'transform', 
           transform: 'translateZ(0)' 
         }}
       />
 
-      {/* 2. The Wash Layer: A white veil to reduce contrast range */}
-      <div className="absolute inset-0 bg-white/30 mix-blend-overlay" />
+      {/* 2. THE DARKENING LAYER (CONTROLS VISIBILITY) 
+          -------------------------------------------------------
+          CONTROL KNOB: Change 'bg-black/20' to adjust darkness.
+          - bg-black/10 = 10% Darkness (Subtle)
+          - bg-black/50 = 50% Darkness (Very Dark)
+      */}
+      <div className="absolute inset-0 bg-black/20" />
 
-      {/* 3. The Vignette: Focuses eye to center, completely independent of the blurred image */}
-      <div 
-        className="absolute inset-0"
-        style={{ 
-          background: `radial-gradient(circle at center, rgba(240, 244, 248, 0.2) 0%, rgba(240, 244, 248, 0.8) 100%)`
-        }}
-      />
     </div>
 
-    {/* Optional: Warm Tint (Retained but made more subtle) */}
+    {/* Warm Tint (Retained) */}
     <div className="absolute inset-0 bg-orange-500/[0.01] dark:hidden pointer-events-none mix-blend-multiply" />
 
     {/* --- DARK MODE LAYERS (UNCHANGED) --- */}
@@ -150,7 +147,6 @@ const IndustrialBackground = memo(() => (
    
   </div>
 ));
-
 const PolishedGlassLayer = memo(() => (
   <div className="fixed inset-0 pointer-events-none z-[1] overflow-hidden hidden dark:block">
     <div className="absolute -top-[10%] left-1/2 -translate-x-1/2 w-[70%] h-[50%] bg-white/[0.03] blur-[100px] rounded-[100%] mix-blend-overlay" />
@@ -213,25 +209,24 @@ const StaticGlowCard = memo(({ children, className = "" }) => (
 const SectionHeading = memo(({ children, subtitle }) => (
   <Reveal>
     <div className="mb-12 md:mb-16 relative z-10">
-      {/* LEVITATION PHYSICS:
-        Light Mode: Downward shadow (Distance from paper)
-        Dark Mode:  Outward glow + Y-offset (Hovering neon) 
-      */}
-      <h2 className="text-4xl md:text-6xl font-bold mb-4 font-display uppercase tracking-wide text-orange-600 dark:text-white drop-shadow-[0_5px_5px_rgba(0,0,0,0.25)] dark:drop-shadow-[0_4px_15px_rgba(34,211,238,0.5)] transition-all">
+      <h2 className="text-4xl md:text-6xl font-bold mb-4 font-display uppercase tracking-wide text-orange-600 dark:text-white drop-shadow-[0_5px_5px_rgba(0,0,0,0.3)] dark:drop-shadow-[0_4px_15px_rgba(34,211,238,0.5)] transition-all">
         {children}
       </h2>
       
       <div className="h-1 w-32 mb-6 bg-gradient-to-r from-orange-500 via-orange-400 to-transparent rounded-full shadow-[0_0_20px_orange]" />
       
-      <p className="text-xl max-w-2xl text-[#3A2F26] dark:text-slate-300 transition-colors 
-        font-bold dark:font-normal
-        [text-shadow:0_0_20px_rgba(255,255,255,0.8)] dark:[text-shadow:none]">
+      {/* MODIFICATION: 
+          - Shadow increased to [0_5px_5px] for visible lift.
+          - Opacity increased to 0.5 (50%).
+      */}
+      <p className="text-xl max-w-2xl text-[#E2E8F0] dark:text-slate-300 transition-colors 
+        font-medium dark:font-normal
+        [text-shadow:0_5px_5px_rgba(0,0,0,0.5)] dark:[text-shadow:none]">
         {subtitle}
       </p>
     </div>
   </Reveal>
 ));
-
 const FormInput = memo((props) => (
   <input 
     {...props}
@@ -265,7 +260,7 @@ const Navbar = memo(({ theme, setTheme }) => {
 
   useEffect(() => {
     const handleScroll = () => {
-      const isScrolled = window.scrollY > 10;
+      const isScrolled = window.scrollY > 20; // Increased threshold slightly for smoother initial feel
       if (scrolled !== isScrolled) setScrolled(isScrolled);
     };
     window.addEventListener('scroll', handleScroll, { passive: true });
@@ -274,18 +269,16 @@ const Navbar = memo(({ theme, setTheme }) => {
 
   return (
     <nav className={`fixed top-0 left-0 w-full z-50 transition-all duration-500 ease-[cubic-bezier(0.4,0,0.2,1)]
-      bg-white/5 dark:bg-[#050505]/80
-      backdrop-blur-xl
-      border-b border-white/10
-      shadow-[0_4px_30px_rgba(0,0,0,0.1)]
-      ${scrolled ? 'py-4 rounded-b-2xl md:rounded-b-[2rem]' : 'py-6 md:py-8 rounded-b-none'}
+      ${scrolled 
+        ? 'py-4 bg-white/80 dark:bg-[#050505]/90 backdrop-blur-xl border-b border-slate-200/50 dark:border-white/10 shadow-[0_4px_30px_rgba(0,0,0,0.1)] rounded-b-2xl md:rounded-b-[2rem]' 
+        : 'py-6 md:py-8 bg-transparent border-b border-transparent backdrop-blur-[1px] rounded-b-none'
+      }
     `}>
       <div className="max-w-[95rem] mx-auto px-6 md:px-10 flex items-center justify-between">
         
         {/* LOGO */}
         <div className="flex items-end gap-3 md:gap-5"> 
           <img src="/logo-agp.png" alt="AGP Logo" className="h-10 md:h-12 w-auto object-contain opacity-90" />
-          {/* LEVITATION: White lift in dark mode */}
           <span className="font-bold text-3xl md:text-5xl tracking-tighter font-display flex items-center gap-2 leading-none -mb-1 md:translate-y-1.5 transition-colors text-[#F4EDE4] dark:text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.3)] dark:drop-shadow-[0_0_15px_rgba(255,255,255,0.4)]">
              ENTERPRISES
           </span>
@@ -295,7 +288,6 @@ const Navbar = memo(({ theme, setTheme }) => {
         <div className="hidden md:flex items-center gap-8 lg:gap-12">
           {NAV_LINKS.map((item) => (
             <a key={item} href={`#${item.toLowerCase()}`} 
-               // LEVITATION: Cyan glow in dark mode
                className="text-sm uppercase tracking-[0.2em] font-bold font-display transition-colors 
                text-[#F4EDE4]/90 hover:text-orange-500 dark:text-slate-300 dark:hover:text-cyan-300 
                drop-shadow-[0_3px_2px_rgba(0,0,0,0.3)] dark:drop-shadow-[0_0_8px_rgba(34,211,238,0.3)] hover:drop-shadow-[0_5px_5px_rgba(249,115,22,0.5)]"
@@ -319,23 +311,25 @@ const Hero = () => (
   <section className="relative min-h-screen flex items-center overflow-visible pt-20">
     <div className="max-w-7xl mx-auto px-6 relative z-10 grid lg:grid-cols-2 gap-12 items-center">
       <Reveal>
-        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/80 dark:bg-slate-800/80 border border-slate-300 dark:border-slate-700 text-orange-600 dark:text-cyan-300 text-sm font-bold tracking-widest uppercase mb-8 shadow-sm dark:shadow-[0_0_15px_rgba(34,211,238,0.15)] backdrop-blur-md transition-colors">
+        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 dark:bg-slate-800/80 border border-white/20 dark:border-slate-700 text-orange-100 dark:text-cyan-300 text-sm font-medium tracking-widest uppercase mb-8 shadow-sm dark:shadow-[0_0_15px_rgba(34,211,238,0.15)] backdrop-blur-md transition-colors">
           <span className="w-2 h-2 rounded-full bg-orange-500 dark:bg-cyan-300 animate-pulse dark:shadow-[0_0_10px_cyan]"/> Est. 2019
         </div>
         
-        {/* LEVITATION: Huge atmospheric glow in dark mode */}
         <h1 className="text-6xl md:text-8xl font-bold leading-[0.9] mb-8 font-display transition-colors">
-          <span className="block text-[#F4EDE4] dark:text-white drop-shadow-[0_15px_10px_rgba(0,0,0,0.25)] dark:drop-shadow-[0_0_35px_rgba(255,255,255,0.3)]">PRECISION</span> 
-          <span className="block text-orange-600 drop-shadow-[0_15px_10px_rgba(0,0,0,0.25)] dark:drop-shadow-[0_0_50px_rgba(249,115,22,0.9)] relative z-10">
+          {/* MODIFICATION: 
+              - drop-shadow opacity increased to 0.3 (30%) for visible levitation.
+          */}
+          <span className="block text-[#FFEBA7] dark:text-white drop-shadow-[0_15px_10px_rgba(0,0,0,0.3)] dark:drop-shadow-[0_0_35px_rgba(255,255,255,0.3)]">PRECISION</span> 
+          <span className="block text-orange-600 drop-shadow-[0_15px_10px_rgba(0,0,0,0.3)] dark:drop-shadow-[0_0_50px_rgba(249,115,22,0.9)] relative z-10">
             IN PRINT.
           </span>
         </h1>
 
-        <p className="text-[#F4EDE4] dark:text-slate-300 text-xl md:text-2xl mb-10 leading-relaxed max-w-lg 
-            font-bold dark:font-normal 
-            transition-colors [text-shadow:0_2px_12px_rgba(0,0,0,0.4)] dark:[text-shadow:none]">
+        <p className="text-[#FFEBA7] dark:text-slate-300 text-xl md:text-2xl mb-10 leading-relaxed max-w-lg 
+            font-medium dark:font-normal 
+            transition-colors [text-shadow:0_2px_12px_rgba(0,0,0,0.3)] dark:[text-shadow:none]">
             Engineering your brand's physical identity with <span className="text-orange-600 dark:text-cyan-300 
-            font-extrabold dark:font-semibold
+            font-semibold dark:font-semibold
             dark:drop-shadow-[0_0_15px_rgba(34,211,238,0.5)]">industrial-grade perfection</span>.
         </p>
 
@@ -344,7 +338,7 @@ const Hero = () => (
             Start Project <ArrowRight size={20} />
           </a>
           
-          <a href="#portfolio" className="border border-[#F4EDE4]/40 dark:border-slate-600 text-[#F4EDE4] dark:text-white px-8 py-4 rounded-lg font-bold text-lg hover:bg-[#F4EDE4] hover:text-orange-900 dark:hover:bg-slate-800 dark:hover:border-cyan-300 dark:hover:text-cyan-300 transition-all flex items-center justify-center font-display uppercase tracking-wide backdrop-blur-sm shadow-sm dark:shadow-none bg-white/5 dark:bg-transparent">
+          <a href="#portfolio" className="border border-[#FFEBA7]/40 dark:border-slate-600 text-[#FFEBA7] dark:text-white px-8 py-4 rounded-lg font-bold text-lg hover:bg-[#FFEBA7] hover:text-orange-900 dark:hover:bg-slate-800 dark:hover:border-cyan-300 dark:hover:text-cyan-300 transition-all flex items-center justify-center font-display uppercase tracking-wide backdrop-blur-sm shadow-sm dark:shadow-none bg-white/5 dark:bg-transparent">
             Our Work
           </a>
         </div>
@@ -380,7 +374,6 @@ const Hero = () => (
     </div>
   </section>
 );
-
 const Services = () => (
   <section className="py-24 relative border-t border-[#F4EDE4]/20 dark:border-slate-800 transition-colors">
     <ScrollAnchor id="services" />
@@ -396,12 +389,12 @@ const Services = () => (
                   <div className="h-14 w-14 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-400 rounded-xl flex items-center justify-center mb-6 border border-slate-200 dark:border-slate-700 group-hover:bg-orange-500 dark:group-hover:bg-cyan-400 group-hover:text-white dark:group-hover:text-black group-hover:border-orange-400 dark:group-hover:border-cyan-300 transition-all shadow-sm">
                     {service.icon}
                   </div>
-                  {/* LEVITATION: Card titles lift in dark mode */}
-                  <h3 className="text-xl font-bold text-[#3A2F26] dark:text-white mb-3 font-display uppercase tracking-wide group-hover:text-orange-600 dark:group-hover:text-cyan-300 transition-colors drop-shadow-[0_3px_2px_rgba(0,0,0,0.2)] dark:drop-shadow-[0_0_10px_rgba(255,255,255,0.2)]">{service.title}</h3>
+                  <h3 className="text-xl font-bold text-[#3A2F26] dark:text-white mb-3 font-display uppercase tracking-wide group-hover:text-orange-600 dark:group-hover:text-cyan-300 transition-colors drop-shadow-[0_3px_2px_rgba(0,0,0,0.3)] dark:drop-shadow-[0_0_10px_rgba(255,255,255,0.2)]">{service.title}</h3>
                   
-                  <p className="text-[#3A2F26] dark:text-slate-400 text-sm leading-relaxed 
-                    font-bold dark:font-normal 
-                    group-hover:text-black dark:group-hover:text-slate-300 [text-shadow:0_0_15px_rgba(255,255,255,0.9)] dark:[text-shadow:none]">
+                  {/* MODIFICATION: Shadow increased to [0_5px_5px_rgba(0,0,0,0.5)] */}
+                  <p className="text-[#E2E8F0] dark:text-slate-400 text-sm leading-relaxed 
+                    font-medium dark:font-normal 
+                    group-hover:text-black dark:group-hover:text-slate-300 [text-shadow:0_5px_5px_rgba(0,0,0,0.5)] dark:[text-shadow:none]">
                     {service.desc}
                   </p>
                </div>
@@ -412,7 +405,6 @@ const Services = () => (
     </div>
   </section>
 );
-
 const Portfolio = () => (
   <section className="py-24 relative border-t border-[#F4EDE4]/20 dark:border-slate-900 transition-colors bg-white/5 dark:bg-transparent">
     <ScrollAnchor id="portfolio" />
@@ -483,12 +475,12 @@ const About = () => (
                     <Star size={18} fill="currentColor" />
                 </div>
                 <div>
-                  {/* LEVITATION: Card headers */}
-                  <h4 className="text-2xl font-bold mb-2 text-[#3A2F26] dark:text-white font-display uppercase group-hover:text-orange-600 dark:group-hover:text-cyan-300 transition-colors drop-shadow-[0_2px_2px_rgba(0,0,0,0.2)] dark:drop-shadow-[0_0_10px_rgba(255,255,255,0.2)]">{item.title}</h4>
+                  <h4 className="text-2xl font-bold mb-2 text-[#3A2F26] dark:text-white font-display uppercase group-hover:text-orange-600 dark:group-hover:text-cyan-300 transition-colors drop-shadow-[0_2px_2px_rgba(0,0,0,0.3)] dark:drop-shadow-[0_0_10px_rgba(255,255,255,0.2)]">{item.title}</h4>
                   
-                  <p className="text-[#3A2F26] dark:text-slate-400 leading-relaxed text-lg 
-                    font-bold dark:font-normal 
-                    group-hover:text-black dark:group-hover:text-slate-200 [text-shadow:0_0_15px_rgba(255,255,255,0.9)] dark:[text-shadow:none]">
+                  {/* MODIFICATION: Color changed to #E2E8F0 */}
+                  <p className="text-[#E2E8F0] dark:text-slate-400 leading-relaxed text-lg 
+                    font-medium dark:font-normal 
+                    group-hover:text-black dark:group-hover:text-slate-200 [text-shadow:0_0_15px_rgba(0,0,0,0.3)] dark:[text-shadow:none]">
                     {item.desc}
                   </p>
                 </div>
@@ -582,8 +574,10 @@ const Contact = () => {
              <div className="lg:col-span-2 bg-slate-50 dark:bg-slate-900/60 p-12 text-slate-900 dark:text-white flex flex-col justify-between relative overflow-hidden border-r border-slate-200 dark:border-white/5 transition-colors">
                   <div className="absolute top-0 right-0 p-40 bg-orange-500/10 rounded-full blur-[80px] -mr-20 -mt-20 pointer-events-none"></div>
                   <div className="relative z-10">
-                    <h3 className="text-4xl font-bold mb-6 font-display text-black dark:text-white transition-colors">LET'S PRINT.</h3>
+                    {/* MODIFICATION: Levitation shadow added here */}
+                    <h3 className="text-4xl font-bold mb-6 font-display text-black dark:text-white transition-colors drop-shadow-[0_5px_5px_rgba(0,0,0,0.25)]">LET'S PRINT.</h3>
                     <div className="space-y-8 mb-12">
+                      {/* ... (Contact Details remain largely the same, they benefit from high contrast) ... */}
                       <div className="flex items-center gap-5">
                         <Phone className="text-orange-600 dark:text-orange-500 drop-shadow-sm dark:drop-shadow-[0_0_8px_orange]" size={24} />
                         <div>
@@ -627,6 +621,7 @@ const Contact = () => {
 
             <div className="lg:col-span-3 p-8 md:p-12">
               <form ref={formRef} onSubmit={handleSubmit} className="space-y-6">
+                {/* Inputs kept as is, they are already functional */}
                 <div className="grid md:grid-cols-2 gap-6">
                   <FormInput name="user_name" required type="text" placeholder="Your Name" />
                   <FormInput name="user_phone" required type="tel" placeholder="+91-XXXXXXXXXX" />
@@ -666,7 +661,6 @@ const Contact = () => {
     </section>
   );
 };
-
 const Footer = memo(() => (
   <footer className="bg-[#F4EDE4]/90 dark:bg-black text-slate-900 dark:text-slate-500 py-12 border-t border-slate-200 dark:border-slate-900 text-sm relative z-10 transition-colors backdrop-blur-sm">
     <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-6">
