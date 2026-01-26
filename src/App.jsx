@@ -109,26 +109,29 @@ const IndustrialBackground = memo(() => (
     {/* --- LIGHT MODE LAYERS --- */}
     <div className="absolute inset-0 dark:hidden">
 
-      {/* 1. The Texture Layer */}
+      {/* MOBILE ONLY: p1.png with blur - shows on screens < 768px */}
       <div
-        className="absolute inset-0 opacity-90"
+        className="absolute inset-0 blur-[5px] md:hidden"
+        style={{
+          backgroundImage: `url('/p1.png')`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundRepeat: 'no-repeat',
+        }}
+      />
+
+      {/* DESKTOP ONLY: pastel_1.png with light overlay - shows on screens >= 768px */}
+      <div
+        className="absolute inset-0 hidden md:block blur-[3px]"
         style={{
           backgroundImage: `url('/pastel_1.png')`,
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           backgroundRepeat: 'no-repeat',
-          willChange: 'transform',
-          transform: 'translateZ(0)'
         }}
       />
-
-      {/* 2. THE DARKENING LAYER (CONTROLS VISIBILITY) 
-          -------------------------------------------------------
-          Responsive opacity:
-          - Mobile: bg-black/50 (50% darkness)
-          - Desktop (md+): bg-black/25 (25% darkness)
-      */}
-      <div className="absolute inset-0 bg-black/40" />
+      {/* Desktop darkening layer - lighter at 20% */}
+      <div className="absolute inset-0 bg-black/20 hidden md:block" />
 
     </div>
 
