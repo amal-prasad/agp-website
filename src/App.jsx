@@ -120,7 +120,7 @@ const IndustrialBackground = memo(() => (
       <div
         className="absolute inset-0 blur-[5px] md:hidden"
         style={{
-          backgroundImage: `url('/p1.png')`,
+          backgroundImage: `url('/P1.png')`,
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           backgroundRepeat: 'no-repeat',
