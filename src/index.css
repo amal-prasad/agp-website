@@ -9,13 +9,23 @@ html {
   scroll-behavior: smooth;
   /* Prevent horizontal scroll bounce on mobile */
   overflow-x: hidden;
+  /* Explicit BG to prevent white bleed during mobile overscroll */
+  background-color: #F0F4F8;
+}
+
+html.dark {
+  background-color: #050505;
 }
 
 body {
-  /* Removed @apply bg-brand-light to let App.jsx handle background via Tailwind */
   @apply font-sans;
   margin: 0;
   padding: 0;
+  background-color: #F0F4F8;
+}
+
+.dark body {
+  background-color: #050505;
 }
 
 /* Rest of the styles remain 1:1 */
@@ -28,12 +38,15 @@ body {
 }
 
 .text-depth {
-  text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
 }
 
 /* === MOBILE VIEWPORT STABILIZATION === */
 @supports (height: 100dvh) {
-  html, body, #root {
+
+  html,
+  body,
+  #root {
     min-height: 100dvh;
   }
 }
@@ -51,7 +64,10 @@ body {
 
 /* Reduced motion: skip heavy animations for accessibility + performance */
 @media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after {
+
+  *,
+  *::before,
+  *::after {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;

@@ -182,11 +182,11 @@ const ThemeToggle = ({ theme, setTheme, isVertical = false }) => {
       <motion.div
         layout
         transition={{ type: "spring", stiffness: 400, damping: 25 }}
-        className={`absolute ${isVertical ? 'w-[calc(100%-6px)] h-7' : 'h-[calc(100%-6px)] w-6'} rounded-full bg-white/90 dark:bg-slate-700 shadow-md z-0`}
+        className={`absolute ${isVertical ? 'w-[calc(100%-6px)] h-7' : 'h-7 w-7'} rounded-full bg-white/90 dark:bg-slate-700 shadow-md z-0`}
         style={isVertical ? {
           top: `calc(${currentIndex * 30}px + 3px)`
         } : {
-          left: `calc(${currentIndex * 28}px + 3px)`
+          left: `calc(${currentIndex * 30}px + 3px)`
         }}
       />
       {icons.map(({ mode, icon, activeColor }) => (
@@ -234,9 +234,9 @@ const SectionHeading = memo(({ children, subtitle }) => (
 
       <div className="h-1 w-32 mb-6 bg-gradient-to-r from-[#FFEBA7] via-[#FFEBA7]/60 to-transparent dark:from-orange-500 dark:via-orange-400 rounded-full shadow-[0_0_20px_rgba(255,235,167,0.6)] dark:shadow-[0_0_20px_orange]" />
 
-      <p className="text-xl max-w-2xl text-slate-700 dark:text-slate-300 transition-colors 
+      <p className="text-xl max-w-2xl text-white dark:text-slate-300 transition-colors 
         font-medium dark:font-normal
-        [text-shadow:0_2px_4px_rgba(255,255,255,0.5)] dark:[text-shadow:none]">
+        [text-shadow:0_2px_8px_rgba(0,0,0,0.3)] dark:[text-shadow:none]">
         {subtitle}
       </p>
     </div>
@@ -271,20 +271,31 @@ const ScrollAnchor = ({ id }) => <div id={id} className="absolute -top-32 left-0
 // --- SECTIONS ---
 
 const Navbar = memo(({ theme, setTheme }) => {
+  const [visible, setVisible] = useState(true);
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const lastScrollY = useRef(0);
 
   useEffect(() => {
     const handleScroll = throttle(() => {
-      setScrolled(window.scrollY > 20);
-    }, 100);
+      const currentScrollY = window.scrollY;
+      const isAtTop = currentScrollY < 20;
+      const isScrollingUp = currentScrollY < lastScrollY.current;
+
+      setScrolled(!isAtTop);
+      // Show navbar when at top OR scrolling UP, hide when scrolling DOWN
+      setVisible(isAtTop || isScrollingUp);
+
+      lastScrollY.current = currentScrollY;
+    }, 50);
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   return (
     <>
-      <nav className={`fixed top-0 left-0 w-full z-50 transition-all duration-500 ease-[cubic-bezier(0.4,0,0.2,1)]
+      <nav className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ease-[cubic-bezier(0.4,0,0.2,1)]
+        ${visible ? 'translate-y-0' : '-translate-y-full'}
         ${scrolled
           ? 'py-3 md:py-4 bg-black/60 dark:bg-[#050505]/90 backdrop-blur-xl border-b border-white/10 shadow-[0_4px_30px_rgba(0,0,0,0.3)]'
           : 'py-4 md:py-8 bg-transparent border-b border-transparent backdrop-blur-[1px]'
@@ -405,7 +416,7 @@ const Hero = () => (
         </h1>
 
         <p className="text-xl md:text-2xl mb-10 leading-relaxed max-w-lg font-semibold dark:font-normal transition-colors">
-          <span className="text-slate-700 dark:text-slate-300 [text-shadow:0_2px_4px_rgba(255,255,255,0.5)] dark:[text-shadow:none]">Engineering your brand's physical identity with </span><span className="text-indigo-900 dark:text-cyan-300 font-bold drop-shadow-[0_3px_6px_rgba(49,46,129,0.5)] dark:drop-shadow-[0_0_15px_rgba(34,211,238,0.5)]">industrial-grade perfection</span><span className="text-slate-700 dark:text-slate-300 [text-shadow:0_2px_4px_rgba(255,255,255,0.5)] dark:[text-shadow:none]">.</span>
+          <span className="text-white dark:text-slate-300 [text-shadow:0_2px_8px_rgba(0,0,0,0.3)] dark:[text-shadow:none]">Engineering your brand's physical identity with </span><span className="!text-black dark:!text-cyan-300 font-bold [text-shadow:0_6px_12px_rgba(0,0,0,0.4)] dark:[text-shadow:none] dark:drop-shadow-[0_0_15px_rgba(34,211,238,0.5)]">industrial-grade perfection</span><span className="text-white dark:text-slate-300 [text-shadow:0_2px_8px_rgba(0,0,0,0.3)] dark:[text-shadow:none]">.</span>
         </p>
 
         <div className="flex flex-col sm:flex-row gap-4">
@@ -761,7 +772,7 @@ export default function App() {
   const { theme, setTheme } = useTheme();
 
   return (
-    <div className="antialiased bg-[#F0F4F8] dark:bg-[#050505] text-slate-900 dark:text-slate-100 transition-colors duration-700 selection:bg-orange-500 selection:text-white overflow-x-hidden relative min-h-screen">
+    <div className="antialiased bg-[#F0F4F8] dark:bg-[#050505] text-slate-900 dark:text-slate-100 transition-colors duration-700 selection:bg-orange-500 selection:text-white overflow-x-hidden relative min-h-[100dvh]">
       <IndustrialBackground />
       <PolishedGlassLayer />
       <Navbar theme={theme} setTheme={setTheme} />
