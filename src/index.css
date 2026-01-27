@@ -28,6 +28,16 @@ body {
   background-color: #050505;
 }
 
+/* Force text black override */
+#force-black-text {
+  color: black !important;
+}
+
+html.dark #force-black-text {
+  color: #22d3ee !important;
+  /* Cyan-400 */
+}
+
 /* Rest of the styles remain 1:1 */
 .font-display {
   font-family: 'Rajdhani', sans-serif;

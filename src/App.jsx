@@ -111,7 +111,7 @@ const Reveal = memo(({ children, dir = "up", delay = 0, className = "" }) => (
 // Locate the IndustrialBackground component and replace it with this:
 
 const IndustrialBackground = memo(() => (
-  <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden bg-[#F0F4F8] dark:bg-[#050505] transition-colors duration-700 min-h-[100dvh]">
+  <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden bg-[#F0F4F8] dark:bg-[#050505] transition-colors duration-700 min-h-[100dvh]" data-section="background">
 
     {/* --- LIGHT MODE LAYERS --- */}
     <div className="absolute inset-0 dark:hidden">
@@ -277,24 +277,26 @@ const Navbar = memo(({ theme, setTheme }) => {
   const lastScrollY = useRef(0);
 
   useEffect(() => {
-    const handleScroll = throttle(() => {
-      const currentScrollY = window.scrollY;
+    const handleScroll = () => {
+      const currentScrollY = Math.max(0, window.scrollY);
       const isAtTop = currentScrollY < 20;
+      // Show if at top OR scrolling up. 
+      // Added small buffer (10px) to prevent micro-jitters
       const isScrollingUp = currentScrollY < lastScrollY.current;
 
       setScrolled(!isAtTop);
-      // Show navbar when at top OR scrolling UP, hide when scrolling DOWN
       setVisible(isAtTop || isScrollingUp);
 
       lastScrollY.current = currentScrollY;
-    }, 50);
+    };
+
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   return (
     <>
-      <nav className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ease-[cubic-bezier(0.4,0,0.2,1)]
+      <nav data-section="navbar" className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ease-[cubic-bezier(0.4,0,0.2,1)]
         ${visible ? 'translate-y-0' : '-translate-y-full'}
         ${scrolled
           ? 'py-3 md:py-4 bg-black/60 dark:bg-[#050505]/90 backdrop-blur-xl border-b border-white/10 shadow-[0_4px_30px_rgba(0,0,0,0.3)]'
@@ -352,11 +354,13 @@ const Navbar = memo(({ theme, setTheme }) => {
 
       {/* FLOATING VERTICAL TOGGLE - Hidden when scrolled */}
       <motion.div
+        data-section="floating-toggle"
         initial={{ opacity: 1, x: 0 }}
         animate={{
-          opacity: scrolled ? 0 : 1,
-          x: scrolled ? 20 : 0,
-          pointerEvents: scrolled ? 'none' : 'auto'
+          /* FIX: Show when NOT scrolled OR when scrolling UP (visible) */
+          opacity: visible ? 1 : 0,
+          x: visible ? 0 : 20,
+          pointerEvents: visible ? 'auto' : 'none'
         }}
         transition={{ duration: 0.3 }}
         className="fixed top-24 md:top-28 right-4 z-50 md:hidden"
@@ -398,7 +402,7 @@ const Navbar = memo(({ theme, setTheme }) => {
 });
 
 const Hero = () => (
-  <section className="relative min-h-screen flex items-center overflow-visible pt-20">
+  <section className="relative min-h-screen flex items-center overflow-visible pt-20" data-section="hero">
     <div className="max-w-7xl mx-auto px-6 relative z-10 grid lg:grid-cols-2 gap-12 items-center">
       <Reveal>
         <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 dark:bg-slate-800/80 border border-white/20 dark:border-slate-700 text-orange-100 dark:text-cyan-300 text-sm font-medium tracking-widest uppercase mb-8 shadow-sm dark:shadow-[0_0_15px_rgba(34,211,238,0.15)] backdrop-blur-md transition-colors">
@@ -416,7 +420,12 @@ const Hero = () => (
         </h1>
 
         <p className="text-xl md:text-2xl mb-10 leading-relaxed max-w-lg font-semibold dark:font-normal transition-colors">
-          <span className="text-white dark:text-slate-300 [text-shadow:0_2px_8px_rgba(0,0,0,0.3)] dark:[text-shadow:none]">Engineering your brand's physical identity with </span><span className="!text-black dark:!text-cyan-300 font-bold [text-shadow:0_6px_12px_rgba(0,0,0,0.4)] dark:[text-shadow:none] dark:drop-shadow-[0_0_15px_rgba(34,211,238,0.5)]">industrial-grade perfection</span><span className="text-white dark:text-slate-300 [text-shadow:0_2px_8px_rgba(0,0,0,0.3)] dark:[text-shadow:none]">.</span>
+          <span className="text-white dark:text-slate-300 [text-shadow:0_2px_8px_rgba(0,0,0,0.3)] dark:[text-shadow:none]">Engineering your brand's physical identity with </span>
+          {/* LIGHT MODE TEXT (Black) */}
+          <span className="dark:hidden font-bold !text-black [text-shadow:0_6px_12px_rgba(0,0,0,0.4)]" style={{ color: 'black' }}>industrial-grade perfection</span>
+          {/* DARK MODE TEXT (Cyan) */}
+          <span className="hidden dark:inline font-bold text-cyan-300 drop-shadow-[0_0_15px_rgba(34,211,238,0.5)]">industrial-grade perfection</span>
+          <span className="text-white dark:text-slate-300 [text-shadow:0_2px_8px_rgba(0,0,0,0.3)] dark:[text-shadow:none]">.</span>
         </p>
 
         <div className="flex flex-col sm:flex-row gap-4">
@@ -463,7 +472,7 @@ const Hero = () => (
 const Services = () => (
   // REMOVED: border-t border-[#F4EDE4]/20 dark:border-slate-800
   // RATIONALE: Eliminates the hard visual stop, allowing the Hero to flow organically into Services.
-  <section className="py-24 relative transition-colors">
+  <section className="py-24 relative transition-colors" data-section="services">
     <ScrollAnchor id="services" />
     <div className="max-w-7xl mx-auto px-6 relative z-10">
       <SectionHeading subtitle="Comprehensive printing solutions tailored for businesses of all scales.">
@@ -494,7 +503,7 @@ const Services = () => (
   </section>
 );
 const Portfolio = () => (
-  <section className="py-24 relative border-t border-[#F4EDE4]/20 dark:border-slate-900 transition-colors bg-white/5 dark:bg-transparent">
+  <section className="py-24 relative border-t border-[#F4EDE4]/20 dark:border-slate-900 transition-colors bg-white/5 dark:bg-transparent" data-section="portfolio">
     <ScrollAnchor id="portfolio" />
     <div className="max-w-7xl mx-auto px-6 relative z-10">
       <SectionHeading subtitle="A showcase of our recent industrial printing projects.">
@@ -525,7 +534,7 @@ const Portfolio = () => (
 );
 
 const About = () => (
-  <section className="py-32 relative overflow-hidden border-t border-[#F4EDE4]/20 dark:border-slate-800 transition-colors">
+  <section className="py-32 relative overflow-hidden border-t border-[#F4EDE4]/20 dark:border-slate-800 transition-colors" data-section="about">
     <ScrollAnchor id="about" />
     <div className="max-w-7xl mx-auto px-6 grid md:grid-cols-2 gap-16 items-center relative z-10">
       <div className="grid grid-cols-2 gap-6 relative z-10">
@@ -588,7 +597,7 @@ const About = () => (
 );
 
 const Clients = () => (
-  <section className="py-20 relative border-y border-[#F4EDE4]/20 dark:border-slate-800 transition-colors bg-white/5 dark:bg-transparent">
+  <section className="py-20 relative border-y border-[#F4EDE4]/20 dark:border-slate-800 transition-colors bg-white/5 dark:bg-transparent" data-section="clients">
     <ScrollAnchor id="clients" />
     <div className="max-w-7xl mx-auto px-6 relative z-10">
       <Reveal>
@@ -660,7 +669,7 @@ const Contact = () => {
   };
 
   return (
-    <section className="py-24 relative scroll-mt-32">
+    <section className="py-24 relative scroll-mt-32" data-section="contact">
       <ScrollAnchor id="contact" />
 
       <div className="max-w-7xl mx-auto px-6 relative z-10">

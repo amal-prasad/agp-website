@@ -1,0 +1,110 @@
+/* mobile.css - Isolated Mobile Overrides */
+/* Only applies to devices smaller than 768px (standard tablet breakpoint) */
+@media (max-width: 767px) {
+
+    /* --- 1. CORE STABILITY FIXES --- */
+
+    /* Ensure body doesn't show white bars on overscroll */
+    html,
+    body {
+        background-color: #F0F4F8 !important;
+        overscroll-behavior-y: none !important;
+        /* Prevents rubber-banding exposing the background */
+        min-height: 100dvh !important;
+    }
+
+    /* Dark mode fallback for same */
+    html.dark,
+    html.dark body {
+        background-color: #050505 !important;
+    }
+
+    /* Fix Background Breakage: Force the background container to cover effectively */
+    [data-section="background"] {
+        position: fixed !important;
+        top: 0 !important;
+        left: 0 !important;
+        width: 100vw !important;
+        height: 100dvh !important;
+        /* Use dynamic viewport height */
+        z-index: -1 !important;
+        background-size: cover !important;
+        background-position: center !important;
+        /* Ensure the mobile image is targeted specifically if not handled by JS */
+        /* Note: App.jsx handles the image src switching, we just robustify the container */
+    }
+
+    /* --- 2. NAVBAR & TOGGLE FIXES --- */
+
+    /* Navbar Transparency Fix */
+    /* We ensure the navbar background transitions smoothly */
+    [data-section="navbar"] {
+        transition: background-color 0.3s ease, transform 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    }
+
+    /* Floating Toggle Visibility */
+    /* Ensure it has a high z-index and safe positioning */
+    [data-section="floating-toggle"] {
+        z-index: 9999 !important;
+        /* Move it slightly away from edge to avoid curved corner cutoffs on modern phones */
+        right: 16px !important;
+        top: 100px !important;
+    }
+
+    /* --- 3. TYPOGRAPHY & LAYOUT OPTIMIZATIONS (iPhone 14 Pro / Android) --- */
+
+    /* Hero Heading - Sleeker sizing for mobile */
+    [data-section="hero"] h1 {
+        font-size: 3.25rem !important;
+        /* ~52px, down from 6xl */
+        line-height: 0.95 !important;
+        margin-bottom: 1.5rem !important;
+    }
+
+    /* Hero Subtext */
+    [data-section="hero"] p {
+        font-size: 1.125rem !important;
+        /* lg instead of xl/2xl */
+        line-height: 1.6 !important;
+        max-width: 90% !important;
+    }
+
+    /* Button Stack - Vertical on mobile */
+    [data-section="hero"] .flex {
+        flex-direction: column !important;
+        width: 100% !important;
+        gap: 1rem !important;
+    }
+
+    [data-section="hero"] a {
+        width: 100% !important;
+        justify-content: center !important;
+        padding-top: 1rem !important;
+        padding-bottom: 1rem !important;
+    }
+
+    /* Section Headings */
+    [data-section="services"] h2,
+    [data-section="portfolio"] h2,
+    [data-section="about"] h2,
+    [data-section="clients"] h2,
+    [data-section="contact"] h2 {
+        font-size: 2.5rem !important;
+        /* 4xl equivalent */
+        line-height: 1 !important;
+    }
+
+    /* Service Cards */
+    [data-section="services"] .grid {
+        gap: 1.5rem !important;
+    }
+
+    /* Fix spacing in contact section */
+    [data-section="contact"] .p-12 {
+        padding: 1.5rem !important;
+    }
+
+    [data-section="contact"] h3 {
+        font-size: 2rem !important;
+    }
+}
