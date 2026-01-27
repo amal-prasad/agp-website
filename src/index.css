@@ -30,3 +30,30 @@ body {
 .text-depth {
   text-shadow: 0 2px 10px rgba(0,0,0,0.5);
 }
+
+/* === MOBILE VIEWPORT STABILIZATION === */
+@supports (height: 100dvh) {
+  html, body, #root {
+    min-height: 100dvh;
+  }
+}
+
+/* Prevent scroll bounce exposing background gaps */
+body {
+  overscroll-behavior-y: none;
+}
+
+/* GPU acceleration for smoother animations */
+.gpu-accelerate {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+/* Reduced motion: skip heavy animations for accessibility + performance */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

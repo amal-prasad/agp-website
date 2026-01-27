@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect, memo } from 'react';
+import React, { useState, useRef, useEffect, memo, useCallback } from 'react';
 import { motion } from 'framer-motion';
 import emailjs from '@emailjs/browser';
 import {
@@ -20,21 +20,21 @@ const MAP_EMBED_URL = "https://maps.google.com/maps?q=Treasure+Fantasy+Cat+Road+
 const NAV_LINKS = ['Services', 'Portfolio', 'About', 'Contact'];
 
 const SERVICES = [
-  { title: "Visiting Cards", icon: <User />, desc: "Premium matte, gloss, and textured finishes." },
-  { title: "Bill Books", icon: <FileText />, desc: "Carbonless multi-copy invoice solutions." },
-  { title: "Flex Printing", icon: <Layers />, desc: "High-durability outdoor banners & hoardings." },
-  { title: "ID Cards", icon: <CreditCard />, desc: "PVC cards with lanyards for corporate use." },
-  { title: "Brochures", icon: <Palette />, desc: "Tri-fold, bi-fold, and catalog printing." },
-  { title: "Sticker Labels", icon: <CheckCircle />, desc: "Product packaging and adhesive labels." },
-  { title: "Offset Printing", icon: <Printer />, desc: "High-volume bulk printing with precision." },
-  { title: "Logo Design", icon: <ImageIcon />, desc: "Brand identity creation and vectorization." },
+  { title: "Visiting Cards", Icon: User, desc: "Premium matte, gloss, and textured finishes." },
+  { title: "Bill Books", Icon: FileText, desc: "Carbonless multi-copy invoice solutions." },
+  { title: "Flex Printing", Icon: Layers, desc: "High-durability outdoor banners & hoardings." },
+  { title: "ID Cards", Icon: CreditCard, desc: "PVC cards with lanyards for corporate use." },
+  { title: "Brochures", Icon: Palette, desc: "Tri-fold, bi-fold, and catalog printing." },
+  { title: "Sticker Labels", Icon: CheckCircle, desc: "Product packaging and adhesive labels." },
+  { title: "Offset Printing", Icon: Printer, desc: "High-volume bulk printing with precision." },
+  { title: "Logo Design", Icon: ImageIcon, desc: "Brand identity creation and vectorization." },
 ];
 
 const CLIENTS = [
-  { name: "IIT Indore", icon: <GraduationCap size={32} />, type: "Education" },
-  { name: "IIM Indore", icon: <GraduationCap size={32} />, type: "Management" },
-  { name: "Panasonic", icon: <Factory size={32} />, type: "Industrial" },
-  { name: "RRCAT", icon: <Building2 size={32} />, type: "Research" },
+  { name: "IIT Indore", Icon: GraduationCap, type: "Education" },
+  { name: "IIM Indore", Icon: GraduationCap, type: "Management" },
+  { name: "Panasonic", Icon: Factory, type: "Industrial" },
+  { name: "RRCAT", Icon: Building2, type: "Research" },
 ];
 
 const PORTFOLIO = [
@@ -50,11 +50,22 @@ const REVEAL_VARIANTS = {
   right: { opacity: 0, x: 50 }
 };
 
+// --- THROTTLE UTILITY ---
+const throttle = (fn, ms) => {
+  let lastCall = 0;
+  return (...args) => {
+    const now = Date.now();
+    if (now - lastCall >= ms) {
+      lastCall = now;
+      fn(...args);
+    }
+  };
+};
+
 // --- THEME HOOK ---
+// Always starts in system mode on every page load. Session-only preference.
 const useTheme = () => {
-  const [theme, setTheme] = useState(
-    () => localStorage.getItem('theme') || 'system'
-  );
+  const [theme, setTheme] = useState('system');
 
   useEffect(() => {
     const element = document.documentElement;
@@ -76,10 +87,6 @@ const useTheme = () => {
     };
 
     darkQuery.addEventListener('change', handleChange);
-
-    if (theme === 'system') localStorage.removeItem('theme');
-    else localStorage.setItem('theme', theme);
-
     return () => darkQuery.removeEventListener('change', handleChange);
   }, [theme]);
 
@@ -104,7 +111,7 @@ const Reveal = memo(({ children, dir = "up", delay = 0, className = "" }) => (
 // Locate the IndustrialBackground component and replace it with this:
 
 const IndustrialBackground = memo(() => (
-  <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden bg-[#F0F4F8] dark:bg-[#050505] transition-colors duration-700">
+  <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden bg-[#F0F4F8] dark:bg-[#050505] transition-colors duration-700 min-h-[100dvh]">
 
     {/* --- LIGHT MODE LAYERS --- */}
     <div className="absolute inset-0 dark:hidden">
@@ -244,10 +251,10 @@ const FormInput = memo((props) => (
 
 const TeamCard = memo(({ name, role, tag, img, colorClass, glowColor, delay = 0 }) => (
   <Reveal dir="left" delay={delay}>
-    <div className="relative bg-black/40 dark:bg-slate-800 backdrop-blur-xl rounded-2xl border border-white/20 dark:border-slate-700 shadow-xl dark:shadow-2xl group hover:border-orange-500/30 transition-all duration-300 mt-0 hover:-translate-y-2 hover:shadow-2xl dark:hover:shadow-[0_0_30px_rgba(249,115,22,0.3)]">
-      <div className="aspect-[3/4] relative overflow-hidden rounded-t-2xl bg-black/20 dark:bg-slate-900/50">
+    <div className="relative bg-black/20 dark:bg-slate-800 backdrop-blur-xl rounded-2xl border border-white/20 dark:border-slate-700 shadow-xl dark:shadow-2xl group hover:border-orange-500/30 transition-all duration-300 mt-0 hover:-translate-y-2 hover:shadow-2xl dark:hover:shadow-[0_0_30px_rgba(249,115,22,0.3)] overflow-visible">
+      <div className="aspect-[3/4] relative overflow-hidden group-hover:overflow-visible rounded-t-2xl bg-black/20 dark:bg-slate-900/50">
         <div className={`absolute bottom-0 left-0 w-full h-[80%] bg-gradient-to-t ${glowColor} blur-[50px] opacity-40 dark:opacity-60 group-hover:opacity-100 transition-all duration-500 z-0`} />
-        <img src={img} loading="lazy" decoding="async" alt={role} className="absolute bottom-0 left-0 w-full h-[105%] object-contain object-bottom drop-shadow-2xl z-0 scale-100 group-hover:scale-105 transition-transform duration-500 origin-bottom" />
+        <img src={img} loading="lazy" decoding="async" alt={role} className="absolute bottom-0 left-0 w-full h-[105%] object-contain object-bottom drop-shadow-2xl z-10 scale-100 group-hover:scale-110 transition-transform duration-500 origin-bottom" />
       </div>
       <div className="p-4 bg-black/30 dark:bg-slate-900 backdrop-blur-md border-t border-white/10 dark:border-slate-800 relative z-10 rounded-b-2xl transition-colors">
         {/* LEVITATION: Dark mode subtle lift */}
@@ -268,13 +275,12 @@ const Navbar = memo(({ theme, setTheme }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   useEffect(() => {
-    const handleScroll = () => {
-      const isScrolled = window.scrollY > 20;
-      if (scrolled !== isScrolled) setScrolled(isScrolled);
-    };
+    const handleScroll = throttle(() => {
+      setScrolled(window.scrollY > 20);
+    }, 100);
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
-  }, [scrolled]);
+  }, []);
 
   return (
     <>
@@ -393,18 +399,15 @@ const Hero = () => (
               - drop-shadow opacity increased to 0.3 (30%) for visible levitation.
           */}
           <span className="block text-[#FFEBA7] dark:text-white drop-shadow-[0_15px_10px_rgba(0,0,0,0.3)] dark:drop-shadow-[0_0_35px_rgba(255,255,255,0.3)]">PRECISION</span>
-          <span className="block text-orange-600 drop-shadow-[0_15px_10px_rgba(0,0,0,0.3)] dark:drop-shadow-[0_0_50px_rgba(249,115,22,0.9)] relative z-10">
+          <span className="block text-[#FFEBA7] dark:text-orange-500 drop-shadow-[0_15px_10px_rgba(0,0,0,0.3)] dark:drop-shadow-[0_0_50px_rgba(249,115,22,0.9)] relative z-10">
             IN PRINT.
           </span>
         </h1>
 
-        <p className="text-[#FFEBA7] dark:text-slate-300 text-xl md:text-2xl mb-10 leading-relaxed max-w-lg 
-            font-medium dark:font-normal 
-            transition-colors [text-shadow:0_2px_12px_rgba(0,0,0,0.3)] dark:[text-shadow:none]">
-          Engineering your brand's physical identity with <span className="text-cyan-400 dark:text-cyan-300 
-            font-semibold 
-            drop-shadow-[0_0_10px_rgba(34,211,238,0.5)] dark:drop-shadow-[0_0_15px_rgba(34,211,238,0.5)]
-            [text-shadow:0_4px_8px_rgba(0,0,0,0.3),0_0_15px_rgba(34,211,238,0.4)]">industrial-grade perfection</span>.
+        <p className="text-slate-700 dark:text-slate-300 text-xl md:text-2xl mb-10 leading-relaxed max-w-lg 
+            font-semibold dark:font-normal transition-colors
+            [text-shadow:0_2px_4px_rgba(255,255,255,0.5)] dark:[text-shadow:none]">
+          Engineering your brand's physical identity with <span className="text-red-700 dark:text-cyan-300 font-bold [text-shadow:0_4px_8px_rgba(185,28,28,0.5)] dark:[text-shadow:none] dark:drop-shadow-[0_0_15px_rgba(34,211,238,0.5)]">industrial-grade perfection</span>.
         </p>
 
         <div className="flex flex-col sm:flex-row gap-4">
@@ -463,13 +466,14 @@ const Services = () => (
             <StaticGlowCard className="rounded-2xl p-8 h-full">
               <div className="relative z-10">
                 <div className="h-14 w-14 bg-slate-200/80 dark:bg-slate-800 text-slate-600 dark:text-slate-400 rounded-xl flex items-center justify-center mb-6 border border-slate-300/50 dark:border-slate-700 group-hover:bg-[#FFEBA7] dark:group-hover:bg-cyan-400 group-hover:text-slate-900 dark:group-hover:text-black group-hover:border-[#FFEBA7] dark:group-hover:border-cyan-300 transition-all shadow-sm">
-                  {service.icon}
+                  <service.Icon />
                 </div>
                 <h3 className="text-xl font-bold text-slate-800 dark:text-white mb-3 font-display uppercase tracking-wide group-hover:text-[#E8D99A] dark:group-hover:text-cyan-300 transition-colors">{service.title}</h3>
 
-                <p className="text-slate-600 dark:text-slate-400 text-sm leading-relaxed 
+                <p className="text-[#FFEBA7] dark:text-slate-400 text-sm leading-relaxed 
                     font-medium dark:font-normal 
-                    group-hover:text-slate-800 dark:group-hover:text-slate-300">
+                    [text-shadow:0_2px_4px_rgba(0,0,0,0.3)] dark:[text-shadow:none]
+                    group-hover:text-[#FFF5D4] dark:group-hover:text-slate-300">
                   {service.desc}
                 </p>
               </div>
@@ -559,9 +563,9 @@ const About = () => (
                     {item.title}
                   </h4>
 
-                  <p className="text-slate-600 dark:text-slate-400 leading-relaxed text-base md:text-lg 
+                  <p className="text-slate-800 dark:text-slate-400 leading-relaxed text-base md:text-lg 
                     font-medium dark:font-normal 
-                    group-hover:text-slate-800 dark:group-hover:text-slate-200">
+                    group-hover:text-slate-900 dark:group-hover:text-slate-200">
                     {item.desc}
                   </p>
                 </div>
@@ -602,7 +606,7 @@ const Clients = () => (
                     group-hover:shadow-[0_0_25px_rgba(249,115,22,0.5)] 
                     transition-all duration-300"
               >
-                {client.icon}
+                <client.Icon size={32} />
               </div>
 
               <div className="text-center">
