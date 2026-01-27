@@ -137,8 +137,8 @@ const IndustrialBackground = memo(() => (
           backgroundRepeat: 'no-repeat',
         }}
       />
-      {/* Desktop darkening layer - lighter at 20% */}
-      <div className="absolute inset-0 bg-black/20 hidden md:block" />
+      {/* Desktop darkening layer */}
+      <div className="absolute inset-0 bg-black/25 hidden md:block" />
 
     </div>
 
@@ -404,10 +404,8 @@ const Hero = () => (
           </span>
         </h1>
 
-        <p className="text-slate-700 dark:text-slate-300 text-xl md:text-2xl mb-10 leading-relaxed max-w-lg 
-            font-semibold dark:font-normal transition-colors
-            [text-shadow:0_2px_4px_rgba(255,255,255,0.5)] dark:[text-shadow:none]">
-          Engineering your brand's physical identity with <span className="text-red-700 dark:text-cyan-300 font-bold [text-shadow:0_4px_8px_rgba(185,28,28,0.5)] dark:[text-shadow:none] dark:drop-shadow-[0_0_15px_rgba(34,211,238,0.5)]">industrial-grade perfection</span>.
+        <p className="text-xl md:text-2xl mb-10 leading-relaxed max-w-lg font-semibold dark:font-normal transition-colors">
+          <span className="text-slate-700 dark:text-slate-300 [text-shadow:0_2px_4px_rgba(255,255,255,0.5)] dark:[text-shadow:none]">Engineering your brand's physical identity with </span><span className="text-indigo-900 dark:text-cyan-300 font-bold drop-shadow-[0_3px_6px_rgba(49,46,129,0.5)] dark:drop-shadow-[0_0_15px_rgba(34,211,238,0.5)]">industrial-grade perfection</span><span className="text-slate-700 dark:text-slate-300 [text-shadow:0_2px_4px_rgba(255,255,255,0.5)] dark:[text-shadow:none]">.</span>
         </p>
 
         <div className="flex flex-col sm:flex-row gap-4">
