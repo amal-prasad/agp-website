@@ -116,11 +116,11 @@ const IndustrialBackground = memo(() => (
     {/* --- LIGHT MODE LAYERS --- */}
     <div className="absolute inset-0 dark:hidden">
 
-      {/* MOBILE ONLY: p1.png with blur - shows on screens < 768px */}
+      {/* MOBILE ONLY: /pastel_1.png with blur - shows on screens < 768px */}
       <div
         className="absolute inset-0 blur-[5px] md:hidden"
         style={{
-          backgroundImage: `url('/P1.png')`,
+          backgroundImage: `url('/pastel_1.png')`,
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           backgroundRepeat: 'no-repeat',
