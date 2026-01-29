@@ -42,6 +42,12 @@ const Contact = () => {
         }
     };
 
+    const inputClasses = "w-full px-6 py-4 outline-none transition-all font-medium backdrop-blur-md " +
+        // Light Mode: Minimalist Notebook Style
+        "bg-transparent text-[#3B2F26] placeholder-[#6B5E52] border-0 border-b-2 border-[#6B5E52]/30 rounded-none focus:border-[#A85832] focus:bg-transparent " +
+        // Dark Mode: Card Style (Preserved)
+        "dark:bg-slate-800/50 dark:text-white dark:placeholder-slate-500 dark:border dark:border-b dark:border-slate-700 dark:rounded-xl dark:focus:bg-slate-800 dark:shadow-sm dark:focus:shadow-md";
+
     return (
         <section className="py-24 relative scroll-mt-32" data-section="contact">
             <ScrollAnchor id="contact" />
@@ -98,14 +104,14 @@ const Contact = () => {
                         <div className="lg:col-span-3 p-8 md:p-12">
                             <form ref={formRef} onSubmit={handleSubmit} className="space-y-6">
                                 <div className="grid md:grid-cols-2 gap-6">
-                                    <input name="user_name" required type="text" placeholder="Your Name" className="w-full px-6 py-4 rounded-xl border border-[#6B5E52]/30 dark:border-slate-700 bg-[#EDE4D3]/50 dark:bg-slate-800/50 focus:bg-white dark:focus:bg-slate-800 focus:border-[#A85832] outline-none transition-all font-medium text-[#3B2F26] dark:text-white placeholder-[#6B5E52] dark:placeholder-slate-500 backdrop-blur-md shadow-sm focus:shadow-md" />
-                                    <input name="user_phone" required type="tel" placeholder="+91-XXXXXXXXXX" className="w-full px-6 py-4 rounded-xl border border-[#6B5E52]/30 dark:border-slate-700 bg-[#EDE4D3]/50 dark:bg-slate-800/50 focus:bg-white dark:focus:bg-slate-800 focus:border-[#A85832] outline-none transition-all font-medium text-[#3B2F26] dark:text-white placeholder-[#6B5E52] dark:placeholder-slate-500 backdrop-blur-md shadow-sm focus:shadow-md" />
+                                    <input name="user_name" required type="text" placeholder="Your Name" className={inputClasses} />
+                                    <input name="user_phone" required type="tel" placeholder="+91-XXXXXXXXXX" className={inputClasses} />
                                 </div>
                                 <div className="grid md:grid-cols-2 gap-6">
-                                    <input name="user_email" required type="email" placeholder="Email Address" className="w-full px-6 py-4 rounded-xl border border-[#6B5E52]/30 dark:border-slate-700 bg-[#EDE4D3]/50 dark:bg-slate-800/50 focus:bg-white dark:focus:bg-slate-800 focus:border-[#A85832] outline-none transition-all font-medium text-[#3B2F26] dark:text-white placeholder-[#6B5E52] dark:placeholder-slate-500 backdrop-blur-md shadow-sm focus:shadow-md" />
+                                    <input name="user_email" required type="email" placeholder="Email Address" className={inputClasses} />
 
                                     <div className="relative">
-                                        <select name="service_interest" className="w-full px-6 py-4 rounded-xl border border-[#6B5E52]/30 dark:border-slate-700 bg-[#EDE4D3]/50 dark:bg-slate-800/50 focus:bg-white dark:focus:bg-slate-800 focus:border-[#A85832] outline-none transition-all font-medium text-[#3B2F26] dark:text-white appearance-none cursor-pointer shadow-sm backdrop-blur-md">
+                                        <select name="service_interest" className={`${inputClasses} appearance-none cursor-pointer`}>
                                             <option value="General" className="bg-[#EDE4D3] dark:bg-slate-900 text-[#3B2F26] dark:text-white">General Inquiry</option>
                                             {SERVICES.map(s => <option key={s} value={s} className="bg-[#EDE4D3] dark:bg-slate-900 text-[#3B2F26] dark:text-white">{s}</option>)}
                                         </select>
@@ -115,7 +121,7 @@ const Contact = () => {
                                     </div>
                                 </div>
 
-                                <textarea name="message" required rows={4} className="w-full px-6 py-4 rounded-xl border border-[#6B5E52]/30 dark:border-slate-700 bg-[#EDE4D3]/50 dark:bg-slate-800/50 focus:bg-white dark:focus:bg-slate-800 focus:border-[#A85832] outline-none transition-all font-medium text-[#3B2F26] dark:text-white placeholder-[#6B5E52] dark:placeholder-slate-500 backdrop-blur-md shadow-sm" placeholder="Message..." />
+                                <textarea name="message" required rows={4} className={inputClasses} placeholder="Message..." />
 
                                 <button
                                     type="submit"

@@ -17,9 +17,14 @@ import Contact from './components/sections/Contact';
 
 export default function App() {
   const { theme, setTheme } = useTheme();
+  const [mounted, setMounted] = React.useState(false);
+
+  React.useEffect(() => {
+    setMounted(true);
+  }, []);
 
   return (
-    <div className="antialiased bg-[#EDE4D3] dark:bg-[#050505] text-[#3B2F26] dark:text-slate-100 transition-colors duration-700 selection:bg-[#A85832] selection:text-white overflow-x-hidden relative min-h-[100dvh]">
+    <div className={`antialiased bg-[#EDE4D3] dark:bg-[#050505] text-[#3B2F26] dark:text-slate-100 selection:bg-[#A85832] selection:text-white overflow-x-hidden relative min-h-[100dvh] ${mounted ? 'transition-colors duration-700' : ''}`}>
       <IndustrialBackground />
       <PolishedGlassLayer />
       <Navbar theme={theme} setTheme={setTheme} />

@@ -12,30 +12,33 @@ const Navbar = memo(({ theme, setTheme }) => {
     const lastScrollY = useRef(0);
 
     useEffect(() => {
-        const handleScroll = throttle(() => {
+        const handleScroll = () => {
             const currentScrollY = Math.max(0, window.scrollY);
-            const isAtTop = currentScrollY < 20;
-            // Show if at top OR scrolling up. 
-            // Added small buffer (10px) to prevent micro-jitters
+            const isAtTop = currentScrollY < 10; // Tighter threshold
             const isScrollingUp = currentScrollY < lastScrollY.current;
 
             setScrolled(!isAtTop);
             setVisible(isAtTop || isScrollingUp);
 
             lastScrollY.current = currentScrollY;
-        }, 100); // Throttled to 100ms
+        };
 
-        window.addEventListener('scroll', handleScroll, { passive: true });
-        return () => window.removeEventListener('scroll', handleScroll);
+        // Immediate check on mount
+        handleScroll();
+
+        // Throttled listener for performance
+        const throttledScroll = throttle(handleScroll, 100);
+        window.addEventListener('scroll', throttledScroll, { passive: true });
+        return () => window.removeEventListener('scroll', throttledScroll);
     }, []);
 
     return (
         <>
-            <nav data-section="navbar" className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ease-[cubic-bezier(0.4,0,0.2,1)]
+            <nav data-section="navbar" className={`fixed top-0 left-0 w-full z-50 transition-all duration-500 ease-[cubic-bezier(0.4,0,0.2,1)]
         ${visible ? 'translate-y-0' : '-translate-y-full'}
         ${scrolled
                     ? 'py-3 md:py-4 bg-[#EDE4D3]/90 dark:bg-[#050505]/90 backdrop-blur-xl border-b border-[#6B5E52]/20 dark:border-white/10 shadow-[0_4px_24px_rgba(59,47,38,0.15)] dark:shadow-[0_4px_30px_rgba(0,0,0,0.3)]'
-                    : 'py-4 md:py-8 bg-transparent border-b border-transparent backdrop-blur-[1px]'
+                    : 'py-5 md:py-8 bg-transparent border-b border-transparent shadow-none'
                 }
       `}>
                 <div className="max-w-[95rem] mx-auto px-4 md:px-10 flex items-center justify-between">
