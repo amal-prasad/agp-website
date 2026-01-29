@@ -6,6 +6,7 @@
 @tailwind utilities;
 
 /* === KRAFT PAPER COLOR SYSTEM === */
+/* Defined at :root level for global availability */
 :root {
   --kraft-bg: #EDE4D3;
   --espresso: #3B2F26;
@@ -16,26 +17,29 @@
   --warm-charcoal: #333333;
 }
 
+/* Base styles with high stability */
 html {
   scroll-behavior: smooth;
   overflow-x: hidden;
-  /* Kraft paper base - warm cream tone */
-  background-color: var(--kraft-bg);
+  /* Kraft paper base - warm cream tone - FORCE applied */
+  background-color: var(--kraft-bg) !important;
+  -webkit-tap-highlight-color: transparent;
 }
 
 html.dark {
-  background-color: #050505;
+  background-color: #050505 !important;
 }
 
 body {
   @apply font-sans;
   margin: 0;
   padding: 0;
-  background-color: var(--kraft-bg);
+  background-color: var(--kraft-bg) !important;
+  min-height: 100dvh;
 }
 
 .dark body {
-  background-color: #050505;
+  background-color: #050505 !important;
 }
 
 /* === WARM PALETTE UTILITIES === */
@@ -83,17 +87,9 @@ html.dark .text-force-production-black,
   text-shadow: 0 0 20px rgba(249, 115, 22, 0.3);
 }
 
-.text-depth {
-  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
-}
-
 /* === WARM LEVITATION SHADOWS === */
 .shadow-warm-levitate {
   box-shadow: 0 8px 24px rgba(59, 47, 38, 0.15);
-}
-
-.shadow-warm-levitate-lg {
-  box-shadow: 0 16px 48px rgba(59, 47, 38, 0.2);
 }
 
 /* === MOBILE VIEWPORT STABILIZATION === */
@@ -115,6 +111,7 @@ body {
 .gpu-accelerate {
   transform: translateZ(0);
   backface-visibility: hidden;
+  will-change: transform;
 }
 
 /* Reduced motion preference */
