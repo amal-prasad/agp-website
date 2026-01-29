@@ -102,10 +102,8 @@ html.dark .text-force-production-black,
   }
 }
 
-/* Prevent scroll bounce exposing background gaps */
-body {
-  overscroll-behavior-y: none;
-}
+/* Prevent scroll bounce exposing background gaps - DISABLED to allow Pull-to-Refresh */
+/* body { overscroll-behavior-y: none; } */
 
 /* GPU acceleration for smoother animations */
 .gpu-accelerate {

@@ -8,7 +8,7 @@
     html,
     body {
         background-color: #EDE4D3 !important;
-        overscroll-behavior-y: none !important;
+        /* overscroll-behavior-y: none !important; */
         /* Prevents rubber-banding exposing the background */
         min-height: 100dvh !important;
     }
