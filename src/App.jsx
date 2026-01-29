@@ -111,38 +111,20 @@ const Reveal = memo(({ children, dir = "up", delay = 0, className = "" }) => (
 // Locate the IndustrialBackground component and replace it with this:
 
 const IndustrialBackground = memo(() => (
-  <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden bg-[#F0F4F8] dark:bg-[#050505] transition-colors duration-700 min-h-[100dvh]" data-section="background">
+  <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden bg-[#EDE4D3] dark:bg-[#050505] transition-colors duration-700 min-h-[100dvh]" data-section="background">
 
-    {/* --- LIGHT MODE LAYERS --- */}
-    <div className="absolute inset-0 dark:hidden">
-
-      {/* MOBILE ONLY: /pastel_1.png with blur - shows on screens < 768px */}
+    {/* --- LIGHT MODE: KRAFT PAPER AESTHETIC --- */}
+    <div className="absolute inset-0 dark:hidden gpu-accelerate">
+      {/* Kraft paper background with subtle blur for depth */}
       <div
-        className="absolute inset-0 blur-[5px] md:hidden"
+        className="absolute inset-0 blur-[6px] bg-center bg-cover bg-no-repeat gpu-accelerate"
         style={{
-          backgroundImage: `url('/pastel_1.png')`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          backgroundRepeat: 'no-repeat',
+          backgroundImage: `url('/kraft-paper-bg.png')`,
         }}
       />
-
-      {/* DESKTOP ONLY: pastel_1.png with light overlay - shows on screens >= 768px */}
-      <div
-        className="absolute inset-0 hidden md:block blur-[3px]"
-        style={{
-          backgroundImage: `url('/pastel_1.png')`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          backgroundRepeat: 'no-repeat',
-        }}
-      />
-      {/* Desktop darkening layer */}
-      <div className="absolute inset-0 bg-black/25 hidden md:block" />
-
+      {/* Warm cream overlay to enhance paper texture */}
+      <div className="absolute inset-0 bg-[#EDE4D3]/30 gpu-accelerate" />
     </div>
-
-
 
     {/* --- DARK MODE LAYERS (UNCHANGED) --- */}
     <div className="hidden dark:block">
@@ -205,22 +187,22 @@ const ThemeToggle = ({ theme, setTheme, isVertical = false }) => {
 
 const StaticGlowCard = memo(({ children, className = "" }) => (
   <div className={`group relative border 
-    border-white/30 dark:border-slate-800 
-    bg-black/10 dark:bg-slate-900/20 
+    border-[#6B5E52]/30 dark:border-slate-800 
+    bg-white/50 dark:bg-slate-900/20 
     backdrop-blur-xl 
     overflow-hidden transition-all duration-300 
     hover:-translate-y-2 
-    shadow-[0_8px_32px_rgba(0,0,0,0.15)] hover:shadow-[0_16px_48px_rgba(0,0,0,0.25)] 
+    shadow-[0_8px_24px_rgba(59,47,38,0.12)] hover:shadow-[0_16px_40px_rgba(59,47,38,0.2)] 
     dark:shadow-[0_0_30px_rgba(249,115,22,0.15)] dark:hover:shadow-[0_0_30px_rgba(249,115,22,0.3)] 
-    hover:border-white/50 dark:hover:border-orange-500/30 ${className}`}
+    hover:border-[#A85832]/40 dark:hover:border-orange-500/30 ${className}`}
   >
-    {/* Glass gradient overlay for light mode */}
-    <div className="absolute inset-0 bg-gradient-to-br from-white/30 via-white/10 to-transparent dark:opacity-0 pointer-events-none" />
+    {/* Warm glass gradient overlay for light mode */}
+    <div className="absolute inset-0 bg-gradient-to-br from-white/40 via-[#EDE4D3]/20 to-transparent dark:opacity-0 pointer-events-none" />
     {/* Hover glow effect */}
     <div className="pointer-events-none absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 ease-in-out"
-      style={{ background: `radial-gradient(circle at 50% 0%, rgba(255, 255, 255, 0.15) 20%, rgba(255, 255, 255, 0.05) 50%, transparent 80%)` }}
+      style={{ background: `radial-gradient(circle at 50% 0%, rgba(168, 88, 50, 0.1) 20%, rgba(168, 88, 50, 0.05) 50%, transparent 80%)` }}
     />
-    <div className="absolute inset-0 border border-white/0 group-hover:border-white/20 rounded-xl transition-colors duration-500 pointer-events-none" />
+    <div className="absolute inset-0 border border-[#A85832]/0 group-hover:border-[#A85832]/20 rounded-xl transition-colors duration-500 pointer-events-none" />
     <div className="relative h-full z-10">{children}</div>
   </div>
 ));
@@ -228,15 +210,15 @@ const StaticGlowCard = memo(({ children, className = "" }) => (
 const SectionHeading = memo(({ children, subtitle }) => (
   <Reveal>
     <div className="mb-12 md:mb-16 relative z-10">
-      <h2 className="text-4xl md:text-6xl font-bold mb-4 font-display uppercase tracking-wide text-[#FFEBA7] dark:text-white drop-shadow-[0_5px_5px_rgba(0,0,0,0.3)] dark:drop-shadow-[0_4px_15px_rgba(34,211,238,0.5)] transition-all">
+      <h2 className="text-4xl md:text-6xl font-bold mb-4 font-display uppercase tracking-wide text-[#3B2F26] dark:text-white drop-shadow-[0_4px_8px_rgba(59,47,38,0.2)] dark:drop-shadow-[0_4px_15px_rgba(34,211,238,0.5)] transition-all">
         {children}
       </h2>
 
-      <div className="h-1 w-32 mb-6 bg-gradient-to-r from-[#FFEBA7] via-[#FFEBA7]/60 to-transparent dark:from-orange-500 dark:via-orange-400 rounded-full shadow-[0_0_20px_rgba(255,235,167,0.6)] dark:shadow-[0_0_20px_orange]" />
+      <div className="h-1 w-32 mb-6 bg-gradient-to-r from-[#A85832] via-[#A85832]/60 to-transparent dark:from-orange-500 dark:via-orange-400 rounded-full shadow-[0_0_15px_rgba(168,88,50,0.4)] dark:shadow-[0_0_20px_orange]" />
 
-      <p className="text-xl max-w-2xl text-white dark:text-slate-300 transition-colors 
+      <p className="text-xl max-w-2xl text-[#4A4238] dark:text-slate-300 transition-colors 
         font-medium dark:font-normal
-        [text-shadow:0_2px_8px_rgba(0,0,0,0.3)] dark:[text-shadow:none]">
+        [text-shadow:0_2px_6px_rgba(237,228,211,0.5)] dark:[text-shadow:none]">
         {subtitle}
       </p>
     </div>
@@ -251,15 +233,14 @@ const FormInput = memo((props) => (
 
 const TeamCard = memo(({ name, role, tag, img, colorClass, glowColor, delay = 0 }) => (
   <Reveal dir="left" delay={delay}>
-    <div className="relative bg-black/20 dark:bg-slate-800 backdrop-blur-xl rounded-2xl border border-white/20 dark:border-slate-700 shadow-xl dark:shadow-2xl group hover:border-orange-500/30 transition-all duration-300 mt-0 hover:-translate-y-2 hover:shadow-2xl dark:hover:shadow-[0_0_30px_rgba(249,115,22,0.3)] overflow-visible">
-      <div className="aspect-[3/4] relative overflow-hidden group-hover:overflow-visible rounded-t-2xl bg-black/20 dark:bg-slate-900/50">
+    <div className="relative bg-white/60 dark:bg-slate-800 backdrop-blur-xl rounded-2xl border border-[#6B5E52]/30 dark:border-slate-700 shadow-[0_8px_24px_rgba(59,47,38,0.12)] dark:shadow-2xl group hover:border-[#A85832]/40 dark:hover:border-orange-500/30 transition-all duration-300 mt-0 hover:-translate-y-2 hover:shadow-[0_16px_40px_rgba(59,47,38,0.2)] dark:hover:shadow-[0_0_30px_rgba(249,115,22,0.3)] overflow-visible">
+      <div className="aspect-[3/4] relative overflow-hidden group-hover:overflow-visible rounded-t-2xl bg-[#EDE4D3]/50 dark:bg-slate-900/50">
         <div className={`absolute bottom-0 left-0 w-full h-[80%] bg-gradient-to-t ${glowColor} blur-[50px] opacity-40 dark:opacity-60 group-hover:opacity-100 transition-all duration-500 z-0`} />
         <img src={img} loading="lazy" decoding="async" alt={role} className="absolute bottom-0 left-0 w-full h-[105%] object-contain object-bottom drop-shadow-2xl z-10 scale-100 group-hover:scale-110 transition-transform duration-500 origin-bottom" />
       </div>
-      <div className="p-4 bg-black/30 dark:bg-slate-900 backdrop-blur-md border-t border-white/10 dark:border-slate-800 relative z-10 rounded-b-2xl transition-colors">
-        {/* LEVITATION: Dark mode subtle lift */}
-        <h4 className="text-white dark:text-white font-display text-xl font-bold uppercase mb-1 drop-shadow-[0_3px_2px_rgba(0,0,0,0.3)] dark:drop-shadow-[0_4px_10px_rgba(255,255,255,0.2)]">{name}</h4>
-        <p className="font-bold text-slate-300 dark:text-slate-300 font-display text-sm uppercase">{role}</p>
+      <div className="p-4 bg-white/70 dark:bg-slate-900 backdrop-blur-md border-t border-[#6B5E52]/20 dark:border-slate-800 relative z-10 rounded-b-2xl transition-colors">
+        <h4 className="text-[#3B2F26] dark:text-white font-display text-xl font-bold uppercase mb-1 drop-shadow-[0_2px_4px_rgba(59,47,38,0.15)] dark:drop-shadow-[0_4px_10px_rgba(255,255,255,0.2)]">{name}</h4>
+        <p className="font-bold text-[#6B5E52] dark:text-slate-300 font-display text-sm uppercase">{role}</p>
         <p className={`text-xs ${colorClass} tracking-widest font-bold mt-1`}>{tag}</p>
       </div>
     </div>
@@ -299,7 +280,7 @@ const Navbar = memo(({ theme, setTheme }) => {
       <nav data-section="navbar" className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ease-[cubic-bezier(0.4,0,0.2,1)]
         ${visible ? 'translate-y-0' : '-translate-y-full'}
         ${scrolled
-          ? 'py-3 md:py-4 bg-black/60 dark:bg-[#050505]/90 backdrop-blur-xl border-b border-white/10 shadow-[0_4px_30px_rgba(0,0,0,0.3)]'
+          ? 'py-3 md:py-4 bg-[#EDE4D3]/90 dark:bg-[#050505]/90 backdrop-blur-xl border-b border-[#6B5E52]/20 dark:border-white/10 shadow-[0_4px_24px_rgba(59,47,38,0.15)] dark:shadow-[0_4px_30px_rgba(0,0,0,0.3)]'
           : 'py-4 md:py-8 bg-transparent border-b border-transparent backdrop-blur-[1px]'
         }
       `}>
@@ -310,18 +291,18 @@ const Navbar = memo(({ theme, setTheme }) => {
             <img
               src="/logo.png"
               alt="AGP Logo"
-              className="h-10 md:h-12 w-auto object-contain contrast-125 saturate-150 drop-shadow-[0_3px_3px_rgba(0,0,0,0.5)]"
+              className="h-10 md:h-12 w-auto object-contain contrast-125 saturate-150 drop-shadow-[0_3px_6px_rgba(59,47,38,0.3)]"
             />
-            <span className="font-bold text-3xl md:text-5xl tracking-tighter font-display leading-none translate-y-1 md:translate-y-3 transition-colors text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.5)]">ENTERPRISES</span>
+            <span className={`font-bold text-3xl md:text-5xl tracking-tighter font-display leading-none translate-y-1 md:translate-y-3 transition-colors ${scrolled ? 'text-[#3B2F26] dark:text-white' : 'text-[#3B2F26] dark:text-white'} drop-shadow-[0_2px_4px_rgba(59,47,38,0.2)] dark:drop-shadow-[0_2px_4px_rgba(0,0,0,0.5)]`}>ENTERPRISES</span>
           </div>
 
           {/* DESKTOP NAVIGATION */}
           <div className="hidden md:flex items-center gap-8 lg:gap-12">
             {NAV_LINKS.map((item) => (
               <a key={item} href={`#${item.toLowerCase()}`}
-                className="text-sm uppercase tracking-[0.2em] font-bold font-display transition-colors 
-                 text-white/90 hover:text-cyan-400 dark:hover:text-cyan-300 
-                 drop-shadow-[0_2px_4px_rgba(0,0,0,0.5)] hover:drop-shadow-[0_0_10px_rgba(34,211,238,0.5)]"
+                className={`text-sm uppercase tracking-[0.2em] font-bold font-display transition-colors 
+                 ${scrolled ? 'text-[#3B2F26] hover:text-[#A85832]' : 'text-[#3B2F26] hover:text-[#A85832]'} dark:text-white/90 dark:hover:text-cyan-300 
+                 drop-shadow-[0_1px_2px_rgba(59,47,38,0.15)] dark:drop-shadow-[0_2px_4px_rgba(0,0,0,0.5)] hover:drop-shadow-[0_0_8px_rgba(168,88,50,0.4)] dark:hover:drop-shadow-[0_0_10px_rgba(34,211,238,0.5)]`}
               >
                 {item}
               </a>
@@ -329,7 +310,7 @@ const Navbar = memo(({ theme, setTheme }) => {
 
             <ThemeToggle theme={theme} setTheme={setTheme} />
 
-            <a href="#contact" className="bg-gradient-to-r from-orange-600 to-red-600 text-white px-8 py-3 rounded-xl font-bold hover:shadow-[0_0_25px_rgba(249,115,22,0.6)] transition-all font-display tracking-widest border border-orange-400/50 text-sm uppercase">
+            <a href="#contact" className="bg-[#A85832] dark:bg-gradient-to-r dark:from-orange-600 dark:to-red-600 text-white px-8 py-3 rounded-xl font-bold hover:bg-[#8B4726] hover:shadow-[0_0_20px_rgba(168,88,50,0.5)] dark:hover:shadow-[0_0_25px_rgba(249,115,22,0.6)] transition-all font-display tracking-widest border border-[#A85832] dark:border-orange-400/50 text-sm uppercase">
               Get Quote
             </a>
           </div>
@@ -338,7 +319,7 @@ const Navbar = memo(({ theme, setTheme }) => {
           <div className="flex md:hidden items-center gap-3">
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="p-2 rounded-lg bg-black/30 backdrop-blur-md border border-white/20 text-white"
+              className={`p-2 rounded-lg backdrop-blur-md border transition-colors ${scrolled ? 'bg-[#3B2F26]/10 border-[#6B5E52]/30 text-[#3B2F26]' : 'bg-[#3B2F26]/10 border-[#6B5E52]/30 text-[#3B2F26]'} dark:bg-black/30 dark:border-white/20 dark:text-white`}
             >
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 {mobileMenuOpen ? (
@@ -374,7 +355,7 @@ const Navbar = memo(({ theme, setTheme }) => {
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -20 }}
-          className="fixed inset-0 z-40 pt-20 bg-black/95 backdrop-blur-xl md:hidden"
+          className="fixed inset-0 z-40 pt-20 bg-[#EDE4D3]/98 dark:bg-black/95 backdrop-blur-xl md:hidden"
         >
           <div className="flex flex-col items-center gap-6 p-8">
             {NAV_LINKS.map((item) => (
@@ -382,7 +363,7 @@ const Navbar = memo(({ theme, setTheme }) => {
                 key={item}
                 href={`#${item.toLowerCase()}`}
                 onClick={() => setMobileMenuOpen(false)}
-                className="text-2xl uppercase tracking-[0.2em] font-bold font-display text-white hover:text-cyan-400 transition-colors"
+                className="text-2xl uppercase tracking-[0.2em] font-bold font-display text-[#3B2F26] dark:text-white hover:text-[#A85832] dark:hover:text-cyan-400 transition-colors"
               >
                 {item}
               </a>
@@ -390,7 +371,7 @@ const Navbar = memo(({ theme, setTheme }) => {
             <a
               href="#contact"
               onClick={() => setMobileMenuOpen(false)}
-              className="mt-4 bg-gradient-to-r from-orange-600 to-red-600 text-white px-10 py-4 rounded-xl font-bold text-lg font-display tracking-widest border border-orange-400/50 uppercase"
+              className="mt-4 bg-[#A85832] dark:bg-gradient-to-r dark:from-orange-600 dark:to-red-600 text-white px-10 py-4 rounded-xl font-bold text-lg font-display tracking-widest border border-[#A85832] dark:border-orange-400/50 uppercase"
             >
               Get Quote
             </a>
@@ -405,35 +386,33 @@ const Hero = () => (
   <section className="relative min-h-screen flex items-center overflow-visible pt-20" data-section="hero">
     <div className="max-w-7xl mx-auto px-6 relative z-10 grid lg:grid-cols-2 gap-12 items-center">
       <Reveal>
-        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 dark:bg-slate-800/80 border border-white/20 dark:border-slate-700 text-orange-100 dark:text-cyan-300 text-sm font-medium tracking-widest uppercase mb-8 shadow-sm dark:shadow-[0_0_15px_rgba(34,211,238,0.15)] backdrop-blur-md transition-colors">
-          <span className="w-2 h-2 rounded-full bg-orange-500 dark:bg-cyan-300 animate-pulse dark:shadow-[0_0_10px_cyan]" /> Est. 2019
+        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#3B2F26]/10 dark:bg-slate-800/80 border border-[#6B5E52]/30 dark:border-slate-700 text-[#A85832] dark:text-cyan-300 text-sm font-medium tracking-widest uppercase mb-8 shadow-[0_4px_12px_rgba(59,47,38,0.1)] dark:shadow-[0_0_15px_rgba(34,211,238,0.15)] backdrop-blur-md transition-colors">
+          <span className="w-2 h-2 rounded-full bg-[#A85832] dark:bg-cyan-300 animate-pulse dark:shadow-[0_0_10px_cyan]" /> Est. 2019
         </div>
 
         <h1 className="text-6xl md:text-8xl font-bold leading-[0.9] mb-8 font-display transition-colors">
-          {/* MODIFICATION: 
-              - drop-shadow opacity increased to 0.3 (30%) for visible levitation.
-          */}
-          <span className="block text-[#FFEBA7] dark:text-white drop-shadow-[0_15px_10px_rgba(0,0,0,0.3)] dark:drop-shadow-[0_0_35px_rgba(255,255,255,0.3)]">PRECISION</span>
-          <span className="block text-[#FFEBA7] dark:text-orange-500 drop-shadow-[0_15px_10px_rgba(0,0,0,0.3)] dark:drop-shadow-[0_0_50px_rgba(249,115,22,0.9)] relative z-10">
+          {/* KRAFT PAPER: Warm levitation with Espresso Brown */}
+          <span className="block text-[#3B2F26] dark:text-white drop-shadow-[0_8px_16px_rgba(59,47,38,0.25)] dark:drop-shadow-[0_0_35px_rgba(255,255,255,0.3)]">PRECISION</span>
+          <span className="block text-[#A85832] dark:text-orange-500 drop-shadow-[0_8px_16px_rgba(168,88,50,0.3)] dark:drop-shadow-[0_0_50px_rgba(249,115,22,0.9)] relative z-10">
             IN PRINT.
           </span>
         </h1>
 
         <p className="text-xl md:text-2xl mb-10 leading-relaxed max-w-lg font-semibold dark:font-normal transition-colors">
-          <span className="text-white dark:text-slate-300 [text-shadow:0_2px_8px_rgba(0,0,0,0.3)] dark:[text-shadow:none]">Engineering your brand's physical identity with </span>
-          {/* LIGHT MODE TEXT (Black) */}
-          <span className="dark:hidden font-bold !text-black [text-shadow:0_6px_12px_rgba(0,0,0,0.4)]" style={{ color: 'black' }}>industrial-grade perfection</span>
-          {/* DARK MODE TEXT (Cyan) */}
-          <span className="hidden dark:inline font-bold text-cyan-300 drop-shadow-[0_0_15px_rgba(34,211,238,0.5)]">industrial-grade perfection</span>
-          <span className="text-white dark:text-slate-300 [text-shadow:0_2px_8px_rgba(0,0,0,0.3)] dark:[text-shadow:none]">.</span>
+          <span className="text-[#4A4238] dark:text-slate-300 [text-shadow:0_2px_6px_rgba(237,228,211,0.5)] dark:[text-shadow:none]">Engineering your brand's physical identity with </span>
+          {/* Forest Green accent for "industrial-grade perfection" */}
+          <span className="font-bold text-force-production-black dark:text-force-production-cyan [text-shadow:0_4px_8px_rgba(35,79,50,0.3)] dark:[text-shadow:0_0_15px_rgba(34,211,238,0.5)] transition-none!">
+            industrial-grade perfection
+          </span>
+          <span className="text-[#4A4238] dark:text-slate-300 [text-shadow:0_2px_6px_rgba(237,228,211,0.5)] dark:[text-shadow:none]">.</span>
         </p>
 
         <div className="flex flex-col sm:flex-row gap-4">
-          <a href="#contact" className="bg-orange-600 text-white px-8 py-4 rounded-lg font-bold text-lg hover:bg-orange-700 transition-all shadow-[0_4px_15px_rgba(249,115,22,0.3)] dark:shadow-[0_0_25px_rgba(249,115,22,0.5)] flex items-center justify-center gap-2 font-display uppercase tracking-wide border border-orange-500">
+          <a href="#contact" className="bg-[#A85832] text-white px-8 py-4 rounded-lg font-bold text-lg hover:bg-[#8B4726] transition-all shadow-[0_6px_20px_rgba(168,88,50,0.35)] dark:shadow-[0_0_25px_rgba(249,115,22,0.5)] flex items-center justify-center gap-2 font-display uppercase tracking-wide border border-[#A85832]">
             Start Project <ArrowRight size={20} />
           </a>
 
-          <a href="#portfolio" className="border border-[#FFEBA7]/40 dark:border-slate-600 text-[#FFEBA7] dark:text-white px-8 py-4 rounded-lg font-bold text-lg hover:bg-[#FFEBA7] hover:text-orange-900 dark:hover:bg-slate-800 dark:hover:border-cyan-300 dark:hover:text-cyan-300 transition-all flex items-center justify-center font-display uppercase tracking-wide backdrop-blur-sm shadow-sm dark:shadow-none bg-white/5 dark:bg-transparent">
+          <a href="#portfolio" className="border border-[#3B2F26]/40 dark:border-slate-600 text-[#3B2F26] dark:text-white px-8 py-4 rounded-lg font-bold text-lg hover:bg-[#3B2F26] hover:text-[#EDE4D3] dark:hover:bg-slate-800 dark:hover:border-cyan-300 dark:hover:text-cyan-300 transition-all flex items-center justify-center font-display uppercase tracking-wide backdrop-blur-sm shadow-[0_4px_12px_rgba(59,47,38,0.15)] dark:shadow-none bg-white/20 dark:bg-transparent">
             Our Work
           </a>
         </div>
@@ -483,15 +462,14 @@ const Services = () => (
           <Reveal dir="left" key={service.title} delay={idx * 0.05}>
             <StaticGlowCard className="rounded-2xl p-8 h-full">
               <div className="relative z-10">
-                <div className="h-14 w-14 bg-slate-200/80 dark:bg-slate-800 text-slate-600 dark:text-slate-400 rounded-xl flex items-center justify-center mb-6 border border-slate-300/50 dark:border-slate-700 group-hover:bg-[#FFEBA7] dark:group-hover:bg-cyan-400 group-hover:text-slate-900 dark:group-hover:text-black group-hover:border-[#FFEBA7] dark:group-hover:border-cyan-300 transition-all shadow-sm">
+                <div className="h-14 w-14 bg-[#EDE4D3] dark:bg-slate-800 text-[#6B5E52] dark:text-slate-400 rounded-xl flex items-center justify-center mb-6 border border-[#6B5E52]/30 dark:border-slate-700 group-hover:bg-[#A85832] dark:group-hover:bg-cyan-400 group-hover:text-white dark:group-hover:text-black group-hover:border-[#A85832] dark:group-hover:border-cyan-300 transition-all shadow-sm">
                   <service.Icon />
                 </div>
-                <h3 className="text-xl font-bold text-slate-800 dark:text-white mb-3 font-display uppercase tracking-wide group-hover:text-[#E8D99A] dark:group-hover:text-cyan-300 transition-colors">{service.title}</h3>
+                <h3 className="text-xl font-bold text-[#3B2F26] dark:text-white mb-3 font-display uppercase tracking-wide group-hover:text-[#A85832] dark:group-hover:text-cyan-300 transition-colors">{service.title}</h3>
 
-                <p className="text-[#FFEBA7] dark:text-slate-400 text-sm leading-relaxed 
+                <p className="text-[#6B5E52] dark:text-slate-400 text-sm leading-relaxed 
                     font-medium dark:font-normal 
-                    [text-shadow:0_2px_4px_rgba(0,0,0,0.3)] dark:[text-shadow:none]
-                    group-hover:text-[#FFF5D4] dark:group-hover:text-slate-300">
+                    group-hover:text-[#4A4238] dark:group-hover:text-slate-300">
                   {service.desc}
                 </p>
               </div>
@@ -503,7 +481,7 @@ const Services = () => (
   </section>
 );
 const Portfolio = () => (
-  <section className="py-24 relative border-t border-[#F4EDE4]/20 dark:border-slate-900 transition-colors bg-white/5 dark:bg-transparent" data-section="portfolio">
+  <section className="py-24 relative border-t border-[#6B5E52]/20 dark:border-slate-900 transition-colors bg-[#EDE4D3]/50 dark:bg-transparent" data-section="portfolio">
     <ScrollAnchor id="portfolio" />
     <div className="max-w-7xl mx-auto px-6 relative z-10">
       <SectionHeading subtitle="A showcase of our recent industrial printing projects.">
@@ -512,44 +490,44 @@ const Portfolio = () => (
       <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
         {PORTFOLIO.map((item, i) => (
           <Reveal key={i} delay={i * 0.1}>
-            <div className="group relative aspect-[4/5] overflow-hidden rounded-2xl bg-black/40 dark:bg-slate-800 backdrop-blur-xl border border-white/20 dark:border-slate-700 transition-all duration-300 hover:-translate-y-2 shadow-sm hover:shadow-xl dark:hover:shadow-[0_0_30px_rgba(249,115,22,0.3)] hover:border-orange-500/30 hover:scale-[1.02]">
-              <div className={`absolute inset-0 ${item.color} opacity-10 dark:opacity-20 group-hover:opacity-20 dark:group-hover:opacity-30 transition-opacity`} />
+            <div className="group relative aspect-[4/5] overflow-hidden rounded-2xl bg-white/60 dark:bg-slate-800 backdrop-blur-xl border border-[#6B5E52]/30 dark:border-slate-700 transition-all duration-300 hover:-translate-y-2 shadow-[0_8px_24px_rgba(59,47,38,0.12)] hover:shadow-[0_16px_40px_rgba(59,47,38,0.2)] dark:hover:shadow-[0_0_30px_rgba(249,115,22,0.3)] hover:border-[#A85832]/40 hover:scale-[1.02]">
+              <div className={`absolute inset-0 ${item.color} opacity-10 dark:opacity-20 group-hover:opacity-15 dark:group-hover:opacity-30 transition-opacity`} />
               <div className="absolute inset-0 flex items-center justify-center">
-                <ImageIcon size={48} className="text-slate-400 dark:text-slate-600 opacity-50" />
+                <ImageIcon size={48} className="text-[#6B5E52] dark:text-slate-600 opacity-40" />
               </div>
-              <div className="absolute inset-0 bg-gradient-to-t from-black/5 via-transparent to-transparent dark:from-black dark:opacity-90" />
+              <div className="absolute inset-0 bg-gradient-to-t from-[#EDE4D3]/80 via-transparent to-transparent dark:from-black dark:opacity-90" />
               <div className="absolute bottom-0 left-0 p-6 w-full">
-                <p className="text-xs font-bold text-[#E8D99A] dark:text-orange-500 uppercase tracking-widest mb-1">{item.category}</p>
-                <h3 className="text-xl font-bold text-white dark:text-white font-display group-hover:text-[#FFEBA7] dark:group-hover:text-cyan-300 transition-colors">{item.title}</h3>
+                <p className="text-xs font-bold text-[#A85832] dark:text-orange-500 uppercase tracking-widest mb-1">{item.category}</p>
+                <h3 className="text-xl font-bold text-[#3B2F26] dark:text-white font-display group-hover:text-[#A85832] dark:group-hover:text-cyan-300 transition-colors">{item.title}</h3>
               </div>
             </div>
           </Reveal>
         ))}
       </div>
       <div className="mt-12 text-center">
-        <p className="text-[#3A2F26] dark:text-slate-500 text-sm font-bold"> * Actual project photos coming soon.</p>
+        <p className="text-[#6B5E52] dark:text-slate-500 text-sm font-bold"> * Actual project photos coming soon.</p>
       </div>
     </div>
   </section>
 );
 
 const About = () => (
-  <section className="py-32 relative overflow-hidden border-t border-[#F4EDE4]/20 dark:border-slate-800 transition-colors" data-section="about">
+  <section className="py-32 relative overflow-hidden border-t border-[#6B5E52]/20 dark:border-slate-800 transition-colors" data-section="about">
     <ScrollAnchor id="about" />
     <div className="max-w-7xl mx-auto px-6 grid md:grid-cols-2 gap-16 items-center relative z-10">
       <div className="grid grid-cols-2 gap-6 relative z-10">
         <TeamCard
           name="M. Sivaprasad" role="Director" tag="LEADERSHIP"
           img="/person-blue.png"
-          colorClass="text-cyan-600 dark:text-cyan-300"
-          glowColor="from-blue-400/30 dark:from-blue-600/50 via-cyan-400/10 dark:via-cyan-500/20 to-transparent"
+          colorClass="text-[#334E68] dark:text-cyan-300"
+          glowColor="from-[#334E68]/30 dark:from-blue-600/50 via-[#334E68]/10 dark:via-cyan-500/20 to-transparent"
         />
         <div className="mt-12">
           <TeamCard
             name="Ajay Pandey" role="Ops Head" tag="EXECUTION"
             img="/person-grey.png"
-            colorClass="text-orange-600 dark:text-orange-500"
-            glowColor="from-orange-400/30 dark:from-orange-600/50 via-red-400/10 dark:via-red-500/20 to-transparent"
+            colorClass="text-[#A85832] dark:text-orange-500"
+            glowColor="from-[#A85832]/30 dark:from-orange-600/50 via-[#A85832]/10 dark:via-red-500/20 to-transparent"
             delay={0.2}
           />
         </div>
@@ -567,23 +545,23 @@ const About = () => (
               { title: "End-to-End", desc: "From design conceptualization to final finishing." }
             ].map((item, i) => (
               <div key={i} className="flex gap-5 group hover:translate-x-2 transition-transform duration-300 p-6 rounded-xl 
-                bg-white/30 dark:bg-slate-800/40 
-                hover:bg-white/50 dark:hover:bg-slate-800/60 
-                border border-slate-200/50 dark:border-white/10 hover:border-cyan-400/30 dark:hover:border-orange-500/30 
-                backdrop-blur-xl shadow-[0_4px_20px_rgba(0,0,0,0.08)] dark:shadow-[0_0_30px_rgba(0,0,0,0.3)]
-                hover:shadow-[0_8px_30px_rgba(6,182,212,0.15)] dark:hover:shadow-[0_0_40px_rgba(249,115,22,0.2)]"
+                bg-white/60 dark:bg-slate-800/40 
+                hover:bg-white/80 dark:hover:bg-slate-800/60 
+                border border-[#6B5E52]/20 dark:border-white/10 hover:border-[#A85832]/40 dark:hover:border-orange-500/30 
+                backdrop-blur-xl shadow-[0_6px_20px_rgba(59,47,38,0.1)] dark:shadow-[0_0_30px_rgba(0,0,0,0.3)]
+                hover:shadow-[0_8px_30px_rgba(168,88,50,0.15)] dark:hover:shadow-[0_0_40px_rgba(249,115,22,0.2)]"
               >
-                <div className="mt-1 min-w-[32px] h-[32px] rounded-lg bg-cyan-100 dark:bg-slate-800 flex items-center justify-center border border-cyan-200 dark:border-slate-700 text-orange-500 shadow-sm dark:shadow-[0_0_15px_rgba(249,115,22,0.3)] group-hover:shadow-[0_0_25px_rgba(249,115,22,0.6)] transition-all">
+                <div className="mt-1 min-w-[32px] h-[32px] rounded-lg bg-[#EDE4D3] dark:bg-slate-800 flex items-center justify-center border border-[#6B5E52]/30 dark:border-slate-700 text-[#A85832] shadow-sm dark:shadow-[0_0_15px_rgba(249,115,22,0.3)] group-hover:shadow-[0_0_20px_rgba(168,88,50,0.4)] transition-all">
                   <Star size={18} fill="currentColor" />
                 </div>
                 <div>
-                  <h4 className="text-xl md:text-2xl font-bold mb-2 text-slate-800 dark:text-white font-display uppercase group-hover:text-[#E8D99A] dark:group-hover:text-cyan-300 transition-colors">
+                  <h4 className="text-xl md:text-2xl font-bold mb-2 text-[#3B2F26] dark:text-white font-display uppercase group-hover:text-[#A85832] dark:group-hover:text-cyan-300 transition-colors">
                     {item.title}
                   </h4>
 
-                  <p className="text-slate-800 dark:text-slate-400 leading-relaxed text-base md:text-lg 
+                  <p className="text-[#6B5E52] dark:text-slate-400 leading-relaxed text-base md:text-lg 
                     font-medium dark:font-normal 
-                    group-hover:text-slate-900 dark:group-hover:text-slate-200">
+                    group-hover:text-[#4A4238] dark:group-hover:text-slate-200">
                     {item.desc}
                   </p>
                 </div>
@@ -597,41 +575,41 @@ const About = () => (
 );
 
 const Clients = () => (
-  <section className="py-20 relative border-y border-[#F4EDE4]/20 dark:border-slate-800 transition-colors bg-white/5 dark:bg-transparent" data-section="clients">
+  <section className="py-20 relative border-y border-[#6B5E52]/20 dark:border-slate-800 transition-colors bg-[#EDE4D3]/60 dark:bg-transparent" data-section="clients">
     <ScrollAnchor id="clients" />
     <div className="max-w-7xl mx-auto px-6 relative z-10">
       <Reveal>
         <div className="text-center mb-12">
-          <h3 className="text-[#FFEBA7] dark:text-orange-500 font-display font-bold text-xl tracking-[0.3em] uppercase mb-4 drop-shadow-[0_2px_4px_rgba(0,0,0,0.3)] dark:drop-shadow-[0_0_15px_rgba(249,115,22,0.6)]">Trusted By The Best</h3>
+          <h3 className="text-[#A85832] dark:text-orange-500 font-display font-bold text-xl tracking-[0.3em] uppercase mb-4 drop-shadow-[0_2px_4px_rgba(168,88,50,0.2)] dark:drop-shadow-[0_0_15px_rgba(249,115,22,0.6)]">Trusted By The Best</h3>
         </div>
       </Reveal>
       <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12">
         {CLIENTS.map((client, i) => (
           <Reveal key={i} delay={i * 0.1}>
             <div className="flex flex-col items-center justify-center gap-4 group cursor-default p-6 
-                bg-black/70 hover:bg-black/80 
+                bg-white/70 hover:bg-white/90 dark:bg-black/70 dark:hover:bg-black/80
                 rounded-2xl transition-all duration-300 
-                border border-white/30 hover:border-orange-500/60 
+                border border-[#6B5E52]/30 hover:border-[#A85832]/50 dark:border-white/30 dark:hover:border-orange-500/60
                 backdrop-blur-xl 
-                shadow-[0_0_20px_rgba(249,115,22,0.15)] hover:shadow-[0_0_35px_rgba(249,115,22,0.4)] 
+                shadow-[0_8px_24px_rgba(59,47,38,0.1)] hover:shadow-[0_16px_40px_rgba(168,88,50,0.2)] dark:shadow-[0_0_20px_rgba(249,115,22,0.15)] dark:hover:shadow-[0_0_35px_rgba(249,115,22,0.4)]
                 hover:-translate-y-2 hover:scale-105"
             >
               <div className="w-20 h-20 rounded-2xl 
-                    bg-white/5 border border-white/20 
+                    bg-[#EDE4D3] dark:bg-white/5 border border-[#6B5E52]/30 dark:border-white/20
                     flex items-center justify-center 
-                    text-slate-300 group-hover:text-white 
-                    group-hover:bg-orange-600 group-hover:border-orange-500 
-                    group-hover:shadow-[0_0_25px_rgba(249,115,22,0.5)] 
+                    text-[#6B5E52] dark:text-slate-300 group-hover:text-white 
+                    group-hover:bg-[#A85832] dark:group-hover:bg-orange-600 group-hover:border-[#A85832] dark:group-hover:border-orange-500
+                    group-hover:shadow-[0_0_20px_rgba(168,88,50,0.4)] dark:group-hover:shadow-[0_0_25px_rgba(249,115,22,0.5)]
                     transition-all duration-300"
               >
                 <client.Icon size={32} />
               </div>
 
               <div className="text-center">
-                <h4 className="text-white font-bold font-display text-xl group-hover:text-orange-500 transition-colors drop-shadow-md">
+                <h4 className="text-[#3B2F26] dark:text-white font-bold font-display text-xl group-hover:text-[#A85832] dark:group-hover:text-orange-500 transition-colors drop-shadow-sm">
                   {client.name}
                 </h4>
-                <p className="text-xs text-slate-400 group-hover:text-slate-200 uppercase tracking-widest mt-1">
+                <p className="text-xs text-[#6B5E52] dark:text-slate-400 group-hover:text-[#4A4238] dark:group-hover:text-slate-200 uppercase tracking-widest mt-1">
                   {client.type}
                 </p>
               </div>
@@ -674,32 +652,30 @@ const Contact = () => {
 
       <div className="max-w-7xl mx-auto px-6 relative z-10">
         <Reveal>
-          <div className="rounded-[2rem] overflow-hidden shadow-2xl grid lg:grid-cols-5 border border-white/20 dark:border-white/10 bg-black/60 dark:bg-slate-900/40 backdrop-blur-xl transition-colors">
-            <div className="lg:col-span-2 bg-black/40 dark:bg-slate-900/60 p-12 text-white dark:text-white flex flex-col justify-between relative overflow-hidden border-r border-white/10 dark:border-white/5 transition-colors">
-              <div className="absolute top-0 right-0 p-40 bg-orange-500/10 rounded-full blur-[80px] -mr-20 -mt-20 pointer-events-none"></div>
+          <div className="rounded-[2rem] overflow-hidden shadow-[0_16px_48px_rgba(59,47,38,0.15)] dark:shadow-2xl grid lg:grid-cols-5 border border-[#6B5E52]/30 dark:border-white/10 bg-white/80 dark:bg-slate-900/40 backdrop-blur-xl transition-colors">
+            <div className="lg:col-span-2 bg-[#3B2F26] dark:bg-slate-900/60 p-12 text-[#EDE4D3] dark:text-white flex flex-col justify-between relative overflow-hidden border-r border-[#6B5E52]/30 dark:border-white/5 transition-colors">
+              <div className="absolute top-0 right-0 p-40 bg-[#A85832]/20 dark:bg-orange-500/10 rounded-full blur-[80px] -mr-20 -mt-20 pointer-events-none"></div>
               <div className="relative z-10">
-                {/* MODIFICATION: Levitation shadow added here */}
-                <h3 className="text-4xl font-bold mb-6 font-display text-white dark:text-white transition-colors drop-shadow-[0_5px_5px_rgba(0,0,0,0.25)]">LET'S PRINT.</h3>
+                <h3 className="text-4xl font-bold mb-6 font-display text-[#EDE4D3] dark:text-white transition-colors drop-shadow-[0_4px_8px_rgba(59,47,38,0.3)]">LET'S PRINT.</h3>
                 <div className="space-y-8 mb-12">
-                  {/* ... (Contact Details remain largely the same, they benefit from high contrast) ... */}
                   <div className="flex items-center gap-5">
-                    <Phone className="text-orange-600 dark:text-orange-500 drop-shadow-sm dark:drop-shadow-[0_0_8px_orange]" size={24} />
+                    <Phone className="text-[#A85832] dark:text-orange-500 drop-shadow-sm dark:drop-shadow-[0_0_8px_orange]" size={24} />
                     <div>
-                      <p className="font-mono text-lg font-bold text-white dark:text-white tracking-wide">+91-7999406413</p>
-                      <p className="font-mono text-lg font-bold text-slate-300 dark:text-slate-400 tracking-wide">+91-8269897212</p>
+                      <p className="font-mono text-lg font-bold text-[#EDE4D3] dark:text-white tracking-wide">+91-7999406413</p>
+                      <p className="font-mono text-lg font-bold text-[#EDE4D3]/70 dark:text-slate-400 tracking-wide">+91-8269897212</p>
                     </div>
                   </div>
 
                   <div className="flex items-center gap-5">
-                    <Send className="text-orange-600 dark:text-orange-500 drop-shadow-sm dark:drop-shadow-[0_0_8px_orange]" size={24} />
-                    <p className="font-mono text-sm md:text-lg font-bold text-white dark:text-white tracking-wide text-ellipsis overflow-hidden">
+                    <Send className="text-[#A85832] dark:text-orange-500 drop-shadow-sm dark:drop-shadow-[0_0_8px_orange]" size={24} />
+                    <p className="font-mono text-sm md:text-lg font-bold text-[#EDE4D3] dark:text-white tracking-wide text-ellipsis overflow-hidden">
                       agpent2019@gmail.com
                     </p>
                   </div>
 
                   <div className="flex items-start gap-5">
-                    <MapPin className="text-orange-600 dark:text-orange-500 drop-shadow-sm dark:drop-shadow-[0_0_8px_orange] mt-1 shrink-0" size={24} />
-                    <p className="font-mono text-lg font-bold text-white dark:text-white tracking-wide leading-relaxed">
+                    <MapPin className="text-[#A85832] dark:text-orange-500 drop-shadow-sm dark:drop-shadow-[0_0_8px_orange] mt-1 shrink-0" size={24} />
+                    <p className="font-mono text-lg font-bold text-[#EDE4D3] dark:text-white tracking-wide leading-relaxed">
                       Flat A36/104, Treasure Fantasy<br />
                       CAT Road, Rau<br />
                       Indore - 453331
@@ -707,7 +683,7 @@ const Contact = () => {
                   </div>
                 </div>
 
-                <div className="w-full h-48 rounded-xl overflow-hidden border border-white/20 dark:border-slate-700/50 shadow-inner relative group">
+                <div className="w-full h-48 rounded-xl overflow-hidden border border-[#6B5E52]/40 dark:border-slate-700/50 shadow-inner relative group">
                   <iframe
                     src={MAP_EMBED_URL}
                     width="100%"
@@ -715,7 +691,7 @@ const Contact = () => {
                     style={{ border: 0 }}
                     allowFullScreen=""
                     loading="lazy"
-                    className="opacity-80 group-hover:opacity-100 transition-all duration-500 grayscale dark:grayscale-0 dark:invert-[.9] dark:hue-rotate-180 dark:contrast-125"
+                    className="opacity-80 group-hover:opacity-100 transition-all duration-500 sepia-[0.2] dark:grayscale-0 dark:invert-[.9] dark:hue-rotate-180 dark:contrast-125"
                     referrerPolicy="no-referrer-when-downgrade"
                     title="Google Maps Location"
                   />
@@ -725,34 +701,33 @@ const Contact = () => {
 
             <div className="lg:col-span-3 p-8 md:p-12">
               <form ref={formRef} onSubmit={handleSubmit} className="space-y-6">
-                {/* Inputs kept as is, they are already functional */}
                 <div className="grid md:grid-cols-2 gap-6">
-                  <FormInput name="user_name" required type="text" placeholder="Your Name" />
-                  <FormInput name="user_phone" required type="tel" placeholder="+91-XXXXXXXXXX" />
+                  <input name="user_name" required type="text" placeholder="Your Name" className="w-full px-6 py-4 rounded-xl border border-[#6B5E52]/30 dark:border-slate-700 bg-[#EDE4D3]/50 dark:bg-slate-800/50 focus:bg-white dark:focus:bg-slate-800 focus:border-[#A85832] outline-none transition-all font-medium text-[#3B2F26] dark:text-white placeholder-[#6B5E52] dark:placeholder-slate-500 backdrop-blur-md shadow-sm focus:shadow-md" />
+                  <input name="user_phone" required type="tel" placeholder="+91-XXXXXXXXXX" className="w-full px-6 py-4 rounded-xl border border-[#6B5E52]/30 dark:border-slate-700 bg-[#EDE4D3]/50 dark:bg-slate-800/50 focus:bg-white dark:focus:bg-slate-800 focus:border-[#A85832] outline-none transition-all font-medium text-[#3B2F26] dark:text-white placeholder-[#6B5E52] dark:placeholder-slate-500 backdrop-blur-md shadow-sm focus:shadow-md" />
                 </div>
                 <div className="grid md:grid-cols-2 gap-6">
-                  <FormInput name="user_email" required type="email" placeholder="Email Address" />
+                  <input name="user_email" required type="email" placeholder="Email Address" className="w-full px-6 py-4 rounded-xl border border-[#6B5E52]/30 dark:border-slate-700 bg-[#EDE4D3]/50 dark:bg-slate-800/50 focus:bg-white dark:focus:bg-slate-800 focus:border-[#A85832] outline-none transition-all font-medium text-[#3B2F26] dark:text-white placeholder-[#6B5E52] dark:placeholder-slate-500 backdrop-blur-md shadow-sm focus:shadow-md" />
 
                   <div className="relative">
-                    <select name="service_interest" className="w-full px-6 py-4 rounded-xl border border-white/20 dark:border-slate-700 bg-black/40 dark:bg-slate-800/50 focus:bg-black/50 dark:focus:bg-slate-800 focus:border-orange-500 outline-none transition-all font-medium text-white dark:text-white appearance-none cursor-pointer shadow-sm backdrop-blur-md">
-                      <option value="General" className="bg-slate-900 dark:bg-slate-900 text-white dark:text-white">General Inquiry</option>
-                      {SERVICES.map(s => <option key={s.title} value={s.title} className="bg-slate-900 dark:bg-slate-900 text-white dark:text-white">{s.title}</option>)}
+                    <select name="service_interest" className="w-full px-6 py-4 rounded-xl border border-[#6B5E52]/30 dark:border-slate-700 bg-[#EDE4D3]/50 dark:bg-slate-800/50 focus:bg-white dark:focus:bg-slate-800 focus:border-[#A85832] outline-none transition-all font-medium text-[#3B2F26] dark:text-white appearance-none cursor-pointer shadow-sm backdrop-blur-md">
+                      <option value="General" className="bg-[#EDE4D3] dark:bg-slate-900 text-[#3B2F26] dark:text-white">General Inquiry</option>
+                      {SERVICES.map(s => <option key={s.title} value={s.title} className="bg-[#EDE4D3] dark:bg-slate-900 text-[#3B2F26] dark:text-white">{s.title}</option>)}
                     </select>
-                    <div className="absolute right-6 top-1/2 -translate-y-1/2 pointer-events-none text-orange-500">
+                    <div className="absolute right-6 top-1/2 -translate-y-1/2 pointer-events-none text-[#A85832]">
                       <svg width="12" height="8" viewBox="0 0 12 8" fill="none"><path d="M1 1.5L6 6.5L11 1.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg>
                     </div>
                   </div>
                 </div>
 
-                <textarea name="message" required rows={4} className="w-full px-6 py-4 rounded-xl border border-white/20 dark:border-slate-700 bg-black/40 dark:bg-slate-800/50 focus:bg-black/50 dark:focus:bg-slate-800 focus:border-orange-500 outline-none transition-all font-medium text-white dark:text-white placeholder-slate-400 dark:placeholder-slate-500 backdrop-blur-md shadow-sm" placeholder="Message..." />
+                <textarea name="message" required rows={4} className="w-full px-6 py-4 rounded-xl border border-[#6B5E52]/30 dark:border-slate-700 bg-[#EDE4D3]/50 dark:bg-slate-800/50 focus:bg-white dark:focus:bg-slate-800 focus:border-[#A85832] outline-none transition-all font-medium text-[#3B2F26] dark:text-white placeholder-[#6B5E52] dark:placeholder-slate-500 backdrop-blur-md shadow-sm" placeholder="Message..." />
 
                 <button
                   type="submit"
                   disabled={status === 'sending' || status === 'success'}
-                  className={`w-full font-bold py-5 rounded-xl transition-all flex items-center justify-center gap-3 text-lg font-display uppercase tracking-wider shadow-lg dark:shadow-[0_0_20px_rgba(0,0,0,0.3)] border
-                    ${status === 'success' ? 'bg-green-600 text-white border-green-500 shadow-green-900/20' :
+                  className={`w-full font-bold py-5 rounded-xl transition-all flex items-center justify-center gap-3 text-lg font-display uppercase tracking-wider shadow-[0_6px_20px_rgba(168,88,50,0.25)] dark:shadow-[0_0_20px_rgba(0,0,0,0.3)] border
+                    ${status === 'success' ? 'bg-[#234F32] text-white border-[#234F32] shadow-[#234F32]/20' :
                       status === 'error' ? 'bg-red-600 text-white border-red-500' :
-                        'bg-orange-600 text-white hover:bg-orange-700 border-orange-500 hover:shadow-[0_5px_20px_rgba(249,115,22,0.4)]'}`}
+                        'bg-[#A85832] text-white hover:bg-[#8B4726] border-[#A85832] hover:shadow-[0_8px_30px_rgba(168,88,50,0.4)]'}`}
                 >
                   {status === 'sending' ? <Loader2 className="animate-spin" /> : <Send size={20} />}
                   {status === 'sending' ? 'Sending...' : status === 'success' ? 'Enquiry Sent!' : status === 'error' ? 'Failed - Retry' : 'Send Enquiry'}
@@ -766,10 +741,10 @@ const Contact = () => {
   );
 };
 const Footer = memo(() => (
-  <footer className="bg-black/60 dark:bg-black text-slate-300 dark:text-slate-500 py-12 border-t border-white/10 dark:border-slate-900 text-sm relative z-10 transition-colors backdrop-blur-xl">
+  <footer className="bg-[#3B2F26]/90 dark:bg-black text-[#EDE4D3] dark:text-slate-500 py-12 border-t border-[#6B5E52]/30 dark:border-slate-900 text-sm relative z-10 transition-colors backdrop-blur-xl">
     <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-6">
       <div className="flex items-center gap-3">
-        <img src="/logo.png" alt="Footer Logo" className="h-6 grayscale opacity-80 hover:grayscale-0 transition-all" />
+        <img src="/logo.png" alt="Footer Logo" className="h-6 opacity-80 hover:opacity-100 transition-all" />
         <p className="font-medium">© {new Date().getFullYear()} AGP Enterprises. Precision Printing Solutions.</p>
       </div>
     </div>
@@ -781,7 +756,7 @@ export default function App() {
   const { theme, setTheme } = useTheme();
 
   return (
-    <div className="antialiased bg-[#F0F4F8] dark:bg-[#050505] text-slate-900 dark:text-slate-100 transition-colors duration-700 selection:bg-orange-500 selection:text-white overflow-x-hidden relative min-h-[100dvh]">
+    <div className="antialiased bg-[#EDE4D3] dark:bg-[#050505] text-[#3B2F26] dark:text-slate-100 transition-colors duration-700 selection:bg-[#A85832] selection:text-white overflow-x-hidden relative min-h-[100dvh]">
       <IndustrialBackground />
       <PolishedGlassLayer />
       <Navbar theme={theme} setTheme={setTheme} />

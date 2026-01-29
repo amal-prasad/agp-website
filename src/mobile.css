@@ -7,7 +7,7 @@
     /* Ensure body doesn't show white bars on overscroll */
     html,
     body {
-        background-color: #F0F4F8 !important;
+        background-color: #EDE4D3 !important;
         overscroll-behavior-y: none !important;
         /* Prevents rubber-banding exposing the background */
         min-height: 100dvh !important;
