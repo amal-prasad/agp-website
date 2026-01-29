@@ -24,7 +24,7 @@ export default function App() {
   }, []);
 
   return (
-    <div className={`antialiased bg-[#EDE4D3] dark:bg-[#050505] text-[#3B2F26] dark:text-slate-100 selection:bg-[#A85832] selection:text-white overflow-x-hidden relative min-h-[100dvh] ${mounted ? 'transition-colors duration-700' : ''}`}>
+    <div className={`antialiased text-[#3B2F26] dark:text-slate-100 selection:bg-[#A85832] selection:text-white overflow-x-hidden relative min-h-[100dvh] ${mounted ? 'transition-colors duration-700' : ''}`}>
       <IndustrialBackground />
       <PolishedGlassLayer />
       <Navbar theme={theme} setTheme={setTheme} />

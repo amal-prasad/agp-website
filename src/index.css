@@ -17,6 +17,20 @@
   --warm-charcoal: #333333;
 }
 
+/* === STRICT THEME VISIBILITY ENFORCEMENT === */
+/* Prevents "ghosting" or mixed themes by forcing opacity/display overrides */
+html:not(.dark) .dark-mode-only {
+  display: none !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+}
+
+html.dark .light-mode-only {
+  display: none !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+}
+
 /* Base styles with high stability */
 html {
   scroll-behavior: smooth;

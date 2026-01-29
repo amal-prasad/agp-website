@@ -29,7 +29,7 @@ const Hero = memo(() => (
                 </p>
 
                 <div className="flex flex-col sm:flex-row gap-4">
-                    <a href="#contact" className="bg-[#A85832] text-white px-8 py-4 rounded-lg font-bold text-lg hover:bg-[#8B4726] transition-all shadow-[0_6px_20px_rgba(168,88,50,0.35)] dark:shadow-[0_0_25px_rgba(249,115,22,0.5)] flex items-center justify-center gap-2 font-display uppercase tracking-wide border border-[#A85832]">
+                    <a href="#contact" className="bg-orange-600 text-white px-8 py-4 rounded-lg font-bold text-lg hover:bg-orange-700 transition-all shadow-[0_6px_20px_rgba(234,88,12,0.35)] dark:shadow-[0_0_25px_rgba(249,115,22,0.5)] flex items-center justify-center gap-2 font-display uppercase tracking-wide border border-transparent">
                         Start Project <ArrowRight size={20} />
                     </a>
 

@@ -14,22 +14,24 @@ const Navbar = memo(({ theme, setTheme }) => {
     useEffect(() => {
         const handleScroll = () => {
             const currentScrollY = Math.max(0, window.scrollY);
-            const isAtTop = currentScrollY < 10; // Tighter threshold
+            // Increased threshold to 50px to ensure it catches the "top" feeling earlier
+            // and avoids flickering near the top edge.
+            const isAtTop = currentScrollY < 50;
             const isScrollingUp = currentScrollY < lastScrollY.current;
 
+            // If at top, ALWAYS transparent (scrolled = false)
+            // If not at top, ALWAYS opaque (scrolled = true)
             setScrolled(!isAtTop);
+
+            // Visible if at top OR scrolling up
             setVisible(isAtTop || isScrollingUp);
 
             lastScrollY.current = currentScrollY;
         };
 
-        // Immediate check on mount
         handleScroll();
-
-        // Throttled listener for performance
-        const throttledScroll = throttle(handleScroll, 100);
-        window.addEventListener('scroll', throttledScroll, { passive: true });
-        return () => window.removeEventListener('scroll', throttledScroll);
+        window.addEventListener('scroll', handleScroll, { passive: true });
+        return () => window.removeEventListener('scroll', handleScroll);
     }, []);
 
     return (

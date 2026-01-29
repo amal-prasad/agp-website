@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 
 export const useTheme = () => {
+    // User Directive: ALWAYS load on 'system' mode.
     const [theme, setTheme] = useState('system');
 
     useEffect(() => {

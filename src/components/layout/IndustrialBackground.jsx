@@ -4,7 +4,7 @@ const IndustrialBackground = memo(() => (
     <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden bg-[#EDE4D3] dark:bg-[#050505] transition-colors duration-700 min-h-[100dvh]" data-section="background">
 
         {/* --- LIGHT MODE: KRAFT PAPER AESTHETIC --- */}
-        <div className="absolute inset-0 dark:hidden gpu-accelerate">
+        <div className="absolute inset-0 light-mode-only gpu-accelerate">
             {/* Kraft paper background with subtle blur for depth */}
             <div
                 className="absolute inset-0 blur-[6px] bg-center bg-cover bg-no-repeat gpu-accelerate"
@@ -17,7 +17,7 @@ const IndustrialBackground = memo(() => (
         </div>
 
         {/* --- DARK MODE LAYERS (UNCHANGED) --- */}
-        <div className="hidden dark:block">
+        <div className="dark-mode-only">
             <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/[0.03] to-transparent" />
             <div className="absolute -top-20 -right-20 w-[800px] h-[800px] bg-orange-600/10 blur-[100px] rounded-full mix-blend-screen" />
             <div className="absolute -bottom-40 -left-20 w-[800px] h-[800px] bg-red-600/5 blur-[100px] rounded-full mix-blend-screen" />
