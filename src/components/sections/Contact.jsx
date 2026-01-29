@@ -10,7 +10,7 @@ const EMAILJS_CONFIG = {
     PUBLIC_KEY: '0tI03IJkKlik1sdYe'
 };
 
-const MAP_EMBED_URL = "https://maps.google.com/maps?q=Treasure+Fantasy+Cat+Road+Rau+Indore&t=&z=15&ie=UTF8&iwloc=&output=embed";
+const MAP_EMBED_URL = "https://maps.google.com/maps?q=22.657433,75.803163&z=19&output=embed";
 
 const SERVICES = [
     "Visiting Cards", "Bill Books", "Flex Printing", "ID Cards",
