@@ -32,6 +32,7 @@ const ThemeToggle = ({ theme, setTheme, isVertical = false }) => {
                 <button
                     key={mode}
                     onClick={() => setTheme(mode)}
+                    aria-label={`Switch to ${mode} mode`}
                     className={`relative z-10 p-1.5 rounded-full transition-all duration-200
             ${theme === mode ? activeColor : 'text-white/60 dark:text-slate-400 hover:text-white/90'}`}
                 >

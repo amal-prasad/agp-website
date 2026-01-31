@@ -50,10 +50,8 @@ const Hero = memo(() => (
                             <p className="uppercase tracking-[0.5em] text-sm text-orange-500 font-bold relative z-10 drop-shadow-[0_0_10px_rgba(249,115,22,0.5)]">High Fidelity Output</p>
                         </div>
                     </div>
-                    <motion.div
-                        animate={{ y: [0, -10, 0] }}
-                        transition={{ repeat: Infinity, duration: 4, ease: "easeInOut" }}
-                        className="absolute -right-6 top-8 bg-white/95 dark:bg-slate-800/60 backdrop-blur-md p-5 rounded-xl shadow-xl dark:shadow-[0_0_30px_rgba(0,0,0,0.6)] max-w-xs z-20 border border-slate-200 dark:border-slate-600 border-l-4 border-l-orange-500 dark:border-l-cyan-400"
+                    <div
+                        className="absolute -right-6 top-8 bg-white/95 dark:bg-slate-800/60 backdrop-blur-md p-5 rounded-xl shadow-xl dark:shadow-[0_0_30px_rgba(0,0,0,0.6)] max-w-xs z-20 border border-slate-200 dark:border-slate-600 border-l-4 border-l-orange-500 dark:border-l-cyan-400 animate-float-infinite"
                     >
                         <div className="flex items-center gap-4 mb-2">
                             <div className="p-3 bg-orange-100 dark:bg-cyan-400/10 rounded-full text-orange-600 dark:text-cyan-300 shadow-sm dark:shadow-[0_0_10px_rgba(34,211,238,0.4)]"><CheckCircle size={24} /></div>
@@ -63,7 +61,7 @@ const Hero = memo(() => (
                             </div>
                         </div>
                         <p className="text-sm text-slate-900 dark:text-slate-300 font-medium">10,000 Brochures for Panasonic Pithampur.</p>
-                    </motion.div>
+                    </div>
                 </div>
             </Reveal>
         </div>

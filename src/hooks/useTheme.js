@@ -1,8 +1,13 @@
 import { useState, useEffect } from 'react';
 
 export const useTheme = () => {
-    // User Directive: ALWAYS load on 'system' mode.
-    const [theme, setTheme] = useState('system');
+    // Initialize from localStorage or default to 'system'
+    const [theme, setTheme] = useState(() => {
+        if (typeof window !== 'undefined') {
+            return localStorage.getItem('theme') || 'system';
+        }
+        return 'system';
+    });
 
     useEffect(() => {
         const element = document.documentElement;
@@ -18,6 +23,7 @@ export const useTheme = () => {
         };
 
         applyTheme();
+        localStorage.setItem('theme', theme);
 
         const handleChange = () => {
             if (theme === 'system') applyTheme();

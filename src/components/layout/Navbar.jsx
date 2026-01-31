@@ -36,7 +36,7 @@ const Navbar = memo(({ theme, setTheme }) => {
 
     return (
         <>
-            <nav data-section="navbar" className={`fixed top-0 left-0 w-full z-50 transition-all duration-500 ease-[cubic-bezier(0.4,0,0.2,1)]
+            <nav data-section="navbar" className={`fixed top-0 left-0 w-full z-50 transition-all duration-500 ease-[cubic-bezier(0.4,0,0.2,1)] transform-gpu
         ${visible ? 'translate-y-0' : '-translate-y-full'}
         ${scrolled
                     ? 'py-3 md:py-4 bg-[#EDE4D3]/90 dark:bg-[#050505]/90 backdrop-blur-xl border-b border-[#6B5E52]/20 dark:border-white/10 shadow-[0_4px_24px_rgba(59,47,38,0.15)] dark:shadow-[0_4px_30px_rgba(0,0,0,0.3)]'

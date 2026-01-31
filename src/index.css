@@ -18,17 +18,26 @@
 }
 
 /* === STRICT THEME VISIBILITY ENFORCEMENT === */
-/* Prevents "ghosting" or mixed themes by forcing opacity/display overrides */
+/* GPU-Accelerated Opacity Transitions (No Layout Thrashing) */
 html:not(.dark) .dark-mode-only {
-  display: none !important;
   opacity: 0 !important;
   visibility: hidden !important;
+  transition: opacity 0.7s ease, visibility 0.7s ease;
+  will-change: opacity;
 }
 
 html.dark .light-mode-only {
-  display: none !important;
   opacity: 0 !important;
   visibility: hidden !important;
+  transition: opacity 0.7s ease, visibility 0.7s ease;
+  will-change: opacity;
+}
+
+/* Ensure active elements are visible */
+.light-mode-only, .dark-mode-only {
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 0.7s ease, visibility 0.7s ease;
 }
 
 /* Base styles with high stability */
@@ -126,6 +135,7 @@ html.dark .text-force-production-black,
   will-change: transform;
 }
 
+
 /* Reduced motion preference */
 @media (prefers-reduced-motion: reduce) {
 
@@ -136,4 +146,16 @@ html.dark .text-force-production-black,
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
+}
+
+/* === PERFORMANCE ANIMATIONS === */
+/* Off-thread animation for floating elements */
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+.animate-float-infinite {
+  animation: float 4s ease-in-out infinite;
+  will-change: transform;
 }
