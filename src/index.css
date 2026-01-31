@@ -34,7 +34,8 @@ html.dark .light-mode-only {
 }
 
 /* Ensure active elements are visible */
-.light-mode-only, .dark-mode-only {
+.light-mode-only,
+.dark-mode-only {
   opacity: 1;
   visibility: visible;
   transition: opacity 0.7s ease, visibility 0.7s ease;
@@ -48,6 +49,15 @@ html {
   background-color: var(--kraft-bg) !important;
   -webkit-tap-highlight-color: transparent;
 }
+
+/* --- PREVENT IMAGE DIALOGS/CLICKS --- */
+img {
+  pointer-events: none;
+  -webkit-user-drag: none;
+  -webkit-touch-callout: none;
+  user-select: none;
+}
+
 
 html.dark {
   background-color: #050505 !important;
@@ -151,8 +161,15 @@ html.dark .text-force-production-black,
 /* === PERFORMANCE ANIMATIONS === */
 /* Off-thread animation for floating elements */
 @keyframes float {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-10px); }
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-10px);
+  }
 }
 
 .animate-float-infinite {
