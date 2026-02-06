@@ -8,12 +8,15 @@ import Navbar from './components/layout/Navbar';
 import Footer from './components/layout/Footer';
 
 // Section Components
+// Section Components (Lazy Loaded)
+const Services = React.lazy(() => import('./components/sections/Services'));
+const Portfolio = React.lazy(() => import('./components/sections/Portfolio'));
+const About = React.lazy(() => import('./components/sections/About'));
+const Clients = React.lazy(() => import('./components/sections/Clients'));
+const Contact = React.lazy(() => import('./components/sections/Contact'));
+
+// Keep Hero eager loaded for LCP
 import Hero from './components/sections/Hero';
-import Services from './components/sections/Services';
-import Portfolio from './components/sections/Portfolio';
-import About from './components/sections/About';
-import Clients from './components/sections/Clients';
-import Contact from './components/sections/Contact';
 
 export default function App() {
   const { theme, setTheme } = useTheme();
@@ -30,11 +33,13 @@ export default function App() {
       <Navbar theme={theme} setTheme={setTheme} />
       <main className="relative z-10">
         <Hero />
-        <Services />
-        <Portfolio />
-        <About />
-        <Clients />
-        <Contact />
+        <React.Suspense fallback={<div className="h-screen w-full flex items-center justify-center text-orange-500">Loading...</div>}>
+          <Services />
+          <Portfolio />
+          <About />
+          <Clients />
+          <Contact />
+        </React.Suspense>
       </main>
       <Footer />
     </div>
