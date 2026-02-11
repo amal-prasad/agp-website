@@ -14,24 +14,19 @@ const Navbar = memo(({ theme, setTheme }) => {
     useEffect(() => {
         const handleScroll = () => {
             const currentScrollY = Math.max(0, window.scrollY);
-            // Increased threshold to 50px to ensure it catches the "top" feeling earlier
-            // and avoids flickering near the top edge.
             const isAtTop = currentScrollY < 50;
             const isScrollingUp = currentScrollY < lastScrollY.current;
 
-            // If at top, ALWAYS transparent (scrolled = false)
-            // If not at top, ALWAYS opaque (scrolled = true)
             setScrolled(!isAtTop);
-
-            // Visible if at top OR scrolling up
             setVisible(isAtTop || isScrollingUp);
 
             lastScrollY.current = currentScrollY;
         };
 
+        const throttledScroll = throttle(handleScroll, 16);
         handleScroll();
-        window.addEventListener('scroll', handleScroll, { passive: true });
-        return () => window.removeEventListener('scroll', handleScroll);
+        window.addEventListener('scroll', throttledScroll, { passive: true });
+        return () => window.removeEventListener('scroll', throttledScroll);
     }, []);
 
     return (
@@ -52,16 +47,14 @@ const Navbar = memo(({ theme, setTheme }) => {
                             alt="AGP Logo"
                             className="h-10 md:h-12 w-auto object-contain contrast-125 saturate-150 drop-shadow-[0_3px_6px_rgba(59,47,38,0.3)]"
                         />
-                        <span className={`font-bold text-3xl md:text-5xl tracking-tighter font-display leading-none translate-y-1 md:translate-y-3 transition-colors ${scrolled ? 'text-[#3B2F26] dark:text-white' : 'text-[#3B2F26] dark:text-white'} drop-shadow-[0_2px_4px_rgba(59,47,38,0.2)] dark:drop-shadow-[0_2px_4px_rgba(0,0,0,0.5)]`}>ENTERPRISES</span>
+                        <span className="font-bold text-3xl md:text-5xl tracking-tighter font-display leading-none translate-y-1 md:translate-y-3 transition-colors text-[#3B2F26] dark:text-white drop-shadow-[0_2px_4px_rgba(59,47,38,0.2)] dark:drop-shadow-[0_2px_4px_rgba(0,0,0,0.5)]">ENTERPRISES</span>
                     </div>
 
                     {/* DESKTOP NAVIGATION */}
                     <div className="hidden md:flex items-center gap-8 lg:gap-12">
                         {NAV_LINKS.map((item) => (
                             <a key={item} href={`#${item.toLowerCase()}`}
-                                className={`text-sm uppercase tracking-[0.2em] font-bold font-display transition-colors 
-                 ${scrolled ? 'text-[#3B2F26] hover:text-[#A85832]' : 'text-[#3B2F26] hover:text-[#A85832]'} dark:text-white/90 dark:hover:text-cyan-300 
-                 drop-shadow-[0_1px_2px_rgba(59,47,38,0.15)] dark:drop-shadow-[0_2px_4px_rgba(0,0,0,0.5)] hover:drop-shadow-[0_0_8px_rgba(168,88,50,0.4)] dark:hover:drop-shadow-[0_0_10px_rgba(34,211,238,0.5)]`}
+                                className="text-sm uppercase tracking-[0.2em] font-bold font-display transition-colors text-[#3B2F26] hover:text-[#A85832] dark:text-white/90 dark:hover:text-cyan-300 drop-shadow-[0_1px_2px_rgba(59,47,38,0.15)] dark:drop-shadow-[0_2px_4px_rgba(0,0,0,0.5)] hover:drop-shadow-[0_0_8px_rgba(168,88,50,0.4)] dark:hover:drop-shadow-[0_0_10px_rgba(34,211,238,0.5)]"
                             >
                                 {item}
                             </a>
@@ -78,7 +71,7 @@ const Navbar = memo(({ theme, setTheme }) => {
                     <div className="flex md:hidden items-center gap-3">
                         <button
                             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                            className={`p-2 rounded-lg backdrop-blur-md border transition-colors ${scrolled ? 'bg-[#3B2F26]/10 border-[#6B5E52]/30 text-[#3B2F26]' : 'bg-[#3B2F26]/10 border-[#6B5E52]/30 text-[#3B2F26]'} dark:bg-black/30 dark:border-white/20 dark:text-white`}
+                            className="p-2 rounded-lg backdrop-blur-md border transition-colors bg-[#3B2F26]/10 border-[#6B5E52]/30 text-[#3B2F26] dark:bg-black/30 dark:border-white/20 dark:text-white"
                         >
                             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                                 {mobileMenuOpen ? (

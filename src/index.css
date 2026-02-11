@@ -23,14 +23,12 @@ html:not(.dark) .dark-mode-only {
   opacity: 0 !important;
   visibility: hidden !important;
   transition: opacity 0.7s ease, visibility 0.7s ease;
-  will-change: opacity;
 }
 
 html.dark .light-mode-only {
   opacity: 0 !important;
   visibility: hidden !important;
   transition: opacity 0.7s ease, visibility 0.7s ease;
-  will-change: opacity;
 }
 
 /* Ensure active elements are visible */
@@ -135,14 +133,10 @@ html.dark .text-force-production-black,
   }
 }
 
-/* Prevent scroll bounce exposing background gaps - DISABLED to allow Pull-to-Refresh */
-/* body { overscroll-behavior-y: none; } */
-
 /* GPU acceleration for smoother animations */
 .gpu-accelerate {
   transform: translateZ(0);
   backface-visibility: hidden;
-  will-change: transform;
 }
 
 
@@ -174,5 +168,4 @@ html.dark .text-force-production-black,
 
 .animate-float-infinite {
   animation: float 4s ease-in-out infinite;
-  will-change: transform;
 }
