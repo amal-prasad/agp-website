@@ -15,7 +15,7 @@
   <!-- Blocking script: Sync theme before first paint (mirrors useTheme.js logic) -->
   <script>
     (function () {
-      var stored = localStorage.getItem('theme');
+      var stored = localStorage.getItem('agp_theme_v1');
       var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
       if (stored === 'dark' || (!stored || stored === 'system') && prefersDark) {
         document.documentElement.classList.add('dark');

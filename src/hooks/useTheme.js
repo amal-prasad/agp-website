@@ -4,7 +4,7 @@ export const useTheme = () => {
     // Initialize from localStorage or default to 'system'
     const [theme, setTheme] = useState(() => {
         if (typeof window !== 'undefined') {
-            return localStorage.getItem('theme') || 'system';
+            return localStorage.getItem('agp_theme_v1') || 'system';
         }
         return 'system';
     });
@@ -23,7 +23,7 @@ export const useTheme = () => {
         };
 
         applyTheme();
-        localStorage.setItem('theme', theme);
+        localStorage.setItem('agp_theme_v1', theme);
 
         const handleChange = () => {
             if (theme === 'system') applyTheme();
