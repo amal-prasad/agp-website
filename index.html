@@ -12,12 +12,11 @@
   <link rel="preload" as="image" href="/logo.png" />
   <link rel="preload" as="image" href="/kraft-texture-v2.webp" media="(prefers-color-scheme: light)" />
   <title>agp-enterprises</title>
-  <!-- Blocking script: Sync theme before first paint (mirrors useTheme.js logic) -->
+  <!-- Blocking script: Sync theme before first paint (always system mode) -->
   <script>
     (function () {
-      var stored = localStorage.getItem('agp_theme_v1');
       var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-      if (stored === 'dark' || (!stored || stored === 'system') && prefersDark) {
+      if (prefersDark) {
         document.documentElement.classList.add('dark');
       }
     })();

@@ -1,13 +1,8 @@
 import { useState, useEffect } from 'react';
 
 export const useTheme = () => {
-    // Initialize from localStorage or default to 'system'
-    const [theme, setTheme] = useState(() => {
-        if (typeof window !== 'undefined') {
-            return localStorage.getItem('agp_theme_v1') || 'system';
-        }
-        return 'system';
-    });
+    // Always start in system mode (follows OS preference)
+    const [theme, setTheme] = useState('system');
 
     useEffect(() => {
         const element = document.documentElement;
@@ -23,7 +18,7 @@ export const useTheme = () => {
         };
 
         applyTheme();
-        localStorage.setItem('agp_theme_v1', theme);
+        localStorage.setItem('theme', theme);
 
         const handleChange = () => {
             if (theme === 'system') applyTheme();
